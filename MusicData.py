@@ -37,6 +37,8 @@ df['section'] = df['section'].astype('int') # Convert column to integer
 # Add columns for the position of notes, calculating only y values for After Effects test.
 
 # Set up variables for video size, object size, and limits of note placement based on action-safe zone.
+# After Effects compositions put (0,0) in the center of the frame. Therefore, we will need to divide results by 2
+# so the highest placement is the variable we'll make here, and the lowest placement is that variable as negative.
 total_h = 2160 # height of 4k UHD resolution
 as_h = 2160 - 2008 # 2008 is total height of action-safe zone for 4k UHD TVs
 h_edge = total_h / 2 - as_h / 2 # height limit of action-safe zone
@@ -45,18 +47,42 @@ shape_edge = h_edge - ring_size / 2 # the limit to where a note can be placed
 
 # Set up dataframe to hold values for each note on the marimba, with fake notes added so that the index compensates for
 # upper keys that do not naturally exist on keyboard. The index can then be used to mathematically calculate y-position.
-s1_note_min = df[df['section'] == 1]['note'].min() # lowest note value of Section I 
-s1_note_max = df[df['section'] == 1]['note'].max() # highest note value of Section I
-keyb_values = [i + s1_note_min for i in range(s1_note_max - s1_note_min + 1)]
-keyboard = pd.DataFrame({'key': keyb_values})
+note_min = df['note'].min() # lowest note value of composition
+note_max = df['note'].max() # highest note value of composition
+note_range = note_max - note_min # full range of notes for composition
+keyb_values = [i + note_min for i in range(note_range + 1)] # the list of values going from low to high
+keyboard = pd.DataFrame({'key': keyb_values}) # converting the list to a dataframe
 
-# Add fake keys.
-add_fake = [{'key': 55.5}, {'key': 60.5}, {'key':67.5}, {'key':72.5}]
-add_fake_df = pd.DataFrame(add_fake)
-keyboard = pd.concat([keyboard, add_fake_df], ignore_index=True)
-keyboard = keyboard.sort_values('key').reset_index(drop=True)
-keyboard = keyboard[keyboard['key'] % 1 == 0].astype('int')
-s1_notes = s1_note_max - s1_note_min # Range of notes across whole composition
-df['y'] = df['note'] - note_min
+# Create a separate dataframe of fake notes.
+fake_notes = [55.5, 60.5, 67.5, 72.5, 79.5]
+fake_notes_df = pd.DataFrame({'key': fake_notes}) # converting fake notes list to dataframe
+keyboard = pd.concat([keyboard, fake_notes_df], ignore_index=True) # combine the two dataframes
+keyboard = keyboard.sort_values('key').reset_index(drop=True) # sort the dataframe, reset index
+# Resetting the index here is intentional and important because once the fake notes are removed, the index is now
+# an accurate replica of a marimba's keyboard, with the spaces between groups of upper keys represented by the removed
+# fake notes.
+keyboard = keyboard[keyboard['key'] % 1 == 0].astype('int') # remove fake notes, change all values back to integers
+keyboard = keyboard.reset_index(names='idx') # save the index to its own column, easier to merge with original dataframe
 
-print(df)
+# The keyboard dataframe can now be used as a reference for where notes are going to be placed on the After Effects
+# composition. The next step is to update the original dataframe with a "y" column.
+merged_keys = df.merge(keyboard, left_on='note', right_on='key', how='left') # merge keyboard values into the dataframe
+df['y'] = merged_keys['idx'] # the new 'y' column will take its data from the resulting merged dataframe
+
+# Before finishing with the 'y' column, the 'side' column will identify which side of the marimba is being played, in case
+# that distinction is made visually in After Effects (adding more realism to the playing).
+df['side'] = (df['y'] % 2 == 0).replace({True: 0, False: 50})
+
+# The remaining step is to calculate the exact y-axis value that will be used in After Effects. To do this, we need
+# the minimum value and maximum value to set a range. Because each section has its own range, we'll do it per section
+# and figure out how to transition between them later.
+for i in range(1, 4):
+	s_note_min = df[df['section'] == i]['y'].min() # lowest note of section
+	s_note_max = df[df['section'] == i]['y'].max() # lowest note of section
+	s_note_range = s_note_max - s_note_min + 1 # total number of note values
+	dist = shape_edge * 2 / s_note_range # total distance between frames
+	selected_rows = df.loc[df['section'] == i] # grab the rows of this section
+	# Calculate the new y-axis value: multiply it by distance, and subtract by the shape_edge so that center is (0,0)
+	df.loc[df['section'] == i, 'y'] = selected_rows['y'] * dist + shape_edge 
+
+df['y'] = df['y'].round(1) # round to the nearest decimal, easier to use in After Effects
