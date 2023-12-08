@@ -39,19 +39,6 @@ df.loc[(df['time'] >= s1) & (df['time'] < s2), 'section'] = 2
 df.loc[df['time'] >= s2, 'section'] = 3
 df['section'] = df['section'].astype('int') # Convert column to integer
 
-# -- VIDEO COLUMNS --
-# Add columns for the position of notes, calculating only y-axis values for After Effects test, and video timecode.
-
-# Set up variables for video size, object size, and limits of note placement based on action-safe zone.
-# After Effects compositions put (0,0) in the top left corner of the frame.
-total_h = 2160 # height of 4k UHD resolution
-as_h = 2160 - 2008 # 2008 is total height of action-safe zone for 4k UHD TVs
-ring_size = 1000 # total size of ring at its largest point
-shape_range = total_h - as_h - ring_size # total amount of room within which rings can be positioned
-shape_edge = total_h - as_h / 2 - ring_size / 2
-# The variable shape_edge is the lowest point to where a note can be placed in a video composition.
-# To get the highest point, we'll use the formula shape_edge - shape_range later.
-
 # Set up dataframe to hold values for each note on the marimba, with fake notes added so that the index compensates for
 # spaces between the groups of sharps and flats on the keyboard. The index can then be used to mathematically
 # calculate y-position.
@@ -70,31 +57,57 @@ keyboard = keyboard.sort_values('key').reset_index(drop=True) # sort the datafra
 # an accurate replica of a marimba's keyboard, with the spaces between groups of sharps and flats represented by the
 # removed fake notes.
 keyboard = keyboard[keyboard['key'] % 1 == 0].astype('int') # remove fake notes, change all values back to integers
-keyboard = keyboard.reset_index(names='idx') # save the index to its own column, easier to merge with original dataframe
+keyboard_dict = keyboard.reset_index().set_index('key')['index'].to_dict() # convert the dataframe to a dictionary
+# Converting to a dictionary allows for mapping the values into the dataframe, which is less intensive a process
+# than merging dataframes.
 
-# The keyboard dataframe can now be used as a reference for where notes are going to be placed on the After Effects
+# The keyboard dictionary can now be used as a reference for where notes are going to be placed on the After Effects
 # composition. The next step is to update the original dataframe with a "y" column.
-merged_keys = df.merge(keyboard, left_on='note', right_on='key', how='left') # merge keyboard and original dataframe
-df['y'] = merged_keys['idx'] # the new 'y' column in the original dataframe now has the merged dataframe's data
+df['y'] = df['note'].map(keyboard_dict)
 
 # Before finishing with the 'y' column, the 'side' column will identify which side of the marimba is being played, in case
 # that distinction is made visually in After Effects (adding more realism to the playing).
 df['side'] = (df['y'] % 2 == 0)
 
-# The remaining step is to calculate the exact y-axis value that will be used in After Effects. To do this, we need
-# the minimum value and maximum value to set a range. Because each section has its own range, we'll do it per section
-# and figure out how to transition between them later.
-for i in range(1, 4):
-	s_note_min = df[df['section'] == i]['y'].min() # lowest note of section
-	s_note_max = df[df['section'] == i]['y'].max() # lowest note of section
-	s_note_range = s_note_max - s_note_min + 1 # total number of note values
-	dist = shape_range / s_note_range # total distance between frames
-	df.loc[df['section'] == i, 'y'] = df.loc[df['section'] == i, 'y'] - s_note_min
-	# Calculate the new y-axis value: multiply it by distance, and subtract by the shape_edge
-	df['y'] = df['y'].astype('float') # convert column for decimal values
-	df.loc[df['section'] == i, 'y'] = shape_edge - df.loc[df['section'] == i, 'y'] * dist
+def adjust_y_values(df):
+	''' Calculate the exact y-axis value that will be used in After Effects. To do this, we need the minimum value
+	and maximum value to set a range. Because each section has its own range, we'll do it per section and figure out
+	how to transition between them later.'''
 
-df['y'] = df['y'].round(1) # round to the nearest decimal, easier to use in After Effects
+	# Set up variables for video size, object size, and limits of note placement based on action-safe zone.
+	# After Effects compositions put (0,0) in the top left corner of the frame.
+	total_h = 2160 # height of 4k UHD resolution
+	as_h = 2160 - 2008 # 2008 is total height of action-safe zone for 4k UHD TVs
+	ring_size = 1000 # total size of ring at its largest point
+	shape_range = total_h - as_h - ring_size # total amount of room within which rings can be positioned
+	shape_edge = total_h - as_h / 2 - ring_size / 2
+	# The variable shape_edge is the lowest point to where a note can be placed in a video composition.
+
+	def adjust_section(group):
+		s_note_min = group['y'].min() # lowest pitch of section
+		s_note_max = group['y'].max() # highest pitch of section
+		s_note_range = s_note_max - s_note_min + 1 # total number of pitch values
+		dist = shape_range / s_note_range # distance between pitches in video
+   		# Set the lowest note to 0 so that the section uses the full available range within the action safe zone,
+		# then calculate the new y-axis value: multiply it by distance, and subtract by the shape_edge.
+		group['y'] = (shape_edge - (group['y'] - s_note_min) * dist).round(1)
+		return group
+
+	return df.groupby('section').apply(adjust_section).reset_index(drop=True) # Apply the function to each section
+
+df = adjust_y_values(df)
 
 # For the last column for timecodes, they are generated from the BPMtoFPS script.
 df['timecode'] = BPMtoFPS(df['time'] - 1)
+
+# After Effects scripting needs time in # of frames, so the following code converts timecode to frames.
+def timecode_to_frames(timecode, frame_rate):
+	seconds, frames = map(int, timecode.split(":"))
+	total_frames = seconds * frame_rate + frames
+	return int(total_frames)
+
+frame_rate = 30 # frames per second of video project
+df['frames'] = df['timecode'].apply(lambda x: timecode_to_frames(x, frame_rate)) # apply function to each row of dataframe
+
+# The final step is to export the data to CSV, for use in After Effects.
+df.to_csv('Six Marimbas Data.csv')
