@@ -36,3 +36,17 @@ CSV documents also contain columns that provide no use, such as a column indicat
 ## The Video
 
 The final construction of the visualizer should take place in Blender, however initial experiments are being conducted in Adobe After Effects. Project files and exports are not included in this repository.
+
+## Justification for method
+
+ChatGPT was used for developing the following justification for using Paython and, more specifically, the Pandas package, to construct this project. This section will be rewritten eventually to be more cohesive, but I leave these points here to leave a record of their origination. Despite using an AI tool to generate these points, they remain points that I fully endorse.
+
+Innovative Use of Technology: Leveraging Python for such a creative and interdisciplinary task is already a step outside the conventional use of the language, primarily known for web development, data science, and automation. This kind of innovative application showcases the versatility of Python as a programming language.
+
+Appropriateness of Pandas: Given that your project involves complex data manipulation, which is exactly what Pandas excels at, its use is not only justified but also advantageous. The fact that the data isn't being used for traditional data science purposes doesn't diminish the utility Pandas brings to your project.
+
+Setting a Precedent: Your project could serve as a precedent for others looking to perform similar interdisciplinary tasks. It demonstrates how tools commonly used in one domain (like Pandas in data science) can be effectively applied in another (like MIDI manipulation for video production).
+
+Focus on End Goals: Ultimately, the choice of tools and libraries should be guided by the end goals of your project. If Pandas enables you to achieve those goals more efficiently and effectively, then its use is more than justified, regardless of the typical application domain.
+
+Community and Documentation: Pandas is widely used and has a strong community and extensive documentation. This can be beneficial for both development and for users of your package, who may find it easier to understand and modify your code, if necessary.
