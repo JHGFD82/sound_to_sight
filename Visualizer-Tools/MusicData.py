@@ -1,55 +1,8 @@
-
-
 import pandas as pd
 import glob
 import os
 import sys
 from BPMtoFPS import *
-
-
-def import_midi(files):
-
-	# Establish variables for CSV files and names of columns in resulting dataframe.
-	names = ['data','time','status','num','note','velocity','ex1','ex2']
-
-	# CSV files are combined into DataFrame, with additional "player" column to identify players.
-	df = pd.concat((pd.read_csv(f, names=names, header=None).assign(player=i + 1)
-		for i, f in enumerate(files)), ignore_index=True)
-
-	return df
-
-
-def clean_data(df):
-
-	# Process the DataFrame to remove undesired rows
-	# For example, removing rows where 'mixed_column' can't be converted to a number
-	columns_to_convert = ['time', 'num', 'note', 'velocity', 'ex1', 'ex2', 'player']
-
-	for column in columns_to_convert:
-		df[column] = pd.to_numeric(df[column], errors='coerce').astype('Int32')
-
-	df['time'] = (df['time'] / 240 + 1).astype('Int32') # simplify time down to eighth notes
-	df = df[['time', 'status', 'note', 'velocity', 'player']] # trim dataframe down to appropriate columns
-	df = df.iloc[9:-2,:] # remove headers and footers from data
-
-	return df
-
-
-def add_sections(df, sections):
-
-	# Add the starting position for the first section
-
-	sections = [(x * 8 - 7) for x in ([1] + sections if sections[0] != 1 else sections)]
-	
-	# Function to determine the section based on position
-	def find_section(position):
-		for i, start in enumerate(sections):
-			if position < sections[i+1] if i+1 < len(sections) else True:
-				return i + 1
-
-	# Apply the function to each row in the DataFrame
-	df['section'] = df['time'].apply(find_section).astype('Int32')
-	return df
 
 
 def note_lengths(df):
