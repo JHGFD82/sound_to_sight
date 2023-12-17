@@ -1,3 +1,9 @@
 # __init__.py
 from .import_midi import import_midi
-from .BPMtoFPS import bpm_to_fps
+from .clean_data import clean_data
+from .add_sections import add_sections
+from .note_lengths import note_lengths
+from .generate_fake_notes import generate_fake_notes
+from .create_keyboard import create_keyboard
+from .keyboard_side import keyboard_side
+from .BPMtoFPS import BPMtoFPS
