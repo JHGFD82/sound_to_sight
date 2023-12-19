@@ -1,0 +1,642 @@
+[
+    {
+        "MIDI Note Number": 0,
+        "Note Symbol": "C-1",
+        "Frequency (Hz)": 8.175798915643707
+    },
+    {
+        "MIDI Note Number": 1,
+        "Note Symbol": "C#-1",
+        "Frequency (Hz)": 8.661957218027252
+    },
+    {
+        "MIDI Note Number": 2,
+        "Note Symbol": "D-1",
+        "Frequency (Hz)": 9.177023997418988
+    },
+    {
+        "MIDI Note Number": 3,
+        "Note Symbol": "D#-1",
+        "Frequency (Hz)": 9.722718241315029
+    },
+    {
+        "MIDI Note Number": 4,
+        "Note Symbol": "E-1",
+        "Frequency (Hz)": 10.300861153527183
+    },
+    {
+        "MIDI Note Number": 5,
+        "Note Symbol": "F-1",
+        "Frequency (Hz)": 10.913382232281373
+    },
+    {
+        "MIDI Note Number": 6,
+        "Note Symbol": "F#-1",
+        "Frequency (Hz)": 11.562325709738575
+    },
+    {
+        "MIDI Note Number": 7,
+        "Note Symbol": "G-1",
+        "Frequency (Hz)": 12.249857374429663
+    },
+    {
+        "MIDI Note Number": 8,
+        "Note Symbol": "G#-1",
+        "Frequency (Hz)": 12.978271799373287
+    },
+    {
+        "MIDI Note Number": 9,
+        "Note Symbol": "A-1",
+        "Frequency (Hz)": 13.75
+    },
+    {
+        "MIDI Note Number": 10,
+        "Note Symbol": "A#-1",
+        "Frequency (Hz)": 14.567617547440307
+    },
+    {
+        "MIDI Note Number": 11,
+        "Note Symbol": "B-1",
+        "Frequency (Hz)": 15.433853164253883
+    },
+    {
+        "MIDI Note Number": 12,
+        "Note Symbol": "C0",
+        "Frequency (Hz)": 16.351597831287414
+    },
+    {
+        "MIDI Note Number": 13,
+        "Note Symbol": "C#0",
+        "Frequency (Hz)": 17.323914436054505
+    },
+    {
+        "MIDI Note Number": 14,
+        "Note Symbol": "D0",
+        "Frequency (Hz)": 18.354047994837977
+    },
+    {
+        "MIDI Note Number": 15,
+        "Note Symbol": "D#0",
+        "Frequency (Hz)": 19.445436482630058
+    },
+    {
+        "MIDI Note Number": 16,
+        "Note Symbol": "E0",
+        "Frequency (Hz)": 20.601722307054366
+    },
+    {
+        "MIDI Note Number": 17,
+        "Note Symbol": "F0",
+        "Frequency (Hz)": 21.826764464562746
+    },
+    {
+        "MIDI Note Number": 18,
+        "Note Symbol": "F#0",
+        "Frequency (Hz)": 23.12465141947715
+    },
+    {
+        "MIDI Note Number": 19,
+        "Note Symbol": "G0",
+        "Frequency (Hz)": 24.499714748859326
+    },
+    {
+        "MIDI Note Number": 20,
+        "Note Symbol": "G#0",
+        "Frequency (Hz)": 25.956543598746574
+    },
+    {
+        "MIDI Note Number": 21,
+        "Note Symbol": "A0",
+        "Frequency (Hz)": 27.5
+    },
+    {
+        "MIDI Note Number": 22,
+        "Note Symbol": "A#0",
+        "Frequency (Hz)": 29.13523509488062
+    },
+    {
+        "MIDI Note Number": 23,
+        "Note Symbol": "B0",
+        "Frequency (Hz)": 30.86770632850775
+    },
+    {
+        "MIDI Note Number": 24,
+        "Note Symbol": "C1",
+        "Frequency (Hz)": 32.70319566257483
+    },
+    {
+        "MIDI Note Number": 25,
+        "Note Symbol": "C#1",
+        "Frequency (Hz)": 34.64782887210901
+    },
+    {
+        "MIDI Note Number": 26,
+        "Note Symbol": "D1",
+        "Frequency (Hz)": 36.70809598967594
+    },
+    {
+        "MIDI Note Number": 27,
+        "Note Symbol": "D#1",
+        "Frequency (Hz)": 38.890872965260115
+    },
+    {
+        "MIDI Note Number": 28,
+        "Note Symbol": "E1",
+        "Frequency (Hz)": 41.20344461410875
+    },
+    {
+        "MIDI Note Number": 29,
+        "Note Symbol": "F1",
+        "Frequency (Hz)": 43.653528929125486
+    },
+    {
+        "MIDI Note Number": 30,
+        "Note Symbol": "F#1",
+        "Frequency (Hz)": 46.2493028389543
+    },
+    {
+        "MIDI Note Number": 31,
+        "Note Symbol": "G1",
+        "Frequency (Hz)": 48.999429497718666
+    },
+    {
+        "MIDI Note Number": 32,
+        "Note Symbol": "G#1",
+        "Frequency (Hz)": 51.91308719749314
+    },
+    {
+        "MIDI Note Number": 33,
+        "Note Symbol": "A1",
+        "Frequency (Hz)": 55.0
+    },
+    {
+        "MIDI Note Number": 34,
+        "Note Symbol": "A#1",
+        "Frequency (Hz)": 58.27047018976124
+    },
+    {
+        "MIDI Note Number": 35,
+        "Note Symbol": "B1",
+        "Frequency (Hz)": 61.7354126570155
+    },
+    {
+        "MIDI Note Number": 36,
+        "Note Symbol": "C2",
+        "Frequency (Hz)": 65.40639132514966
+    },
+    {
+        "MIDI Note Number": 37,
+        "Note Symbol": "C#2",
+        "Frequency (Hz)": 69.29565774421802
+    },
+    {
+        "MIDI Note Number": 38,
+        "Note Symbol": "D2",
+        "Frequency (Hz)": 73.41619197935188
+    },
+    {
+        "MIDI Note Number": 39,
+        "Note Symbol": "D#2",
+        "Frequency (Hz)": 77.78174593052023
+    },
+    {
+        "MIDI Note Number": 40,
+        "Note Symbol": "E2",
+        "Frequency (Hz)": 82.4068892282175
+    },
+    {
+        "MIDI Note Number": 41,
+        "Note Symbol": "F2",
+        "Frequency (Hz)": 87.30705785825097
+    },
+    {
+        "MIDI Note Number": 42,
+        "Note Symbol": "F#2",
+        "Frequency (Hz)": 92.4986056779086
+    },
+    {
+        "MIDI Note Number": 43,
+        "Note Symbol": "G2",
+        "Frequency (Hz)": 97.99885899543733
+    },
+    {
+        "MIDI Note Number": 44,
+        "Note Symbol": "G#2",
+        "Frequency (Hz)": 103.82617439498628
+    },
+    {
+        "MIDI Note Number": 45,
+        "Note Symbol": "A2",
+        "Frequency (Hz)": 110.0
+    },
+    {
+        "MIDI Note Number": 46,
+        "Note Symbol": "A#2",
+        "Frequency (Hz)": 116.54094037952248
+    },
+    {
+        "MIDI Note Number": 47,
+        "Note Symbol": "B2",
+        "Frequency (Hz)": 123.47082531403103
+    },
+    {
+        "MIDI Note Number": 48,
+        "Note Symbol": "C3",
+        "Frequency (Hz)": 130.8127826502993
+    },
+    {
+        "MIDI Note Number": 49,
+        "Note Symbol": "C#3",
+        "Frequency (Hz)": 138.59131548843604
+    },
+    {
+        "MIDI Note Number": 50,
+        "Note Symbol": "D3",
+        "Frequency (Hz)": 146.8323839587038
+    },
+    {
+        "MIDI Note Number": 51,
+        "Note Symbol": "D#3",
+        "Frequency (Hz)": 155.56349186104046
+    },
+    {
+        "MIDI Note Number": 52,
+        "Note Symbol": "E3",
+        "Frequency (Hz)": 164.81377845643496
+    },
+    {
+        "MIDI Note Number": 53,
+        "Note Symbol": "F3",
+        "Frequency (Hz)": 174.61411571650194
+    },
+    {
+        "MIDI Note Number": 54,
+        "Note Symbol": "F#3",
+        "Frequency (Hz)": 184.9972113558172
+    },
+    {
+        "MIDI Note Number": 55,
+        "Note Symbol": "G3",
+        "Frequency (Hz)": 195.99771799087463
+    },
+    {
+        "MIDI Note Number": 56,
+        "Note Symbol": "G#3",
+        "Frequency (Hz)": 207.65234878997256
+    },
+    {
+        "MIDI Note Number": 57,
+        "Note Symbol": "A3",
+        "Frequency (Hz)": 220.0
+    },
+    {
+        "MIDI Note Number": 58,
+        "Note Symbol": "A#3",
+        "Frequency (Hz)": 233.08188075904496
+    },
+    {
+        "MIDI Note Number": 59,
+        "Note Symbol": "B3",
+        "Frequency (Hz)": 246.94165062806206
+    },
+    {
+        "MIDI Note Number": 60,
+        "Note Symbol": "C4",
+        "Frequency (Hz)": 261.6255653005986
+    },
+    {
+        "MIDI Note Number": 61,
+        "Note Symbol": "C#4",
+        "Frequency (Hz)": 277.1826309768721
+    },
+    {
+        "MIDI Note Number": 62,
+        "Note Symbol": "D4",
+        "Frequency (Hz)": 293.6647679174076
+    },
+    {
+        "MIDI Note Number": 63,
+        "Note Symbol": "D#4",
+        "Frequency (Hz)": 311.1269837220809
+    },
+    {
+        "MIDI Note Number": 64,
+        "Note Symbol": "E4",
+        "Frequency (Hz)": 329.6275569128699
+    },
+    {
+        "MIDI Note Number": 65,
+        "Note Symbol": "F4",
+        "Frequency (Hz)": 349.2282314330039
+    },
+    {
+        "MIDI Note Number": 66,
+        "Note Symbol": "F#4",
+        "Frequency (Hz)": 369.9944227116344
+    },
+    {
+        "MIDI Note Number": 67,
+        "Note Symbol": "G4",
+        "Frequency (Hz)": 391.99543598174927
+    },
+    {
+        "MIDI Note Number": 68,
+        "Note Symbol": "G#4",
+        "Frequency (Hz)": 415.3046975799451
+    },
+    {
+        "MIDI Note Number": 69,
+        "Note Symbol": "A4",
+        "Frequency (Hz)": 440.0
+    },
+    {
+        "MIDI Note Number": 70,
+        "Note Symbol": "A#4",
+        "Frequency (Hz)": 466.1637615180899
+    },
+    {
+        "MIDI Note Number": 71,
+        "Note Symbol": "B4",
+        "Frequency (Hz)": 493.8833012561241
+    },
+    {
+        "MIDI Note Number": 72,
+        "Note Symbol": "C5",
+        "Frequency (Hz)": 523.2511306011972
+    },
+    {
+        "MIDI Note Number": 73,
+        "Note Symbol": "C#5",
+        "Frequency (Hz)": 554.3652619537442
+    },
+    {
+        "MIDI Note Number": 74,
+        "Note Symbol": "D5",
+        "Frequency (Hz)": 587.3295358348151
+    },
+    {
+        "MIDI Note Number": 75,
+        "Note Symbol": "D#5",
+        "Frequency (Hz)": 622.2539674441618
+    },
+    {
+        "MIDI Note Number": 76,
+        "Note Symbol": "E5",
+        "Frequency (Hz)": 659.2551138257398
+    },
+    {
+        "MIDI Note Number": 77,
+        "Note Symbol": "F5",
+        "Frequency (Hz)": 698.4564628660078
+    },
+    {
+        "MIDI Note Number": 78,
+        "Note Symbol": "F#5",
+        "Frequency (Hz)": 739.9888454232688
+    },
+    {
+        "MIDI Note Number": 79,
+        "Note Symbol": "G5",
+        "Frequency (Hz)": 783.9908719634985
+    },
+    {
+        "MIDI Note Number": 80,
+        "Note Symbol": "G#5",
+        "Frequency (Hz)": 830.6093951598903
+    },
+    {
+        "MIDI Note Number": 81,
+        "Note Symbol": "A5",
+        "Frequency (Hz)": 880.0
+    },
+    {
+        "MIDI Note Number": 82,
+        "Note Symbol": "A#5",
+        "Frequency (Hz)": 932.3275230361799
+    },
+    {
+        "MIDI Note Number": 83,
+        "Note Symbol": "B5",
+        "Frequency (Hz)": 987.7666025122483
+    },
+    {
+        "MIDI Note Number": 84,
+        "Note Symbol": "C6",
+        "Frequency (Hz)": 1046.5022612023945
+    },
+    {
+        "MIDI Note Number": 85,
+        "Note Symbol": "C#6",
+        "Frequency (Hz)": 1108.7305239074883
+    },
+    {
+        "MIDI Note Number": 86,
+        "Note Symbol": "D6",
+        "Frequency (Hz)": 1174.6590716696303
+    },
+    {
+        "MIDI Note Number": 87,
+        "Note Symbol": "D#6",
+        "Frequency (Hz)": 1244.5079348883237
+    },
+    {
+        "MIDI Note Number": 88,
+        "Note Symbol": "E6",
+        "Frequency (Hz)": 1318.5102276514797
+    },
+    {
+        "MIDI Note Number": 89,
+        "Note Symbol": "F6",
+        "Frequency (Hz)": 1396.9129257320155
+    },
+    {
+        "MIDI Note Number": 90,
+        "Note Symbol": "F#6",
+        "Frequency (Hz)": 1479.9776908465376
+    },
+    {
+        "MIDI Note Number": 91,
+        "Note Symbol": "G6",
+        "Frequency (Hz)": 1567.981743926997
+    },
+    {
+        "MIDI Note Number": 92,
+        "Note Symbol": "G#6",
+        "Frequency (Hz)": 1661.2187903197805
+    },
+    {
+        "MIDI Note Number": 93,
+        "Note Symbol": "A6",
+        "Frequency (Hz)": 1760.0
+    },
+    {
+        "MIDI Note Number": 94,
+        "Note Symbol": "A#6",
+        "Frequency (Hz)": 1864.6550460723597
+    },
+    {
+        "MIDI Note Number": 95,
+        "Note Symbol": "B6",
+        "Frequency (Hz)": 1975.533205024496
+    },
+    {
+        "MIDI Note Number": 96,
+        "Note Symbol": "C7",
+        "Frequency (Hz)": 2093.004522404789
+    },
+    {
+        "MIDI Note Number": 97,
+        "Note Symbol": "C#7",
+        "Frequency (Hz)": 2217.4610478149766
+    },
+    {
+        "MIDI Note Number": 98,
+        "Note Symbol": "D7",
+        "Frequency (Hz)": 2349.31814333926
+    },
+    {
+        "MIDI Note Number": 99,
+        "Note Symbol": "D#7",
+        "Frequency (Hz)": 2489.0158697766474
+    },
+    {
+        "MIDI Note Number": 100,
+        "Note Symbol": "E7",
+        "Frequency (Hz)": 2637.02045530296
+    },
+    {
+        "MIDI Note Number": 101,
+        "Note Symbol": "F7",
+        "Frequency (Hz)": 2793.825851464031
+    },
+    {
+        "MIDI Note Number": 102,
+        "Note Symbol": "F#7",
+        "Frequency (Hz)": 2959.955381693075
+    },
+    {
+        "MIDI Note Number": 103,
+        "Note Symbol": "G7",
+        "Frequency (Hz)": 3135.9634878539946
+    },
+    {
+        "MIDI Note Number": 104,
+        "Note Symbol": "G#7",
+        "Frequency (Hz)": 3322.437580639561
+    },
+    {
+        "MIDI Note Number": 105,
+        "Note Symbol": "A7",
+        "Frequency (Hz)": 3520.0
+    },
+    {
+        "MIDI Note Number": 106,
+        "Note Symbol": "A#7",
+        "Frequency (Hz)": 3729.3100921447194
+    },
+    {
+        "MIDI Note Number": 107,
+        "Note Symbol": "B7",
+        "Frequency (Hz)": 3951.066410048992
+    },
+    {
+        "MIDI Note Number": 108,
+        "Note Symbol": "C8",
+        "Frequency (Hz)": 4186.009044809578
+    },
+    {
+        "MIDI Note Number": 109,
+        "Note Symbol": "C#8",
+        "Frequency (Hz)": 4434.922095629953
+    },
+    {
+        "MIDI Note Number": 110,
+        "Note Symbol": "D8",
+        "Frequency (Hz)": 4698.63628667852
+    },
+    {
+        "MIDI Note Number": 111,
+        "Note Symbol": "D#8",
+        "Frequency (Hz)": 4978.031739553295
+    },
+    {
+        "MIDI Note Number": 112,
+        "Note Symbol": "E8",
+        "Frequency (Hz)": 5274.04091060592
+    },
+    {
+        "MIDI Note Number": 113,
+        "Note Symbol": "F8",
+        "Frequency (Hz)": 5587.651702928062
+    },
+    {
+        "MIDI Note Number": 114,
+        "Note Symbol": "F#8",
+        "Frequency (Hz)": 5919.91076338615
+    },
+    {
+        "MIDI Note Number": 115,
+        "Note Symbol": "G8",
+        "Frequency (Hz)": 6271.926975707989
+    },
+    {
+        "MIDI Note Number": 116,
+        "Note Symbol": "G#8",
+        "Frequency (Hz)": 6644.875161279122
+    },
+    {
+        "MIDI Note Number": 117,
+        "Note Symbol": "A8",
+        "Frequency (Hz)": 7040.0
+    },
+    {
+        "MIDI Note Number": 118,
+        "Note Symbol": "A#8",
+        "Frequency (Hz)": 7458.620184289437
+    },
+    {
+        "MIDI Note Number": 119,
+        "Note Symbol": "B8",
+        "Frequency (Hz)": 7902.132820097988
+    },
+    {
+        "MIDI Note Number": 120,
+        "Note Symbol": "C9",
+        "Frequency (Hz)": 8372.018089619156
+    },
+    {
+        "MIDI Note Number": 121,
+        "Note Symbol": "C#9",
+        "Frequency (Hz)": 8869.844191259906
+    },
+    {
+        "MIDI Note Number": 122,
+        "Note Symbol": "D9",
+        "Frequency (Hz)": 9397.272573357044
+    },
+    {
+        "MIDI Note Number": 123,
+        "Note Symbol": "D#9",
+        "Frequency (Hz)": 9956.06347910659
+    },
+    {
+        "MIDI Note Number": 124,
+        "Note Symbol": "E9",
+        "Frequency (Hz)": 10548.081821211836
+    },
+    {
+        "MIDI Note Number": 125,
+        "Note Symbol": "F9",
+        "Frequency (Hz)": 11175.303405856126
+    },
+    {
+        "MIDI Note Number": 126,
+        "Note Symbol": "F#9",
+        "Frequency (Hz)": 11839.8215267723
+    },
+    {
+        "MIDI Note Number": 127,
+        "Note Symbol": "G9",
+        "Frequency (Hz)": 12543.853951415975
+    }
+]
