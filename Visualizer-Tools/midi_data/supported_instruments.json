@@ -1,0 +1,23 @@
+{
+  "cello_layout.json": [
+    "cello"
+  ],
+  "keyboard_layout.json": [
+    "accordion",
+    "celesta",
+    "clavichord",
+    "electric keyboard",
+    "glockenspiel",
+    "harpsichord",
+    "marimba",
+    "melodica",
+    "organ",
+    "piano",
+    "synthesizer",
+    "vibraphone",
+    "xylophone"
+  ],
+  "violin_layout.json": [
+    "violin"
+  ]
+}
