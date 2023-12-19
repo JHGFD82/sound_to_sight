@@ -2,8 +2,7 @@
 
 import os
 import argparse
-from . import (import_midi, clean_data, add_sections, calculate_note_lengths, generate_fake_notes, create_keyboard,
-               keyboard_side, BPMtoFPS)
+from . import (import_midi, clean_data, add_sections, calculate_note_lengths, BPMtoFPS)
 
 
 def main(file_list, sections=None, action_safe=False):
@@ -38,9 +37,7 @@ def main(file_list, sections=None, action_safe=False):
                           "spaces, or simply hit enter to continue: ").split())
     df = add_sections(df, sections, division, notes_per_bar)
     df = calculate_note_lengths(df)
-    fake_notes = list(generate_fake_notes())
-    keyboard = create_keyboard(df, fake_notes)
-    df = keyboard_side(df, keyboard)
+    # insert function for adding visual layout columns
     df = BPMtoFPS(df)
     df.to_csv('output.csv', index=False)
 
