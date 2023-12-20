@@ -1,674 +1,188 @@
-[
-    {
-        "MIDI Note Number": 55,
-        "position": {
-            "x": 0,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 56,
-        "position": {
-            "x": 1,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 57,
-        "position": {
-            "x": 2,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 58,
-        "position": {
-            "x": 3,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 59,
-        "position": {
-            "x": 4,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 60,
-        "position": {
-            "x": 5,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 61,
-        "position": {
-            "x": 6,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 62,
-        "position": {
-            "x": 7,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 63,
-        "position": {
-            "x": 8,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 64,
-        "position": {
-            "x": 9,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 65,
-        "position": {
-            "x": 10,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 66,
-        "position": {
-            "x": 11,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 67,
-        "position": {
-            "x": 12,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 68,
-        "position": {
-            "x": 13,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 69,
-        "position": {
-            "x": 14,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 70,
-        "position": {
-            "x": 15,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 71,
-        "position": {
-            "x": 16,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 72,
-        "position": {
-            "x": 17,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 73,
-        "position": {
-            "x": 18,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 74,
-        "position": {
-            "x": 19,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 75,
-        "position": {
-            "x": 20,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 76,
-        "position": {
-            "x": 21,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 77,
-        "position": {
-            "x": 22,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 78,
-        "position": {
-            "x": 23,
-            "y": 1
-        }
-    },
-    {
-        "MIDI Note Number": 62,
-        "position": {
-            "x": 0,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 63,
-        "position": {
-            "x": 1,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 64,
-        "position": {
-            "x": 2,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 65,
-        "position": {
-            "x": 3,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 66,
-        "position": {
-            "x": 4,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 67,
-        "position": {
-            "x": 5,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 68,
-        "position": {
-            "x": 6,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 69,
-        "position": {
-            "x": 7,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 70,
-        "position": {
-            "x": 8,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 71,
-        "position": {
-            "x": 9,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 72,
-        "position": {
-            "x": 10,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 73,
-        "position": {
-            "x": 11,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 74,
-        "position": {
-            "x": 12,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 75,
-        "position": {
-            "x": 13,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 76,
-        "position": {
-            "x": 14,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 77,
-        "position": {
-            "x": 15,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 78,
-        "position": {
-            "x": 16,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 79,
-        "position": {
-            "x": 17,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 80,
-        "position": {
-            "x": 18,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 81,
-        "position": {
-            "x": 19,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 82,
-        "position": {
-            "x": 20,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 83,
-        "position": {
-            "x": 21,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 84,
-        "position": {
-            "x": 22,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 85,
-        "position": {
-            "x": 23,
-            "y": 2
-        }
-    },
-    {
-        "MIDI Note Number": 69,
-        "position": {
-            "x": 0,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 70,
-        "position": {
-            "x": 1,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 71,
-        "position": {
-            "x": 2,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 72,
-        "position": {
-            "x": 3,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 73,
-        "position": {
-            "x": 4,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 74,
-        "position": {
-            "x": 5,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 75,
-        "position": {
-            "x": 6,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 76,
-        "position": {
-            "x": 7,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 77,
-        "position": {
-            "x": 8,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 78,
-        "position": {
-            "x": 9,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 79,
-        "position": {
-            "x": 10,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 80,
-        "position": {
-            "x": 11,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 81,
-        "position": {
-            "x": 12,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 82,
-        "position": {
-            "x": 13,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 83,
-        "position": {
-            "x": 14,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 84,
-        "position": {
-            "x": 15,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 85,
-        "position": {
-            "x": 16,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 86,
-        "position": {
-            "x": 17,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 87,
-        "position": {
-            "x": 18,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 88,
-        "position": {
-            "x": 19,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 89,
-        "position": {
-            "x": 20,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 90,
-        "position": {
-            "x": 21,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 91,
-        "position": {
-            "x": 22,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 92,
-        "position": {
-            "x": 23,
-            "y": 3
-        }
-    },
-    {
-        "MIDI Note Number": 76,
-        "position": {
-            "x": 0,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 77,
-        "position": {
-            "x": 1,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 78,
-        "position": {
-            "x": 2,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 79,
-        "position": {
-            "x": 3,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 80,
-        "position": {
-            "x": 4,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 81,
-        "position": {
-            "x": 5,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 82,
-        "position": {
-            "x": 6,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 83,
-        "position": {
-            "x": 7,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 84,
-        "position": {
-            "x": 8,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 85,
-        "position": {
-            "x": 9,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 86,
-        "position": {
-            "x": 10,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 87,
-        "position": {
-            "x": 11,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 88,
-        "position": {
-            "x": 12,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 89,
-        "position": {
-            "x": 13,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 90,
-        "position": {
-            "x": 14,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 91,
-        "position": {
-            "x": 15,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 92,
-        "position": {
-            "x": 16,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 93,
-        "position": {
-            "x": 17,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 94,
-        "position": {
-            "x": 18,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 95,
-        "position": {
-            "x": 19,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 96,
-        "position": {
-            "x": 20,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 97,
-        "position": {
-            "x": 21,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 98,
-        "position": {
-            "x": 22,
-            "y": 4
-        }
-    },
-    {
-        "MIDI Note Number": 99,
-        "position": {
-            "x": 23,
-            "y": 4
-        }
-    }
-]
+{
+    "55": [
+        {"x": 0, "y": 1}
+    ],
+    "56": [
+        {"x": 1, "y": 1}
+    ],
+    "57": [
+        {"x": 2, "y": 1}
+    ],
+    "58": [
+        {"x": 3, "y": 1}
+    ],
+    "59": [
+        {"x": 4, "y": 1}
+    ],
+    "60": [
+        {"x": 5, "y": 1}
+    ],
+    "61": [
+        {"x": 6, "y": 1}
+    ],
+    "62": [
+        {"x": 7, "y": 1},
+        {"x": 0, "y": 2}
+    ],
+    "63": [
+        {"x": 8, "y": 1},
+        {"x": 1, "y": 2}
+    ],
+    "64": [
+        {"x": 9, "y": 1},
+        {"x": 2, "y": 2}
+    ],
+    "65": [
+        {"x": 10, "y": 1},
+        {"x": 3, "y": 2}
+    ],
+    "66": [
+        {"x": 11, "y": 1},
+        {"x": 4, "y": 2}
+    ],
+    "67": [
+        {"x": 12, "y": 1},
+        {"x": 5, "y": 2}
+    ],
+    "68": [
+        {"x": 13, "y": 1},
+        {"x": 6, "y": 2}
+    ],
+    "69": [
+        {"x": 14, "y": 1},
+        {"x": 7, "y": 2},
+        {"x": 0, "y": 3}
+    ],
+    "70": [
+        {"x": 15, "y": 1},
+        {"x": 8, "y": 2},
+        {"x": 1, "y": 3}
+    ],
+    "71": [
+        {"x": 16, "y": 1},
+        {"x": 9, "y": 2},
+        {"x": 2, "y": 3}
+    ],
+    "72": [
+        {"x": 17, "y": 1},
+        {"x": 10, "y": 2},
+        {"x": 3, "y": 3}
+    ],
+    "73": [
+        {"x": 18, "y": 1},
+        {"x": 11, "y": 2},
+        {"x": 4, "y": 3}
+    ],
+    "74": [
+        {"x": 19, "y": 1},
+        {"x": 12, "y": 2},
+        {"x": 5, "y": 3}
+    ],
+    "75": [
+        {"x": 20, "y": 1},
+        {"x": 13, "y": 2},
+        {"x": 6, "y": 3}
+    ],
+    "76": [
+        {"x": 21, "y": 1},
+        {"x": 14, "y": 2},
+        {"x": 7, "y": 3},
+        {"x": 0, "y": 4}
+    ],
+    "77": [
+        {"x": 22, "y": 1},
+        {"x": 15, "y": 2},
+        {"x": 8, "y": 3},
+        {"x": 1, "y": 4}
+    ],
+    "78": [
+        {"x": 23, "y": 1},
+        {"x": 16, "y": 2},
+        {"x": 9, "y": 3},
+        {"x": 2, "y": 4}
+    ],
+    "79": [
+        {"x": 17, "y": 2},
+        {"x": 10, "y": 3},
+        {"x": 3, "y": 4}
+    ],
+    "80": [
+        {"x": 18, "y": 2},
+        {"x": 11, "y": 3},
+        {"x": 4, "y": 4}
+    ],
+    "81": [
+        {"x": 19, "y": 2},
+        {"x": 12, "y": 3},
+        {"x": 5, "y": 4}
+    ],
+    "82": [
+        {"x": 20, "y": 2},
+        {"x": 13, "y": 3},
+        {"x": 6, "y": 4}
+    ],
+    "83": [
+        {"x": 21, "y": 2},
+        {"x": 14, "y": 3},
+        {"x": 7, "y": 4}
+    ],
+    "84": [
+        {"x": 22, "y": 2},
+        {"x": 15, "y": 3},
+        {"x": 8, "y": 4}
+    ],
+    "85": [
+        {"x": 23, "y": 2},
+        {"x": 16, "y": 3},
+        {"x": 9, "y": 4}
+    ],
+    "86": [
+        {"x": 17, "y": 3},
+        {"x": 10, "y": 4}
+    ],
+    "87": [
+        {"x": 18, "y": 3},
+        {"x": 11, "y": 4}
+    ],
+    "88": [
+        {"x": 19, "y": 3},
+        {"x": 12, "y": 4}
+    ],
+    "89": [
+        {"x": 20, "y": 3},
+        {"x": 13, "y": 4}
+    ],
+    "90": [
+        {"x": 21, "y": 3},
+        {"x": 14, "y": 4}
+    ],
+    "91": [
+        {"x": 22, "y": 3},
+        {"x": 15, "y": 4}
+    ],
+    "92": [
+        {"x": 23, "y": 3},
+        {"x": 16, "y": 4}
+    ],
+    "93": [
+        {"x": 17, "y": 4}
+    ],
+    "94": [
+        {"x": 18, "y": 4}
+    ],
+    "95": [
+        {"x": 19, "y": 4}
+    ],
+    "96": [
+        {"x": 20, "y": 4}
+    ],
+    "97": [
+        {"x": 21, "y": 4}
+    ],
+    "98": [
+        {"x": 22, "y": 4}
+    ],
+    "99": [
+        {"x": 23, "y": 4}
+    ]
+}
