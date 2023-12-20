@@ -2,7 +2,8 @@
 
 import os
 import argparse
-from . import (import_midi, clean_data, add_sections, calculate_note_lengths, BPMtoFPS)
+from . import (import_midi, clean_data, add_sections, calculate_note_lengths,
+               assign_instrument_json, extract_positions, BPMtoFPS)
 
 
 def main(file_list, sections=None, action_safe=False):
@@ -37,7 +38,8 @@ def main(file_list, sections=None, action_safe=False):
                           "spaces, or simply hit enter to continue: ").split())
     df = add_sections(df, sections, division, notes_per_bar)
     df = calculate_note_lengths(df)
-    # insert function for adding visual layout columns
+    instruments = assign_instrument_json(df)
+    df = extract_positions(df, instruments)
     df = BPMtoFPS(df)
     df.to_csv('output.csv', index=False)
 
