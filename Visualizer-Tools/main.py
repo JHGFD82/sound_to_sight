@@ -38,8 +38,8 @@ def main(file_list, sections=None, action_safe=False):
                           "spaces, or simply hit enter to continue: ").split())
     df = add_sections(df, sections, division, notes_per_bar)
     df = calculate_note_lengths(df)
-    instruments = assign_instrument_json(df)
-    df = extract_positions(df, instruments)
+    layouts = assign_instrument_json(df)
+    df = extract_positions(df, layouts)
     df = BPMtoFPS(df)
     df.to_csv('output.csv', index=False)
 
