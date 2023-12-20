@@ -6,7 +6,7 @@ def clean_data(df):
 
     Cleans and processes the given DataFrame.
 
-    Args:
+    Parameters:
         df (pandas.DataFrame): The DataFrame containing the data to be cleaned and processed.
 
     Returns:
