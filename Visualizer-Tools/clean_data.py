@@ -17,10 +17,11 @@ def clean_data(df):
         ValueError: If the DataFrame is missing a 'Header' row or a 'Time_signature' row.
 
     """
-    def convert_columns_to_integer(dataframe):
+    def prep_for_extraction(dataframe):
         for column in ['time', 'num', 'note', 'velocity', 'extra1', 'extra2', 'player']:
             dataframe[column] = pd.to_numeric(dataframe[column], errors='coerce').astype('Int32')
         dataframe['status'] = dataframe['status'].str.strip()
+        dataframe['instrument'] = dataframe['instrument'].str.replace(r'\d+', '', regex=True).str.strip().str.lower()
         return dataframe
 
     def extract_relevant_data(dataframe):
@@ -36,13 +37,13 @@ def clean_data(df):
 
         valid_statuses = ['Note_on_c', 'Note_off_c']
         dataframe_filtered = dataframe[dataframe['status'].isin(valid_statuses)][
-            ['time', 'status', 'note', 'velocity', 'player']]
+            ['time', 'status', 'note', 'velocity', 'player', 'instrument']]
 
         dataframe_filtered = dataframe_filtered.reset_index(drop=True)
 
         return dataframe_filtered, division_extract, notes_per_bar_extract
 
-    df = convert_columns_to_integer(df)
+    df = prep_for_extraction(df)
     df, division, notes_per_bar = extract_relevant_data(df)
 
     return df, division, notes_per_bar
