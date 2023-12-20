@@ -38,7 +38,7 @@ def calculate_note_lengths(df):
     df['length'] = pd.Series([0] * len(df), dtype='Int32')
 
     def process_note(row):
-        time, status, note = row[0], row[1], row[2]
+        time, status, note = row.iloc[0], row.iloc[1], row.iloc[2]
         if status == NOTE_ON_STATUS:
             note_start_times[note] = (time, row.name)
         elif status == NOTE_OFF_STATUS:
