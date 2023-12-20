@@ -1,24 +1,28 @@
 import json
+import pandas as pd
+
+INSTRUMENTS_MAPPING_FILE_PATH = "midi_data/supported_instruments.json"
 
 
-def assign_instruments(dataframe):
-    json_file_path = "midi_data/supported_instruments.json"
-    # Load the JSON file
-    with open(json_file_path) as json_file:
+def assign_instrument_json(dataframe):
+    df_copy = dataframe.copy()
+
+    with open(INSTRUMENTS_MAPPING_FILE_PATH) as json_file:
         data = json.load(json_file)
 
-    # Create a new dictionary
-    new_dict = {}
+    # Create a dictionary to map instrument to its key
+    instrument_to_key = {instrument: key for key, instruments in data.items() for instrument in instruments}
 
-    # Iterate over the rows of the dataframe
-    for i, row in dataframe.iterrows():
-        # Get the corresponding key for each value in the 'instrument' column
-        for key, value in data.items():
-            if row['instrument'] in value:
-                player_number = row['player']
+    try:
+        # Leverage pandas map function for efficient mapping
+        df_copy['player_instrument'] = df_copy['instrument'].map(instrument_to_key)
+    except KeyError as e:
+        raise KeyError(f"An instrument in the dataframe does not exist in the mapping file: {e}")
 
-                # Save the key as a value in the new dictionary, with the 'player' being the key
-                new_dict[player_number] = key
+    # Convert 'player' and 'player_instrument' columns to dictionary
+    try:
+        player_to_instrument = df_copy.set_index('player')['player_instrument'].to_dict()
+    except KeyError as e:
+        raise KeyError("The provided dataframe is missing required 'player' columns: {e}")
 
-    # Return the new dictionary
-    return new_dict
+    return player_to_instrument
