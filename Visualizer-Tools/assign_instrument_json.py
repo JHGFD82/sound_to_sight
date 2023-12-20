@@ -23,6 +23,6 @@ def assign_instrument_json(dataframe):
     try:
         player_to_instrument = df_copy.set_index('player')['player_instrument'].to_dict()
     except KeyError as e:
-        raise KeyError("The provided dataframe is missing required 'player' columns: {e}")
+        raise KeyError(f"The provided dataframe is missing required 'player' columns: {e}")
 
     return player_to_instrument
