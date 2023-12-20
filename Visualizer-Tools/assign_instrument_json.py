@@ -1,17 +1,29 @@
 import json
-import pandas as pd
 
 INSTRUMENTS_MAPPING_FILE_PATH = "midi_data/supported_instruments.json"
 
 
 def assign_instrument_json(dataframe):
+    """
+    Assigns instruments to players based on a mapping file.
+
+    Parameters:
+        dataframe (pandas.DataFrame): Pandas DataFrame containing player and instrument information.
+
+    Returns:
+        A dictionary mapping players to their assigned instruments.
+
+    Raises:
+        KeyError: If an instrument in the dataframe does not exist in the mapping file, or if the provided
+        dataframe is missing the required 'player' column.
+    """
     df_copy = dataframe.copy()
 
     with open(INSTRUMENTS_MAPPING_FILE_PATH) as json_file:
-        data = json.load(json_file)
+        instrument_data = json.load(json_file)
 
     # Create a dictionary to map instrument to its key
-    instrument_to_key = {instrument: key for key, instruments in data.items() for instrument in instruments}
+    instrument_to_key = {instrument: key for key, instruments in instrument_data.items() for instrument in instruments}
 
     try:
         # Leverage pandas map function for efficient mapping
