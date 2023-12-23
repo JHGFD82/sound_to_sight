@@ -3,7 +3,7 @@
 import os
 import argparse
 from . import (import_midi, clean_data, add_sections, calculate_note_lengths,
-               assign_instrument_json, extract_positions, BPMtoFPS)
+               assign_instrument_json, extract_positions)
 
 
 def main(file_list, sections=None, action_safe=False):
@@ -40,7 +40,6 @@ def main(file_list, sections=None, action_safe=False):
     df = calculate_note_lengths(df)
     layouts = assign_instrument_json(df)
     df = extract_positions(df, layouts)
-    df = BPMtoFPS(df)
     df.to_csv('output.csv', index=False)
 
 
