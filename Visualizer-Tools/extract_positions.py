@@ -14,13 +14,13 @@ def extract_positions(df, layouts, chunk_size=100):
             for pos in current_note_positions]
         return current_note_positions[np.argmin(distances)]
 
-    def process_chunk(chunked, layout_list, prev_position=None):
+    def process_chunk(chunk, layout_list, prev_position=None):
 
-        def process_row(per_row, p_position):
-            player = per_row['player']
-            note = per_row['note']
+        def process_row(row, p_position):
+            player = row['player']
+            note = row['note']
             layout_file = layout_list.get(player)
-            per_position = {'x': None, 'y': None}
+            position = {'x': None, 'y': None}
 
             if layout_file:
                 layout_path = os.path.join('midi_data/visual_layouts', layout_file)
@@ -31,14 +31,18 @@ def extract_positions(df, layouts, chunk_size=100):
                     note_positions = [entry[str(note)] for entry in layout if str(note) in entry]
                     if note_positions:
                         if 'keyboard' in layout_file:
-                            per_position = note_positions[0]
+                            position = note_positions[0]
                         elif 'violin' in layout_file:
-                            per_position = find_closest_position(note_positions, p_position)
+                            position = find_closest_position(note_positions, p_position)
 
-            return per_position, per_position
+                else:
+                    raise FileNotFoundError(f"Layout file {layout_file} not found at {layout_path}")
+
+            # Return the calculated position and the same position to be used as previous position
+            return position, position
 
         updated_positions = []
-        for index, row in chunked.iterrows():
+        for index, row in chunk.iterrows():
             position, prev_position = process_row(row, prev_position)
             updated_positions.append([position.get('x'), position.get('y')])
 
