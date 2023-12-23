@@ -18,9 +18,7 @@ setup(
     long_description_content_type="text/markdown",
     classifiers=[
         "Programming Language :: Python :: 3.11",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        "Development Status :: 2 - Pre-Alpha",
         "Topic :: Artistic Software",
         "Topic :: Multimedia :: Sound/Audio :: MIDI",
         "Topic :: Multimedia :: Video"
