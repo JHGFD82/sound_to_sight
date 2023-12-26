@@ -32,4 +32,4 @@ No person is an island. Paul Simon was wrong, he is not a rock, he is a person. 
 
 ## Addendum
 
-Seriously, I just converted this from only being a small series of steps for my own use to a potential Python package that I coudl be proud of if I put in the work. Cut me some slack if I don't write documentation like it'll apply to every written language just yet.
+Seriously, I just converted this from only being a small series of steps for my own use to a potential Python package that I could be proud of if I put in the work. Cut me some slack if I don't write documentation like it'll apply to every written language just yet.
