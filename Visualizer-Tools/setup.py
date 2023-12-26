@@ -6,7 +6,7 @@ setup(
     author='Jeff Heller (JHGFD)',
     author_email='jeffheller@jhgfd.com',
     packages=find_packages(),
-    install_requires=['pandas'],
+    install_requires=['pandas', 'BPMtoFPS'],
     entry_points={
         'console_scripts': [
             'Visualizer-Tools = Visualizer-Tools.main:main',
