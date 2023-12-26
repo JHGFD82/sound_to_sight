@@ -49,5 +49,5 @@ def calculate_note_lengths(df):
 
     df.apply(process_note, axis=1)
 
-    df = df[df['status'] != NOTE_OFF_STATUS].reset_index(drop=True)
+    df = df[df['status'] != NOTE_OFF_STATUS].reset_index(drop=True).drop('status', axis=1)
     return df
