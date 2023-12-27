@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='Visualizer Tools',
+    name='Sound to Sight',
     version='0.1.0',
     author='Jeff Heller (JHGFD)',
     author_email='jeffheller@jhgfd.com',

@@ -1,4 +1,4 @@
-# Visualizer Tools
+# Sound to Sight
 
 These tools are developed to assist in the process of turning music data into video projects. This includes the individual tasks of importing CSV files converted from MIDI using [MIDICSV](https://www.fourmilab.ch/webtools/midicsv/), cleaning and parsing the data, addressing potential visual quirks for keyboard-based instruments, assigning values based on spatial differences between notes, and exporting the data for use in other applications.
 
