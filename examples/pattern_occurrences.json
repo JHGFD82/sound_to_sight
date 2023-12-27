@@ -1,0 +1,12 @@
+{
+  "pattern_occurrences": [
+    {
+      "pattern_hash": "hash123",
+      "player": 1,
+      "section": 1,
+      "instrument": "marimba",
+      "total_repetitions": 5
+    },
+    // More pattern occurrences...
+  ]
+}

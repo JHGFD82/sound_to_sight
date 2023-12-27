@@ -1,0 +1,10 @@
+{
+  "pattern_timings": [
+    {
+      "pattern_hash": "hash123",
+      "start_time": 480,  // Absolute start time of this pattern occurrence
+      "player": 1  // Player number
+    },
+    // More pattern timings for each occurrence...
+  ]
+}

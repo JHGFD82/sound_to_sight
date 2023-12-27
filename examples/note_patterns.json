@@ -1,0 +1,18 @@
+{
+  "patterns": [
+    {
+      "pattern_hash": "hash123",
+      "notes": [
+        {
+          "note": 65,  // MIDI note number as a numerical value
+          "duration": 240,  // Duration as a numerical value
+          "velocity": 74,  // Velocity as a numerical value
+          "x": 38.0,  // X coordinate
+          "y": 0  // Y coordinate
+        },
+        // More notes...
+      ]
+    },
+    // More patterns...
+  ]
+}
