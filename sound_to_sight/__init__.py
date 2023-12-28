@@ -6,3 +6,4 @@ from .calculate_note_lengths import calculate_note_lengths
 from .assign_instrument_json import assign_instrument_json
 from .extract_positions import extract_positions
 from .add_timings import add_timings
+from .create_jsons import create_jsons
