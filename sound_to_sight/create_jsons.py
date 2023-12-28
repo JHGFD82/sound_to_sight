@@ -1,13 +1,16 @@
 import json
 import mmh3
+import pandas as pd
+from tqdm import tqdm
 
 
 def convert_pattern_to_hashable(pattern_df):
-    return [(int(row['note']), int(row['velocity']), int(row['length'])) for index, row in pattern_df.iterrows()]
+    return list(
+        zip(pattern_df['note'].astype(int), pattern_df['velocity'].astype(int), pattern_df['length'].astype(int)))
 
 
 def hash_pattern(pattern):
-    pattern_string = "_".join([str(item) for item in pattern])
+    pattern_string = "_".join(map(str, pattern))
     return mmh3.hash(pattern_string)
 
 
