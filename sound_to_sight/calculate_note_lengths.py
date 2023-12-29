@@ -50,4 +50,14 @@ def calculate_note_lengths(df):
     df.apply(process_note, axis=1)
 
     df = df[df['status'] != NOTE_OFF_STATUS].reset_index(drop=True).drop('status', axis=1)
+
+    return df
+
+
+def add_measure_time(df, division, notes_per_bar):
+    ticks_per_pattern = division * notes_per_bar
+
+    df['measure_time'] = pd.Series([0] * len(df), dtype='Int32')
+    df['measure_time'] = df['time'] % ticks_per_pattern
+
     return df
