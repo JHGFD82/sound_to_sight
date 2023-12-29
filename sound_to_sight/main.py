@@ -52,9 +52,13 @@ def main(file_list, bpm, fps, tpb, sections=None, action_safe=False):
     # MEASURE ANALYSIS
     df = calculate_note_lengths(df)
     df = add_measure_time(df, division, notes_per_bar)
-    print(df)
-    # layouts = assign_instrument_json(df)
-    # df = extract_positions(df, layouts)
+
+    details, timing = create_jsons(df, division, notes_per_bar)
+
+    # EXTRACT POSITIONS
+
+    layouts = assign_instrument_json(details)
+    df = extract_positions(df, layouts)
     # df = add_timings(df, bpm, fps, tpb)
     # df.to_csv('output.csv', index=False)
 
