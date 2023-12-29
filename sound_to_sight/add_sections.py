@@ -1,4 +1,4 @@
-def add_sections(dataframe, section_bar_positions, bar_division, notes_per_bar):
+def add_sections(dataframe, bar_division, notes_per_bar, section_bar_positions=None):
     """
     Adds a 'section' column to the given dataframe based on the provided section bar positions, bar division, and notes
     per bar.
