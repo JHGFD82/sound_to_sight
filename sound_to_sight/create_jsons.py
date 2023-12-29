@@ -74,10 +74,10 @@ def create_pattern_timing_json(df, patterns, notes_per_bar, division):
 
 def create_jsons(df, notes_per_bar, division):
     patterns, pattern_details = identify_and_hash_patterns(df, notes_per_bar, division)
-    pattern_timing_json = create_pattern_timing_json(df, patterns, notes_per_bar, division)
+    pattern_timing = create_pattern_timing_json(df, patterns, notes_per_bar, division)
 
     # Writing JSON files
     with open('pattern_details.json', 'w') as file:
         json.dump(pattern_details, file)
-    with open('pattern_timing_json.json', 'w') as file:
-        json.dump(pattern_timing_json, file)
+    with open('pattern_timing.json', 'w') as file:
+        json.dump(pattern_timing, file)
