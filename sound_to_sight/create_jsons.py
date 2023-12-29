@@ -79,3 +79,5 @@ def create_jsons(df, notes_per_bar, division):
         json.dump(pattern_details, file)
     with open('pattern_timing.json', 'w') as file:
         json.dump(pattern_timing, file)
+
+    return pattern_details, pattern_timing
