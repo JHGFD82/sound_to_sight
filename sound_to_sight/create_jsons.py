@@ -26,7 +26,8 @@ def identify_and_hash_patterns(df, notes_per_bar, division):
         df_player = df[df['player'] == player]
 
         max_time = df_player['time'].max()
-        for start_tick in range(0, max_time, ticks_per_pattern):
+        for start_tick in tqdm(range(0, max_time, ticks_per_pattern),
+                               leave=False, colour='blue', desc='Hashing patterns'):
             end_tick = start_tick + ticks_per_pattern
             pattern_df = df_player[(df_player['time'] >= start_tick) & (df_player['time'] < end_tick)]
             pattern = convert_pattern_to_hashable(pattern_df)
@@ -54,7 +55,8 @@ def create_pattern_timing_json(df, patterns, notes_per_bar, division):
         df_player = df[df['player'] == player]
 
         max_time = df_player['time'].max()
-        for start_tick in tqdm(range(0, max_time, ticks_per_pattern)):
+        for start_tick in tqdm(range(0, max_time, ticks_per_pattern),
+                               leave=False, colour='blue', desc='Timing patterns'):
             end_tick = start_tick + ticks_per_pattern
             pattern_df = df_player[(df_player['time'] >= start_tick) & (df_player['time'] < end_tick)]
             segment_pattern = convert_pattern_to_hashable(pattern_df)
