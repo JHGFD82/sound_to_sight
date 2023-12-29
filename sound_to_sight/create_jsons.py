@@ -33,10 +33,8 @@ def identify_and_hash_patterns(df, notes_per_bar, division):
             pattern = convert_pattern_to_hashable(pattern_df)
             pattern_hash = hash_pattern(pattern)
 
-            pattern_key = (int(player), pattern_hash)
-
-            if pattern_key not in patterns:
-                patterns[pattern_key] = pattern
+            if pattern_hash not in patterns:
+                patterns[pattern_hash] = pattern
                 pattern_details.append({
                     "pattern_hash": pattern_hash,
                     "notes": pattern
