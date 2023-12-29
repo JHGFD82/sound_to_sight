@@ -6,7 +6,10 @@ from tqdm import tqdm
 
 def convert_pattern_to_hashable(pattern_df):
     return list(
-        zip(pattern_df['note'].astype(int), pattern_df['velocity'].astype(int), pattern_df['length'].astype(int)))
+        zip(pattern_df['measure_time'].astype(int),
+            pattern_df['note'].astype(int),
+            pattern_df['velocity'].astype(int),
+            pattern_df['length'].astype(int)))
 
 
 def hash_pattern(pattern):
