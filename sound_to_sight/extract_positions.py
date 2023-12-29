@@ -52,7 +52,7 @@ def extract_positions(df, layouts, chunk_size=100):
     processed_chunks = []
     previous_position = None
 
-    for chunk in tqdm(chunks):
+    for chunk in tqdm(chunks, leave=False, desc='Setting note positions', color='blue'):
         processed_chunk, previous_position = process_chunk(chunk, layouts, previous_position)
         processed_chunks.append(processed_chunk)
 
