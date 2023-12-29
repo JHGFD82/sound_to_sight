@@ -3,7 +3,7 @@
 import os
 import argparse
 from sound_to_sight import (import_midi, clean_data, add_sections, calculate_note_lengths, add_measure_time,
-                            assign_instrument_json, extract_positions, add_timings)
+                            assign_instrument_json, extract_positions, add_timings, create_jsons)
 
 TPB = 480
 
