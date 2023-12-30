@@ -1,7 +1,7 @@
 import os
 import argparse
 from sound_to_sight import (import_midi, clean_data, add_sections, calculate_note_lengths, add_measure_time,
-                            gather_instruments, create_jsons, extract_positions, convert_timing)
+                            gather_instruments, create_jsons, extract_positions, convert_timing, export_jsons)
 
 TPB = 480
 
@@ -62,7 +62,9 @@ def main(file_list, bpm, fps, tpb, sections=None, action_safe=False):
 
     # CONVERT TIMING
     details, timing = convert_timing(details, timing, division, bpm, fps)
-    print(details)
+    export_jsons(details, 'pattern_details')
+    export_jsons(timing, 'pattern_timing')
+    export_jsons(player_info, 'player_info')
 
 # if __name__ == "__main__":
 #     parser = argparse.ArgumentParser(description="Process some files.")

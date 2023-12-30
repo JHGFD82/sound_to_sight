@@ -126,29 +126,4 @@ def create_jsons(df, notes_per_bar, division, layouts, reversed_instruments):
     pattern_timing = create_pattern_timing_json(df, patterns, notes_per_bar, division)
     player_hash_info = create_player_hash_json(df, pattern_timing)
 
-    # import numpy as np
-    #
-    # def handle_np_int(data):
-    #     if isinstance(data, np.int32):
-    #         return int(data)
-    #     elif isinstance(data, dict):
-    #         return {handle_np_int(key): handle_np_int(value) for key, value in data.items()}
-    #     elif isinstance(data, list):
-    #         return [handle_np_int(element) for element in data]
-    #     else:
-    #         return data
-    #
-    # pattern_details = handle_np_int(pattern_details)
-    # pattern_timing = handle_np_int(pattern_timing)
-    # player_hash_info = handle_np_int(player_hash_info)
-    #
-    # with open('pattern_details.json', 'w') as file:
-    #     json.dump(pattern_details, file, indent=4)
-    #
-    # with open('pattern_timing.json', 'w') as file:
-    #     json.dump(pattern_timing, file, indent=4)
-    #
-    # with open('player_hash_info.json', 'w') as file:
-    #     json.dump(player_hash_info, file, indent=4)
-
     return pattern_details, pattern_timing, player_hash_info

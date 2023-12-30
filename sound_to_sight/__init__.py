@@ -8,3 +8,4 @@ from .gather_instruments import gather_instruments
 from .assemble_dictionaries import create_jsons
 from .extract_positions import extract_positions
 from .convert_timing import convert_timing
+from .export_jsons import export_jsons
