@@ -18,7 +18,7 @@ def extract_positions(pattern_details, layouts_dir=LAYOUTS_DIR):
                 note = list(note)  # Convert tuple to list
                 note_value = note[1]  # The second value in the note is the note value
                 if str(note_value) in layout:
-                    note.append(tuple(layout[str(note_value)].values()))  # Add layout coordinates as a tuple to the note
+                    note.append(tuple(layout[str(note_value)].values()))
                 pattern['notes'][i] = tuple(note)  # Convert back to tuple and replace the original note
 
     return pattern_details
