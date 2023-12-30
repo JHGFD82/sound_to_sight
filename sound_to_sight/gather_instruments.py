@@ -1,16 +1,14 @@
-import numpy as np
 import json
-import os
 
 INSTRUMENTS_MAPPING_FILE_PATH = "midi_data/supported_instruments.json"
 
 
-def gather_instruments(instrument_dict):
+def gather_instruments(dataframe):
     """
     Assigns instruments to players based on a mapping file.
 
     Parameters:
-        instrument_dict (dict): Dictionary containing player and instrument information.
+        dataframe (DataFrame): contains player and instrument information.
 
     Returns:
         A dictionary mapping players to their assigned instruments.
@@ -18,7 +16,7 @@ def gather_instruments(instrument_dict):
     Raises:
         KeyError: If an instrument in the reference dictionary does not exist in the mapping file.
     """
-    output_dict = {}
+    df_copy = dataframe.copy()
 
     with open(INSTRUMENTS_MAPPING_FILE_PATH) as json_file:
         instrument_data = json.load(json_file)
@@ -26,13 +24,16 @@ def gather_instruments(instrument_dict):
     # Create a dictionary to map instrument to its key
     instrument_to_key = {instrument: key for key, instruments in instrument_data.items() for instrument in instruments}
 
-    for player, player_data in instrument_dict.items():
-        instrument = player_data.get('instrument')
-        if instrument not in instrument_to_key:
-            raise KeyError(
-                f"An instrument in the reference dictionary does not exist in the mapping file: {instrument}")
+    try:
+        # Leverage pandas map function for efficient mapping
+        df_copy['player_instrument'] = df_copy['instrument'].map(instrument_to_key)
+    except KeyError as e:
+        raise KeyError(f"An instrument in the dataframe does not exist in the mapping file: {e}")
 
-        # Add player and their instrument to our output dict
-        output_dict[player] = instrument_to_key[instrument]
+    # Convert 'player' and 'player_instrument' columns to dictionary
+    try:
+        player_to_instrument = df_copy.set_index('player')['player_instrument'].to_dict()
+    except KeyError as e:
+        raise KeyError(f"The provided dataframe is missing required 'player' columns: {e}")
 
-    return output_dict
+    return player_to_instrument, instrument_to_key
