@@ -14,8 +14,7 @@ def main(file_list, bpm, fps, sections=None, action_safe=False):
     Parameters:
         file_list (list): A list of file paths containing MIDI files
         bpm (int): The beats per minute of the song being analyzed
-        fps (int): The frames per second of the video project
-        tpb (int): The ticks per beat
+        fps (float): The frames per second of the video project
         sections (list): A list of sections which may indicate visual separation in video projects
         action_safe (bool): If true, the script will accommodate for the action safe zone in the video (usually 5% of
             the video's pixel resolution)
@@ -73,10 +72,9 @@ def main(file_list, bpm, fps, sections=None, action_safe=False):
 #                         help="Boolean to accommodate action safe zones in video pixel resolution")
 #     parser.add_argument('-b', '--bpm', type=float, required=True, help='Beats per minute of the song')
 #     parser.add_argument('-f', '--fps', type=float, required=True, help='Frames per second of the video')
-#     parser.add_argument('-tpb', '--ticks_per_beat', default=TPB, type=int,
-#                         help='Number of ticks per beat (default is 480)')
 #     args = parser.parse_args()
 #
-#     main(args.input_files, args.bpm, args.fps, args.ticks_per_beat, args.sections, args.action_safe)
+#     main(args.input_files, args.bpm, args.fps, args.sections, args.action_safe)
 
-main(['../../Six Marimbas/Music/Six.csv'], 192, 29.97, sections=[329, 676])
+# main(['../../Six Marimbas/Music/Six.csv'], 192, 29.97, sections=[329, 676])
+main(['../tests/CSVs/Music for 18 Musicians (Section IV-VI) v2.csv'], 104, 29.97)
