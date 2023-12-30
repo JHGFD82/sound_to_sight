@@ -11,7 +11,7 @@ def gather_instruments(dataframe):
         dataframe (DataFrame): contains player and instrument information.
 
     Returns:
-        A dictionary mapping players to their assigned instruments.
+        A dictionary mapping instruments to their keys.
 
     Raises:
         KeyError: If an instrument in the reference dictionary does not exist in the mapping file.
@@ -30,10 +30,4 @@ def gather_instruments(dataframe):
     except KeyError as e:
         raise KeyError(f"An instrument in the dataframe does not exist in the mapping file: {e}")
 
-    # Convert 'player' and 'player_instrument' columns to dictionary
-    try:
-        player_to_instrument = df_copy.set_index('player')['player_instrument'].to_dict()
-    except KeyError as e:
-        raise KeyError(f"The provided dataframe is missing required 'player' columns: {e}")
-
-    return player_to_instrument, instrument_to_key
+    return instrument_to_key

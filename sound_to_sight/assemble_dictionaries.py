@@ -1,6 +1,4 @@
-import json
 import mmh3
-import pandas as pd
 from tqdm import tqdm
 
 
@@ -17,7 +15,7 @@ def hash_pattern(pattern):
     return mmh3.hash(pattern_string)
 
 
-def identify_and_hash_patterns(df, notes_per_bar, division, layouts, reversed_instruments):
+def identify_and_hash_patterns(df, notes_per_bar, division, reversed_instruments):
     patterns = {}
     pattern_details_by_instrument_group = {}
     ticks_per_pattern = notes_per_bar * division
@@ -121,8 +119,8 @@ def create_player_hash_json(df, pattern_timing):
     return player_hash_info
 
 
-def create_jsons(df, notes_per_bar, division, layouts, reversed_instruments):
-    patterns, pattern_details = identify_and_hash_patterns(df, notes_per_bar, division, layouts, reversed_instruments)
+def create_jsons(df, notes_per_bar, division, reversed_instruments):
+    patterns, pattern_details = identify_and_hash_patterns(df, notes_per_bar, division, reversed_instruments)
     pattern_timing = create_pattern_timing_json(df, patterns, notes_per_bar, division)
     player_hash_info = create_player_hash_json(df, pattern_timing)
 
