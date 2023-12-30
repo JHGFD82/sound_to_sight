@@ -53,9 +53,11 @@ def main(file_list, bpm, fps, tpb, sections=None, action_safe=False):
     df = calculate_note_lengths(df)
     df = add_measure_time(df, division, notes_per_bar)
 
-    layouts = gather_instruments(player_info)
+    # GATHER INSTRUMENTS
+    layouts, instrument_to_key = gather_instruments(df)
 
-    # details, timing, player_info = create_jsons(df, division, notes_per_bar)
+    # ASSEMBLE DICTIONARIES
+    details, timing, player_info = create_jsons(df, division, notes_per_bar, layouts, instrument_to_key)
 
 
 # if __name__ == "__main__":
