@@ -5,5 +5,5 @@ from .add_sections import add_sections
 from .measure_analysis import calculate_note_lengths
 from .measure_analysis import add_measure_time
 from .gather_instruments import gather_instruments
-from .add_timings import add_timings
-from .create_jsons import create_jsons
+from .assemble_dictionaries import create_jsons
+from .extract_positions import extract_positions

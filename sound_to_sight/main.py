@@ -1,9 +1,7 @@
-# main.py
-
 import os
 import argparse
 from sound_to_sight import (import_midi, clean_data, add_sections, calculate_note_lengths, add_measure_time,
-                            gather_instruments, create_jsons)
+                            gather_instruments, create_jsons, extract_positions)
 
 TPB = 480
 
@@ -59,6 +57,9 @@ def main(file_list, bpm, fps, tpb, sections=None, action_safe=False):
     # ASSEMBLE DICTIONARIES
     details, timing, player_info = create_jsons(df, division, notes_per_bar, layouts, instrument_to_key)
 
+    # EXTRACT POSITIONS
+    details = extract_positions(details)
+    print(details)
 
 # if __name__ == "__main__":
 #     parser = argparse.ArgumentParser(description="Process some files.")
