@@ -3,7 +3,7 @@
 import os
 import argparse
 from sound_to_sight import (import_midi, clean_data, add_sections, calculate_note_lengths, add_measure_time,
-                            assign_instrument_json, extract_positions, add_timings, create_jsons)
+                            gather_instruments, create_jsons)
 
 TPB = 480
 
@@ -53,14 +53,9 @@ def main(file_list, bpm, fps, tpb, sections=None, action_safe=False):
     df = calculate_note_lengths(df)
     df = add_measure_time(df, division, notes_per_bar)
 
-    details, timing = create_jsons(df, division, notes_per_bar)
+    layouts = gather_instruments(player_info)
 
-    # EXTRACT POSITIONS
-
-    layouts = assign_instrument_json(details)
-    df = extract_positions(df, layouts)
-    # df = add_timings(df, bpm, fps, tpb)
-    # df.to_csv('output.csv', index=False)
+    # details, timing, player_info = create_jsons(df, division, notes_per_bar)
 
 
 # if __name__ == "__main__":
