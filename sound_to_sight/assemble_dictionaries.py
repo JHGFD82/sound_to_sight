@@ -60,7 +60,7 @@ def identify_and_hash_patterns(df, notes_per_bar, division, reversed_instruments
     return patterns, pattern_details_by_instrument_group
 
 
-def create_pattern_timing_json(df, patterns, notes_per_bar, division):
+def create_pattern_timing(df, patterns, notes_per_bar, division):
     pattern_timing_data = {}
     ticks_per_pattern = notes_per_bar * division
 
@@ -75,7 +75,7 @@ def create_pattern_timing_json(df, patterns, notes_per_bar, division):
                         colour='blue', leave=False)
 
     for player in unique_players:
-        pattern_timing_data[player] = []  # Initialize an empty list for each player
+        pattern_timing_data[player] = {}  # Initialize an empty dictionary for each player
         df_player = df[df['player'] == player]
 
         max_time = df_player['time'].max()
@@ -85,8 +85,18 @@ def create_pattern_timing_json(df, patterns, notes_per_bar, division):
             segment_pattern = convert_pattern_to_hashable(pattern_df)
             segment_hash = hash_pattern(segment_pattern)
 
+            # Get the section from the pattern dataframe. We assume that the section does not change mid-pattern.
+            if not pattern_df.empty:
+                section = pattern_df.iloc[0]['section']  # Get section from the first note in the pattern dataframe
+            else:
+                continue
+
             if segment_hash in pattern_hashes:
-                pattern_timing_data[player].append({
+                # Add the relevant data under section key
+                if section not in pattern_timing_data[player]:
+                    pattern_timing_data[player][section] = []
+
+                pattern_timing_data[player][section].append({
                     "pattern_hash": segment_hash,
                     "start_time": start_tick
                 })
@@ -95,33 +105,35 @@ def create_pattern_timing_json(df, patterns, notes_per_bar, division):
     return pattern_timing_data
 
 
-def create_player_hash_json(df, pattern_timing):
+def create_player_hash(df, pattern_timing):
     player_hash_info = {}
 
     # Initialize tqdm progress bar
-    total_timing_info = sum([len(v) for v in pattern_timing.values()])
+    total_timing_info = sum([sum([len(vv) for vv in v.values()]) for v in pattern_timing.values()])
     progress_bar = tqdm(total=total_timing_info, desc="Assembling player information",
                         colour='magenta', leave=False)
 
     # Group by player and count hash repetitions
-    for player, player_pattern_timings in pattern_timing.items():
+    for player, player_sections in pattern_timing.items():
         instrument = df[df['player'] == player]['instrument'].iloc[0]
         player_hash_info[player] = {'instrument': instrument, 'hash_repetitions': {}, 'unique_hash_count': 0}
-        for timing_info in player_pattern_timings:
-            pattern_hash = timing_info['pattern_hash']
-            if pattern_hash in player_hash_info[player]['hash_repetitions']:
-                player_hash_info[player]['hash_repetitions'][pattern_hash] += 1
-            else:
-                player_hash_info[player]['hash_repetitions'][pattern_hash] = 1
-                player_hash_info[player]['unique_hash_count'] += 1
-            progress_bar.update(1)
+
+        for section, player_pattern_timings in player_sections.items():
+            for timing_info in player_pattern_timings:
+                pattern_hash = timing_info['pattern_hash']
+                if pattern_hash in player_hash_info[player]['hash_repetitions']:
+                    player_hash_info[player]['hash_repetitions'][pattern_hash] += 1
+                else:
+                    player_hash_info[player]['hash_repetitions'][pattern_hash] = 1
+                    player_hash_info[player]['unique_hash_count'] += 1
+                progress_bar.update(1)
 
     return player_hash_info
 
 
-def create_jsons(df, notes_per_bar, division, reversed_instruments):
+def create_dictionaries(df, notes_per_bar, division, reversed_instruments):
     patterns, pattern_details = identify_and_hash_patterns(df, notes_per_bar, division, reversed_instruments)
-    pattern_timing = create_pattern_timing_json(df, patterns, notes_per_bar, division)
-    player_hash_info = create_player_hash_json(df, pattern_timing)
+    pattern_timing = create_pattern_timing(df, patterns, notes_per_bar, division)
+    player_hash_info = create_player_hash(df, pattern_timing)
 
     return pattern_details, pattern_timing, player_hash_info
