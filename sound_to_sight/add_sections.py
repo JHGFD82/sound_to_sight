@@ -1,5 +1,5 @@
 import pandas as pd
-from typing import List, Optional, Union
+from typing import List, Optional
 
 
 def compute_sections_time(bar_division: int, notes_per_bar: int, section_bar_positions: Optional[List[int]]) -> List:
@@ -10,7 +10,7 @@ def compute_sections_time(bar_division: int, notes_per_bar: int, section_bar_pos
         notes_per_bar (int): The number of notes in a bar.
         section_bar_positions (Optional[List[int]]): A list of section bar positions.
     Returns:
-        list: sections time postions.
+        list: sections time positions.
     """
     if section_bar_positions:
         sections_time = [((section - 1) * bar_division * notes_per_bar) for section in
