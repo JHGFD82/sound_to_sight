@@ -2,18 +2,21 @@ import numpy as np
 import json
 
 
-def export_jsons(dictionary, dictionary_name):
-    def handle_np_int(data):
-        if isinstance(data, np.int32):
-            return int(data)
-        elif isinstance(data, dict):
-            return {handle_np_int(key): handle_np_int(value) for key, value in data.items()}
-        elif isinstance(data, list):
-            return [handle_np_int(element) for element in data]
-        else:
-            return data
+def convert_numpy_to_python(data, numpy_type_conversions):
+    if isinstance(data, tuple(numpy_type_conversions.keys())):
+        return numpy_type_conversions[type(data)](data)
+    elif isinstance(data, dict):
+        return {
+            convert_numpy_to_python(key, numpy_type_conversions): convert_numpy_to_python(value, numpy_type_conversions)
+            for key, value in data.items()}
+    elif isinstance(data, list):
+        return [convert_numpy_to_python(element, numpy_type_conversions) for element in data]
+    else:
+        return data
 
-    dictionary = handle_np_int(dictionary)
 
-    with open(dictionary_name + '.json', 'w') as file:
-        json.dump(dictionary, file, indent=4)
+def export_jsons(data, filename):
+    numpy_type_conversions = {np.int32: int, np.float32: float}  # Add more numpy types if needed
+    data = convert_numpy_to_python(data, numpy_type_conversions)
+    with open(filename + '.json', 'w') as file:
+        json.dump(data, file, indent=4)
