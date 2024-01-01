@@ -1,7 +1,7 @@
 import os
 import argparse
 from sound_to_sight import (import_midi, clean_data, add_sections, calculate_note_lengths, add_measure_time,
-                            gather_instruments, create_jsons, extract_positions, convert_timing, export_jsons)
+                            gather_instruments, create_dictionaries, extract_positions, convert_timing, export_jsons)
 
 
 def main(file_list, bpm, fps, sections=None, action_safe=False):
@@ -52,7 +52,7 @@ def main(file_list, bpm, fps, sections=None, action_safe=False):
     instrument_to_key = gather_instruments(df)
 
     # ASSEMBLE DICTIONARIES
-    details, timing, player_info = create_jsons(df, division, notes_per_bar, instrument_to_key)
+    details, timing, player_info = create_dictionaries(df, division, notes_per_bar, instrument_to_key)
 
     # EXTRACT POSITIONS
     details = extract_positions(details)
@@ -76,5 +76,5 @@ def main(file_list, bpm, fps, sections=None, action_safe=False):
 #
 #     main(args.input_files, args.bpm, args.fps, args.sections, args.action_safe)
 
-# main(['../../Six Marimbas/Music/Six.csv'], 192, 29.97, sections=[329, 676])
-main(['../tests/CSVs/Music for 18 Musicians (Section IV-VI) v2.csv'], 104, 29.97)
+main(['../../Six Marimbas/Music/Six.csv'], 192, 29.97, sections=[329, 676])
+# main(['../tests/CSVs/Music for 18 Musicians (Section IV-VI) v2.csv'], 104, 29.97)
