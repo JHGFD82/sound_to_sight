@@ -52,15 +52,16 @@ def main(file_list, bpm, fps, sections=None, action_safe=False):
     instrument_to_key = gather_instruments(df)
 
     # ASSEMBLE DICTIONARIES
-    details, timing, player_info = create_dictionaries(df, division, notes_per_bar, instrument_to_key)
+    details, timing, timeline, player_info = create_dictionaries(df, division, notes_per_bar, instrument_to_key)
 
     # EXTRACT POSITIONS
     details = extract_positions(details)
 
     # CONVERT TIMING
-    details, timing = convert_timing(details, timing, division, bpm, fps)
+    details, timing, timeline = convert_timing(details, timing, timeline, division, bpm, fps)
     export_jsons(details, 'pattern_details')
     export_jsons(timing, 'pattern_timing')
+    export_jsons(timeline, 'timeline')
     export_jsons(player_info, 'player_info')
 
 
@@ -76,5 +77,5 @@ def main(file_list, bpm, fps, sections=None, action_safe=False):
 #
 #     main(args.input_files, args.bpm, args.fps, args.sections, args.action_safe)
 
-main(['../../Six Marimbas/Music/Six.csv'], 192, 29.97, sections=[329, 676])
+main(['../../Six Marimbas/Music/Six.csv'], 192, 30, sections=[329, 676])
 # main(['../tests/CSVs/Music for 18 Musicians (Section IV-VI) v2.csv'], 104, 29.97)

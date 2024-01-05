@@ -105,6 +105,29 @@ def create_pattern_timing(df, patterns, notes_per_bar, division):
     return pattern_timing_data
 
 
+def create_timeline(pattern_timing_data):
+    timeline = {}
+
+    # Iterate over each player, section, and entry
+    for player, sections in pattern_timing_data.items():
+        for section_number, entries in sections.items():
+            if section_number not in timeline:
+                timeline[section_number] = {}
+
+            for entry in entries:
+                start_time = entry['start_time']
+                pattern_hash = entry['pattern_hash']
+
+                if start_time not in timeline[section_number]:
+                    # Initialize start time for this section with all players having a default hash of 0
+                    timeline[section_number][start_time] = {p: 0 for p in pattern_timing_data}
+
+                # Update the pattern_hash for the current player at this start time
+                timeline[section_number][start_time][player] = pattern_hash
+
+    return timeline
+
+
 def create_player_hash(df, pattern_timing):
     player_hash_info = {}
 
@@ -134,6 +157,7 @@ def create_player_hash(df, pattern_timing):
 def create_dictionaries(df, notes_per_bar, division, reversed_instruments):
     patterns, pattern_details = identify_and_hash_patterns(df, notes_per_bar, division, reversed_instruments)
     pattern_timing = create_pattern_timing(df, patterns, notes_per_bar, division)
+    timeline = create_timeline(pattern_timing)
     player_hash_info = create_player_hash(df, pattern_timing)
 
-    return pattern_details, pattern_timing, player_hash_info
+    return pattern_details, pattern_timing, timeline, player_hash_info
