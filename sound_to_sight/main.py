@@ -2,6 +2,7 @@ import os
 import argparse
 from sound_to_sight import (import_midi, clean_data, add_sections, calculate_note_lengths, add_measure_time,
                             gather_instruments, create_dictionaries, extract_positions, convert_timing, export_jsons)
+from sound_to_sight.pattern import extract_patterns
 
 
 def main(file_list, bpm, fps, sections=None, action_safe=False):
@@ -52,7 +53,10 @@ def main(file_list, bpm, fps, sections=None, action_safe=False):
     instrument_to_key = gather_instruments(df)
 
     # ASSEMBLE DICTIONARIES
-    details, timing, timeline, player_info = create_dictionaries(df, division, notes_per_bar, instrument_to_key)
+    # details, timing, timeline, player_info = create_dictionaries(df, division, notes_per_bar, instrument_to_key)
+    patterns = extract_patterns(df, notes_per_bar, division)
+
+    
 
     # EXTRACT POSITIONS
     details = extract_positions(details)
