@@ -1,10 +1,9 @@
 import os
 import argparse
-from sound_to_sight import import_midi
+from csv_reader import parse_midi
 
 
 def main(file_list, fps, sections=None, action_safe=False):
-
     # FILE IMPORT
     for file in file_list:
         if not os.path.isfile(file):
@@ -18,7 +17,11 @@ def main(file_list, fps, sections=None, action_safe=False):
         sections = (input("If the music has sections you want to designate, enter their bar numbers here separated by "
                           "spaces, or simply hit enter to continue: ").split())
 
-    df = import_midi(file_list)
+    music = []
+
+    for file in file_list:
+        music.append(parse_midi(file, sections))
+
 
 # if __name__ == "__main__":
 #     parser = argparse.ArgumentParser(description="Process some files.")
@@ -32,5 +35,6 @@ def main(file_list, fps, sections=None, action_safe=False):
 #
 #     main(args.input_files, args.bpm, args.fps, args.sections, args.action_safe)
 
-main(['../../Six Marimbas/Music/Six.csv'], 192, 30, sections=[329, 676])
+
+main(['../../Six Marimbas/Music/Six.csv'], 192, sections=[329, 676])
 # main(['../tests/CSVs/Music for 18 Musicians (Section IV-VI) v2.csv'], 104, 29.97)
