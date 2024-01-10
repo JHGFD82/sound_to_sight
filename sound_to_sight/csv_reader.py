@@ -1,7 +1,8 @@
 import json
 import os
 import csv
-from sound_to_sight import Note, Pattern
+import re
+from sound_to_sight import Note, Pattern, PlayerMeasure
 
 
 def parse_midi(filename, section_start_times):
