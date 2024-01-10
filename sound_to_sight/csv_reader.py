@@ -8,6 +8,23 @@ from sound_to_sight import Note, Pattern, PlayerMeasure
 def parse_midi(filename, section_start_times):
     with open(filename, "r") as csvfile:
         rows = list(csv.reader(csvfile))
+def parse_header(rows):
+    """Parse the header to extract MIDI file metadata."""
+    division, tempo, notes_per_bar = None, None, None
+    for row in rows:
+        row = [field.strip() for field in row]
+        if row[2] == 'note_on_c':
+            # Stop metadata extraction when note rows are reached
+            break
+        if row[2] == 'Header':
+            division = int(row[5])
+        if row[2] == 'Tempo':
+            tempo = int(row[3])
+        if row[2] == 'Time_signature':
+            notes_per_bar = int(row[3])
+    if not (division and tempo and notes_per_bar):
+        raise ValueError('Incomplete metadata, please check the MIDI CSV file')
+    return division, tempo, notes_per_bar
 
         # GRAB METADATA FROM HEADER
         division = None
