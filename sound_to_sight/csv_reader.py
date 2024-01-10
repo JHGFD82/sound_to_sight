@@ -33,6 +33,9 @@ def parse_header(rows):
 
         for row in rows:
             row = [field.strip() for field in row]
+def calculate_bpm(tempo):
+    """Calculate beats per minute from tempo."""
+    return 60000000 / tempo
 
             if row[2] == 'note_on_c':
                 # We've reached the note rows, stop metadata extraction
