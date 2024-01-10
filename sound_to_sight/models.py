@@ -6,7 +6,7 @@ class Note:
         self.start_time = start_time
         self.measure_time = measure_time
         self.length = length
-        self.note = note_value
+        self.note_value = note_value
         self.velocity = velocity
         self.note_name = note_name
         self.layout = layout
