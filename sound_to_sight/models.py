@@ -29,6 +29,26 @@ class Pattern:
         pattern_string = '_'.join('_'.join(map(str, tup)) for tup in pattern)
         return mmh3.hash(pattern_string)
 
+    def is_complete(self):
+        """Check if all notes in the pattern are complete (have lengths)."""
+        return all(note.length is not None for note in self.notes)
+
+    def finalize(self, player_measures, current_player, measure_number, section_number,
+                 instrument, unfinished_patterns, index):
+        """Finalize the pattern and update relevant structures."""
+        self.hash = self.calculate_hash(self.notes)
+        if current_player not in player_measures:
+            player_measures[current_player] = [PlayerMeasure(
+                measure_number, section_number, current_player, instrument, self)]
+        else:
+            latest_pm = player_measures[current_player][-1]
+            if not latest_pm.pattern.hash or self.hash != latest_pm.pattern.hash:
+                player_measures[current_player].append(PlayerMeasure(
+                    measure_number, section_number, current_player, instrument, self))
+            else:
+                latest_pm.play_count += 1
+        del unfinished_patterns[index]
+
 
 class PlayerMeasure:
     def __init__(self, measure_number, section_number, player_number, instrument, pattern):
