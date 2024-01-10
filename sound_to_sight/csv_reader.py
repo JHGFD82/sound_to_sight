@@ -105,47 +105,55 @@ def parse_midi(filename, section_start_times):
                 if track not in track_to_player:
                     track_to_player[track] = player_number
                     player_number += 1
+                    current_section = 1
 
                 # Get current player number
-                player_num = track_to_player[track]
+                current_player = track_to_player[track]
 
                 # Priority given to 'Title_t', but if 'Instrument_name_t' appears first, it will be recorded
                 # and only overridden by 'Title_t' if it appears later for the same track
-                if row[2] == 'Title_t' or player_num not in player_instruments:
+                if row[2] == 'Title_t' or current_player not in player_instruments:
                     # Initialize the dictionary for this player number if it doesn't exist
-                    if player_num not in player_instruments:
-                        player_instruments[player_num] = {"instrument": "", "layout": ""}
+                    if current_player not in player_instruments:
+                        player_instruments[current_player] = {"instrument": "", "layout": ""}
 
-                    player_instruments[player_num]["instrument"] = row[3].lower()
-
-                instrument = player_instruments[player_num]["instrument"]
-                if instrument not in instrument_layout:
-                    user_instrument = input(f"The instrument '{instrument}' does not have a corresponding layout. "
-                                            f"Please input the name of a physical instrument, or press Enter to use "
-                                            f"the default layout: ").lower().strip()
-
-                    if user_instrument in instrument_layout.keys():
-                        instrument = user_instrument
-                    else:
-                        instrument = default_instrument
-
-                # Fetch the layout for the instrument and save it in player_instruments
-                layout = instrument_layout.get(instrument, default_instrument)
-                player_instruments[player_num]["instrument"] = instrument
-                player_instruments[player_num]["layout"] = layout
+                    instrument = row[3].lower().replace('"', '')
+                    player_instruments[current_player]["instrument"] = re.sub(r'\s+-?\d+$', '', instrument)
 
             elif event_type == 'Note_on_c':
+
+                # Section check
+                if current_section < len(section_start_times) and (
+                        time / pattern_length >= section_start_times[current_section]):
+                    current_section += 1
+
+                # Start the analysis of a new note
                 note_value = int(row[4])
                 velocity = int(row[5])
-
-                # Calculate measure_time
                 measure_time = time % pattern_length
+                current_measure = (time // pattern_length) + 1
+                dict_key = (current_player, current_measure, current_section)
 
-                # Retrieve layout, x, and y for the instrument
-                player_num = track_to_player.get(track, 0)
-                layout = player_instruments[player_num]["layout"]
-                x, y = layout_coordinates[layout].get(note_value,
-                                                      (0, 0))  # Default to (0,0) if the note doesn't exist in layout
+                # Check if the instrument gathered from the track header rows is in the list of supported instruments
+                if not player_instruments[current_player]["layout"]:
+                    instrument = player_instruments[current_player]["instrument"]
+                    if instrument not in instrument_layout:
+                        user_instrument = input(f"The instrument '{instrument}' does not have a corresponding layout. "
+                                                f"Please input the name of a physical instrument, or press Enter to "
+                                                f"use the default layout: ").lower().strip()
+
+                        if user_instrument in instrument_layout.keys():
+                            instrument = user_instrument
+                        else:
+                            instrument = default_instrument
+
+                    # Fetch the layout for the instrument and save it in player_instruments
+                    layout = instrument_layout.get(instrument, default_instrument).replace("_layout.json", "")
+                    player_instruments[current_player] = {"instrument": instrument, "layout": layout}
+                    unfinished_patterns.append({dict_key: Pattern(instrument)})
+
+                # NEED TO PUT IN LOGIC FOR HANDLING MULTI-RESULT X,Y COORDS (CELLO, VIOLIN)
+                x, y = layout_coordinates[layout + '_layout.json'].get(note_value)[0].values()
 
                 # Lookup note name
                 note_name = note_symbols.get(note_value)
@@ -155,30 +163,49 @@ def parse_midi(filename, section_start_times):
                                    note_name=note_name, layout=layout, x=x, y=y)
 
                 # Add note to appropriate pattern
-                unfinished_patterns[-1].add_note(note_object)
+                if not unfinished_patterns:
+                    unfinished_patterns.append({dict_key: Pattern(instrument)})
+
+                unfinished_patterns[-1][dict_key].add_note(note_object)
 
             elif event_type == 'Note_off_c':
                 note_value = int(row[4])
+                current_measure = (time // pattern_length) + 1
+                all_found = [False, 0]
 
-                # Look up the note in previous patterns, starting from earliest
-                for pattern in unfinished_patterns:
+                # Process incomplete patterns
+                for i, pattern_dict in enumerate(unfinished_patterns):
+                    for header_dict, pattern in pattern_dict.items():
+                        current_player, measure_number, section_number = header_dict
+                    # convert dict view to list to be able to delete keys during iteration
+                    # Find the corresponding starting note in this pattern, if any
                     for note in reversed(pattern.notes):
-                        if note.note == note_value and note.length is None:
+                        if note.note_value == note_value and note.length is None:
+                            # Found the starting note, set its length
                             note.length = time - note.start_time
-                            # Check if all notes in the pattern have defined length
-                            if all(note.length is not None for note in pattern.notes):
-                                # Calculate hash and move to patterns if the pattern is new
+
+                            # Check if this pattern has no unfinished notes
+                            if measure_number < current_measure and all(
+                                    note.length is not None for note in pattern.notes):
+                                # Compute hash of completed notes in this pattern
                                 pattern_hash = pattern.calculate_hash(pattern.notes)
-                                if pattern_hash not in patterns:
-                                    patterns[pattern_hash] = pattern
-                                # Remove from unfinished_patterns
-                                unfinished_patterns.remove(pattern)
+                                pattern.hash = pattern_hash
+                                if current_player not in player_measures:
+                                    player_measures[current_player] = []
+                                    player_measures[current_player].append(PlayerMeasure(
+                                        measure_number, section_number, current_player, instrument, pattern))
+                                else:
+                                    # Move this pattern to patterns if it's a new unique pattern
+                                    latest_pm = player_measures[current_player][-1]
+                                    if not latest_pm.pattern.hash or pattern_hash != latest_pm.pattern.hash:
+                                        player_measures[current_player].append(PlayerMeasure(
+                                            measure_number, section_number, current_player, instrument, pattern))
+                                    else:
+                                        latest_pm.play_count += 1
+
+                                all_found = [True, i]
+
                             break
 
-            # When a new measure starts or a new section begins
-            # if condition to check for start of new measure/section:
-        # Handle end of measure: finalize patterns, update player measures
-
-        # Finalize patterns for the last measure after the last row
-
-#    return player_measures  # or whatever your master list variable is named
+                if all_found[0]:
+                    del unfinished_patterns[all_found[1]]
