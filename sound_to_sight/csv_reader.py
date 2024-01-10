@@ -81,10 +81,8 @@ def parse_midi(filename, section_start_times):
             note_symbols = {int(note["MIDI Note Number"]): note["Note Symbol"] for note in midi_info}
 
         # ESTABLISH ITERABLE VARIABLES
-        patterns = {}  # Initialize patterns dictionary per instrument
-        player_measures = []  # Initialize player_measures list
-        current_section = 0
-        current_measure = 0
+        pattern_length = division * notes_per_bar
+        player_measures = {}  # Initialize player_measures list
         player_instruments = {}  # Dictionary mapping player numbers to instruments
         track_to_player = {}  # Dictionary mapping track to player
         player_number = 1  # Player number to assign
