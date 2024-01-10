@@ -68,23 +68,17 @@ def parse_midi(filename, section_start_times):
                 # Map instrument to layout_file
                 instrument_layout[instrument] = layout_file
 
-            # Read the layout file
+            # Read the layout file and save data to layout_coordinates dictionary
             with open(os.path.join(layout_dir, layout_file), 'r') as f:
                 layout = json.load(f)
-
-            # Unpack layout dictionary to MIDI to note coordinate mapping
-            layout_coord = {int(list(note.keys())[0]): list(note.values())[0] for note in layout}
-
-            # Map layout file to layout_coord
-            layout_coordinates[layout_file] = layout_coord
+                layout_coord = {int(key): values for key, values in layout.items()}
+                layout_coordinates[layout_file] = layout_coord
 
         # ESTABLISH NOTE INFO
-        # Read the midi_info.json file
+        # Read the midi_info.json file and save note info to note_symbols
         with open('midi_data/midi_info.json', 'r') as f:
             midi_info = json.load(f)
-
-        # Initialize the note symbols dictionary
-        note_symbols = {int(note["MIDI Note Number"]): note["Note Symbol"] for note in midi_info}
+            note_symbols = {int(note["MIDI Note Number"]): note["Note Symbol"] for note in midi_info}
 
         # ESTABLISH ITERABLE VARIABLES
         patterns = {}  # Initialize patterns dictionary per instrument
