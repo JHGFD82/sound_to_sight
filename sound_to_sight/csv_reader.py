@@ -154,6 +154,13 @@ def parse_midi(filename, section_start_times):
                 current_measure = (time // pattern_length) + 1
                 dict_key = (current_player, current_measure, current_section)
 
+                for i, pattern_dict in enumerate(unfinished_patterns):
+                    for header_dict, pattern in pattern_dict.items():
+                        current_player, measure_number, section_number = header_dict
+                        process_unfinished_patterns(measure_number, current_measure, pattern, current_player,
+                                                    player_measures, section_number, instrument,
+                                                    unfinished_patterns, i)
+
                 # Check if the instrument gathered from the track header rows is in the list of supported instruments
                 if not player_instruments[current_player]["layout"]:
                     instrument = player_instruments[current_player]["instrument"]
