@@ -54,6 +54,11 @@ def establish_sections(section_start_times):
 
             if row[2] == 'Time_signature':
                 notes_per_bar = int(row[3])
+def load_supported_instruments():
+    """Load supported instruments from a JSON file."""
+    with open('midi_data/supported_instruments.json', 'r') as f:
+        supported_instruments = json.load(f)
+    return supported_instruments
 
         # ESTABLISH VARIABLES
         if division and tempo and notes_per_bar:
