@@ -2,7 +2,7 @@ import json
 import os
 import csv
 import re
-from sound_to_sight import Note, Pattern, PlayerMeasure
+from sound_to_sight import Note, Pattern
 
 
 def parse_header(rows):
