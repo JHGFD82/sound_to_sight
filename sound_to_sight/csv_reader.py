@@ -5,9 +5,6 @@ import re
 from sound_to_sight import Note, Pattern, PlayerMeasure
 
 
-def parse_midi(filename, section_start_times):
-    with open(filename, "r") as csvfile:
-        rows = list(csv.reader(csvfile))
 def parse_header(rows):
     """Parse the header to extract MIDI file metadata."""
     division, tempo, notes_per_bar = None, None, None
@@ -26,61 +23,40 @@ def parse_header(rows):
         raise ValueError('Incomplete metadata, please check the MIDI CSV file')
     return division, tempo, notes_per_bar
 
-        # GRAB METADATA FROM HEADER
-        division = None
-        tempo = None
-        notes_per_bar = None
 
-        for row in rows:
-            row = [field.strip() for field in row]
 def calculate_bpm(tempo):
     """Calculate beats per minute from tempo."""
     return 60000000 / tempo
 
-            if row[2] == 'note_on_c':
-                # We've reached the note rows, stop metadata extraction
-                break
 
-            if row[2] == 'Header':
-                division = int(row[5])
 def establish_sections(section_start_times):
     """Establish the sections based on start times."""
     if not section_start_times or section_start_times[0] != 1:
         section_start_times = [1] + section_start_times
     return section_start_times
 
-            if row[2] == 'Tempo':
-                tempo = int(row[3])
 
-            if row[2] == 'Time_signature':
-                notes_per_bar = int(row[3])
 def load_supported_instruments():
     """Load supported instruments from a JSON file."""
     with open('midi_data/supported_instruments.json', 'r') as f:
         supported_instruments = json.load(f)
     return supported_instruments
 
-        # ESTABLISH VARIABLES
-        if division and tempo and notes_per_bar:
-            bpm = 60000000 / tempo
-        else:
-            raise ValueError('Incomplete metadata, please check the MIDI CSV file')
 
-        pattern_length = int(division * notes_per_bar)
+def process_unfinished_patterns():
 
-        # ESTABLISH SECTIONS
-        # If no section list has been provided or doesn't start at 1,
-        # add 1 to the start times list to account for the first section.
-        if not section_start_times or section_start_times[0] != 1:
-            section_start_times = [1] + section_start_times
 
-        # ESTABLISH SUPPORTED INSTRUMENTS
-        # Define layout file directory
-        layout_dir = '/midi_data/visual_layouts/'
 
-        # Read the supported_instruments.json file
-        with open('midi_data/supported_instruments.json', 'r') as f:
-            supported_instruments = json.load(f)
+def parse_midi(filename, section_start_times):
+    with open(filename, "r") as csvfile:
+        rows = list(csv.reader(csvfile))
+
+        division, tempo, notes_per_bar = parse_header(rows)
+        bpm = calculate_bpm(tempo)
+        section_start_times = establish_sections(section_start_times)
+        supported_instruments = load_supported_instruments()
+
+        layout_dir = 'midi_data/visual_layouts/'
 
         # Initialize our dictionaries
         instrument_layout = {}
