@@ -43,8 +43,28 @@ def load_supported_instruments():
     return supported_instruments
 
 
-def process_unfinished_patterns():
+def process_unfinished_patterns(measure_number, current_measure, pattern, current_player, player_measures,
+                                section_number, instrument, unfinished_patterns, i):
+    # Check if this pattern has no unfinished notes
+    if measure_number < current_measure and all(
+            note.length is not None for note in pattern.notes):
+        # Compute hash of completed notes in this pattern
+        pattern_hash = pattern.calculate_hash(pattern.notes)
+        pattern.hash = pattern_hash
+        if current_player not in player_measures:
+            player_measures[current_player] = []
+            player_measures[current_player].append(PlayerMeasure(
+                measure_number, section_number, current_player, instrument, pattern))
+        else:
+            # Move this pattern to patterns if it's a new unique pattern
+            latest_pm = player_measures[current_player][-1]
+            if not latest_pm.pattern.hash or pattern_hash != latest_pm.pattern.hash:
+                player_measures[current_player].append(PlayerMeasure(
+                    measure_number, section_number, current_player, instrument, pattern))
+            else:
+                latest_pm.play_count += 1
 
+        del unfinished_patterns[i]
 
 
 def parse_midi(filename, section_start_times):
