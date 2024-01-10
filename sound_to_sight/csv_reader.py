@@ -43,6 +43,11 @@ def calculate_bpm(tempo):
 
             if row[2] == 'Header':
                 division = int(row[5])
+def establish_sections(section_start_times):
+    """Establish the sections based on start times."""
+    if not section_start_times or section_start_times[0] != 1:
+        section_start_times = [1] + section_start_times
+    return section_start_times
 
             if row[2] == 'Tempo':
                 tempo = int(row[3])
