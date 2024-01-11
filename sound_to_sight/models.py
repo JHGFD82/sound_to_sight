@@ -1,4 +1,9 @@
 import mmh3
+from BPMtoFPS import ticks_to_seconds, seconds_to_frames
+
+
+def ticks_to_frames(ticks, bpm, division, fps):
+    return seconds_to_frames(ticks_to_seconds(ticks, bpm, division), fps)
 
 
 class Note:
