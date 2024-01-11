@@ -86,3 +86,19 @@ class PlayerMeasure:
         self.instrument = instrument
         self.pattern = pattern
         self.play_count = 1
+        self._bpm = None
+        self._division = None
+        self._fps = None
+        self._pattern_length = None
+        self.frame_start = None
+
+    def set_timing_info(self, bpm, division, fps, pattern_length):
+        self._bpm = bpm
+        self._division = division
+        self._fps = fps
+        self._pattern_length = pattern_length
+        self._update_frame_start()
+
+    def _update_frame_start(self):
+        if all([self._bpm, self._division, self._fps, self._pattern_length]):
+            self.frame_start = ticks_to_frames((self.measure_number - 1) * self._pattern_length, self._bpm, self._division, self._fps)
