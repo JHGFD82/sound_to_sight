@@ -47,14 +47,14 @@ def load_supported_instruments():
 
 
 def process_unfinished_patterns(measure_number, current_measure, pattern, current_player, player_measures,
-                                section_number, instrument, unfinished_patterns, i):
+                                section_number, instrument, unfinished_patterns, i, pattern_length, bpm, division, fps):
     # Check if this pattern has no unfinished notes
     if measure_number < current_measure and pattern.is_complete():
         pattern.finalize(player_measures, current_player, measure_number, section_number,
-                         instrument, unfinished_patterns, i)
+                         instrument, unfinished_patterns, i, (bpm, division, fps, pattern_length))
 
 
-def parse_midi(filename, section_start_times):
+def parse_midi(filename, section_start_times, fps):
     with open(filename, "r") as csvfile:
         rows = list(csv.reader(csvfile))
 
@@ -146,7 +146,7 @@ def parse_midi(filename, section_start_times):
                         current_player, measure_number, section_number = header_dict
                         process_unfinished_patterns(measure_number, current_measure, pattern, current_player,
                                                     player_measures, section_number, instrument,
-                                                    unfinished_patterns, i)
+                                                    unfinished_patterns, i, pattern_length, bpm, division, fps)
 
                 # Check if the instrument gathered from the track header rows is in the list of supported instruments
                 if not player_instruments[current_player]["layout"]:
@@ -175,6 +175,7 @@ def parse_midi(filename, section_start_times):
                 # Create note
                 note_object = Note(start_time=time, measure_time=measure_time, note_value=note_value, velocity=velocity,
                                    note_name=note_name, layout=layout, x=x, y=y)
+                note_object.set_timing_info(bpm, division, fps)
 
                 # Add note to appropriate pattern
                 if not unfinished_patterns:
@@ -198,7 +199,8 @@ def parse_midi(filename, section_start_times):
                             note.length = time - note.start_time
                             process_unfinished_patterns(measure_number, current_measure, pattern, current_player,
                                                         player_measures, section_number, instrument,
-                                                        unfinished_patterns, i)
+                                                        unfinished_patterns, i, pattern_length, bpm, division, fps)
                             break
 
     print('done!')
+    return player_measures
