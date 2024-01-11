@@ -50,10 +50,11 @@ class Pattern:
         self.hash = None
 
     def add_note(self, note):
+        # You can add any checks or preprocessing here if needed
         self.notes.append(note)
 
-    def calculate_hash(self, notes):
-        pattern = [(note.measure_time, note.note_value, note.velocity, note.length, note.layout) for note in notes]
+    def calculate_hash(self):
+        pattern = [(note.measure_time, note.note_value, note.velocity, note.length, note.layout) for note in self.notes]
         pattern_string = '_'.join('_'.join(map(str, tup)) for tup in pattern)
         return mmh3.hash(pattern_string)
 
@@ -61,21 +62,31 @@ class Pattern:
         """Check if all notes in the pattern are complete (have lengths)."""
         return all(note.length is not None for note in self.notes)
 
-    def finalize(self, player_measures, current_player, measure_number, section_number,
-                 instrument, unfinished_patterns, index):
+    def finalize(self, player_measures, current_player, measure_number, section_number, instrument, unfinished_patterns,
+                 index, timing_info):
         """Finalize the pattern and update relevant structures."""
-        self.hash = self.calculate_hash(self.notes)
+        self.hash = self.calculate_hash()
         if current_player not in player_measures:
-            player_measures[current_player] = [PlayerMeasure(
-                measure_number, section_number, current_player, instrument, self)]
+            player_measures[current_player] = [self._create_player_measure(measure_number, section_number,
+                                                                           current_player, instrument, timing_info)]
         else:
-            latest_pm = player_measures[current_player][-1]
-            if not latest_pm.pattern.hash or self.hash != latest_pm.pattern.hash:
-                player_measures[current_player].append(PlayerMeasure(
-                    measure_number, section_number, current_player, instrument, self))
-            else:
-                latest_pm.play_count += 1
+            self._update_or_add_player_measure(player_measures[current_player], measure_number, section_number,
+                                               current_player, instrument, timing_info)
         del unfinished_patterns[index]
+
+    def _create_player_measure(self, measure_number, section_number, player_number, instrument, timing_info):
+        player_measure = PlayerMeasure(measure_number, section_number, player_number, instrument, self)
+        player_measure.set_timing_info(*timing_info)
+        return player_measure
+
+    def _update_or_add_player_measure(self, player_measures_list, measure_number, section_number, player_number,
+                                      instrument, timing_info):
+        latest_pm = player_measures_list[-1]
+        if not latest_pm.pattern.hash or self.hash != latest_pm.pattern.hash:
+            player_measures_list.append(self._create_player_measure(measure_number, section_number, player_number,
+                                                                    instrument, timing_info))
+        else:
+            latest_pm.play_count += 1
 
 
 class PlayerMeasure:
