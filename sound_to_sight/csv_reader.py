@@ -24,9 +24,12 @@ def parse_header(rows):
     return division, tempo, notes_per_bar
 
 
+MICROSECONDS_PER_MINUTE = 60000000
+
+
 def calculate_bpm(tempo):
     """Calculate beats per minute from tempo."""
-    return 60000000 / tempo
+    return MICROSECONDS_PER_MINUTE / tempo
 
 
 def establish_sections(section_start_times):
