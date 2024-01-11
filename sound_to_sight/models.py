@@ -7,17 +7,40 @@ def ticks_to_frames(ticks, bpm, division, fps):
 
 
 class Note:
-    def __init__(self, start_time, measure_time, note_value, velocity, note_name, layout, x, y, length=None):
+    def __init__(self, start_time, measure_time, note_value, velocity, note_name, layout, x, y):
         self.start_time = start_time
         self.measure_time = measure_time
-        self.length = length
         self.note_value = note_value
         self.velocity = velocity
         self.note_name = note_name
         self.layout = layout
-        # x and y will be initialized as None and can be updated later.
         self.x = x
         self.y = y
+        self._length = None
+        self._bpm = None
+        self._division = None
+        self._fps = None
+
+    @property
+    def length(self):
+        return self._length
+
+    @length.setter
+    def length(self, length):
+        self._length = length
+        self._update_frames()
+
+    def set_timing_info(self, bpm, division, fps):
+        self._bpm = bpm
+        self._division = division
+        self._fps = fps
+        self._update_frames()
+
+    def _update_frames(self):
+        if self._bpm and self._division and self._fps:
+            self.frame_start = ticks_to_frames(self.measure_time, self._bpm, self._division, self._fps)
+            if self._length is not None:
+                self.frame_duration = ticks_to_frames(self._length, self._bpm, self._division, self._fps)
 
 
 class Pattern:
