@@ -1,6 +1,6 @@
 import os
 import argparse
-from csv_reader import parse_midi
+from csv_reader import MidiCsvParser
 
 
 def main(file_list, fps, sections=None, action_safe=False):
@@ -20,8 +20,10 @@ def main(file_list, fps, sections=None, action_safe=False):
     music = []
 
     for file in file_list:
-        music.append(parse_midi(file, sections, fps))
+        midi_parser = MidiCsvParser(file, fps, sections)
+        music.append(midi_parser.parse())
 
+    print('done!')
 
 
 # if __name__ == "__main__":
