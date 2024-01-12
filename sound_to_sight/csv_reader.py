@@ -24,7 +24,7 @@ class MidiCsvParser:
 
         # Initialize data structures for parsing and processing
         self.player_measures = {}  # To store measures associated with each player
-        self.unfinished_patterns = []  # To keep track of unfinished musical patterns
+        self.unfinished_patterns = {}  # To keep track of unfinished musical patterns
         self.supported_instruments = {}  # To store information about supported instruments
         self.instrument_layout = {}  # To store layout information for each instrument
         self.layout_coordinates = {}  # To store coordinates for each instrument layout
