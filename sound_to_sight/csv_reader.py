@@ -158,7 +158,9 @@ class MidiCsvParser:
         self._get_section(time)
 
         # Retrieve instrument and layout information
-        instrument, layout, layout_name = self._get_instrument_and_layout()
+        instrument = self.player_instruments[self.current_player]['instrument']
+        layout_name = self.player_instruments[self.current_player]['layout'].replace('_layout.json', '')
+        layout = self._get_instrument_and_layout()
 
         x, y = self._get_note_coordinates(layout, note_value)
         note = self._create_note(time, measure_time, note_value, velocity, layout_name, x, y)
