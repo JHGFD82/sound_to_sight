@@ -39,5 +39,4 @@ def main(file_list, fps, sections=None, action_safe=False):
 #     main(args.input_files, args.bpm, args.fps, args.sections, args.action_safe)
 
 
-main(['../../Six Marimbas/Music/Six.csv'], 30, sections=[329, 676])
-# main(['../tests/CSVs/Music for 18 Musicians (Section IV-VI) v2.csv'], 104, 29.97)
+main(['../../Six Marimbas/Music/Six.csv'], 60, sections=[329, 676])
