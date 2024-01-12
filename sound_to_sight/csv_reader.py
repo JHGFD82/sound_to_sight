@@ -44,6 +44,9 @@ class MidiCsvParser:
         # Parse the header to extract MIDI file metadata
         self._parse_header(rows)
 
+        # Validate section start time input
+        self.establish_sections()
+
         # Load additional resources necessary for parsing
         self.supported_instruments = self._load_supported_instruments()
         self._initialize_instrument_layouts()
@@ -122,6 +125,11 @@ class MidiCsvParser:
     def _calculate_bpm(self, tempo):
         """Calculate beats per minute from tempo."""
         return self.MICROSECONDS_PER_MINUTE / tempo
+
+    def establish_sections(self):
+        """Establish the sections based on start times."""
+        if not self.section_start_times or self.section_start_times[0] != 1:
+            self.section_start_times = [1] + self.section_start_times
 
     def _process_row(self, row):
         """Processes a single row based on the event type."""
