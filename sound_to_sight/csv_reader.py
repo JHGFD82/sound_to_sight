@@ -160,12 +160,19 @@ class MidiCsvParser:
         # Retrieve instrument and layout information
         instrument, layout, layout_name = self._get_instrument_and_layout()
 
-        # Fetch x, y coordinates for the note
         x, y = self._get_note_coordinates(layout, note_value)
-
-        # Create and add the new note
         note = self._create_note(time, measure_time, note_value, velocity, layout_name, x, y)
-        self._add_note_to_pattern(note, current_player, current_measure, current_section)
+
+        # Directly add note to pattern, avoiding multiple dictionary lookups
+        dict_key = (self.current_player, self.current_measure, self.current_section)
+        pattern = self.unfinished_patterns.setdefault(dict_key, Pattern(instrument))
+        pattern.add_note(note)
+
+    def _get_section(self, time):
+        # Determine the current section based on time and section_start_times
+        if self.current_section < len(self.section_start_times) and (
+                self.current_measure >= self.section_start_times[self.current_section]):
+            self.current_section += 1
 
     def _extract_note_on_data(self, row):
         """Extracts and returns data from a 'Note_on_c' event row."""
@@ -222,33 +229,19 @@ class MidiCsvParser:
         note.set_timing_info(self.bpm, self.division, self.fps)
         return note
 
-    def _add_note_to_pattern(self, note, current_player, current_measure, current_section):
-        """Adds a note to the appropriate pattern based on the player, measure, and section."""
-        dict_key = (current_player, current_measure, current_section)
-
-        # Check if there's an existing pattern for this combination of player, measure, and section
-        for pattern_dict in self.unfinished_patterns:
-            if dict_key in pattern_dict:
-                pattern_dict[dict_key].add_note(note)
-                return
-
-        # If no existing pattern is found, create a new one
-        new_pattern = Pattern(self.player_instruments[current_player]["instrument"])
-        new_pattern.add_note(note)
-        self.unfinished_patterns.append({dict_key: new_pattern})
-
     def _handle_note_off(self, row):
         """Handles a 'Note_off_c' event."""
         time, track, note_value = self._extract_note_off_data(row)
 
-        current_player = self.track_to_player.get(track)
-        if current_player is None:
-            raise ValueError(f"Track {track} is not assigned to any player.")
+        # Process incomplete patterns more efficiently
+        for pattern in self.unfinished_patterns.values():
+            for note in pattern.notes:
+                if note.note_value == note_value and note.length is None:
+                    note.length = time - note.start_time
+                    break
 
-        current_measure = (time // self.pattern_length) + 1
-
-        # Find the corresponding 'Note_on_c' event and update the note's length
-        self._update_note_length(note_value, time, current_player, current_measure)
+        # Finalize patterns if necessary, avoiding modifying the dict during iteration
+        self._finalize_patterns()
 
     def _extract_note_off_data(self, row):
         """Extracts and returns data from a 'Note_off_c' event row."""
@@ -257,50 +250,29 @@ class MidiCsvParser:
         note_value = int(row[4])
         return time, track, note_value
 
-    def _update_note_length(self, note_value, time, current_player, current_measure):
-        """Updates the length of a note based on the 'Note_off_c' event."""
-        # Iterate through unfinished patterns to find the starting note
-        for i, pattern_dict in enumerate(self.unfinished_patterns):
-            for (player, measure, section), pattern in pattern_dict.items():
-                if player == current_player and measure == current_measure:
-                    # Find the corresponding starting note in this pattern
-                    for note in pattern.notes:
-                        if note.note_value == note_value and note.length is None:
-                            # Update the note's length
-                            note.length = time - note.start_time
-
-                            # Check if completing this note finalizes the pattern
-                            if pattern.is_complete():
-                                # Prepare timing information tuple
-                                timing_info = (self.bpm, self.division, self.fps, self.pattern_length)
-
-                                # Finalize the pattern
-                                pattern.finalize(self.player_measures, current_player, measure, section,
-                                                 pattern.instrument, self.unfinished_patterns,
-                                                 i, timing_info)
-                            return
-
-    def _process_unfinished_patterns(self, current_measure):
-        """Processes and finalizes any patterns that are complete."""
-        # Prepare timing information tuple
+    def _finalize_patterns(self):
+        """Finalize patterns that are complete."""
         timing_info = (self.bpm, self.division, self.fps, self.pattern_length)
 
-        # Iterate through the list of unfinished patterns
-        for i, pattern_dict in enumerate(self.unfinished_patterns[:]):
-            for (current_player, measure_number, section_number), pattern in pattern_dict.items():
-                if measure_number < current_measure and pattern.is_complete():
-                    # Finalize the pattern
-                    pattern.finalize(self.player_measures, current_player, measure_number,
-                                     section_number, pattern.instrument, self.unfinished_patterns,
-                                     i, timing_info)
+        # Create a list to track patterns to be finalized to avoid modifying the dictionary during iteration
+        patterns_to_finalize = []
+        for key, pattern in self.unfinished_patterns.items():
+            _, measure_number, _ = key
+            if measure_number < self.current_measure and pattern.is_complete():
+                patterns_to_finalize.append((key, pattern))
 
-                    # Remove the pattern from the list of unfinished patterns
-                    del self.unfinished_patterns[i]
-                    break  # Break to avoid modifying the list while iterating
+        # Finalize the patterns outside the loop
+        for key, pattern in patterns_to_finalize:
+            player, measure, section = key
+            pattern.finalize(self.player_measures, player, measure, section, pattern.instrument,
+                             self.unfinished_patterns, key, timing_info)
 
     def _handle_instrument_declaration(self, row):
         """Handles instrument declarations in the MIDI file."""
-        event_type, track, instrument_name = row[2], int(row[0]), row[3]
+        time, event_type, track, instrument_name = int(row[1]), row[2], int(row[0]), row[3]
+
+        # A new player means sections reset to 1
+        self.current_section = 1
 
         # Assign a new player number to a new track if not already assigned
         if track not in self.track_to_player:
@@ -308,11 +280,11 @@ class MidiCsvParser:
             self.player_number += 1
 
         # Get the current player number for this track
-        current_player = self.track_to_player[track]
+        self.current_player = self.track_to_player[track]
 
         # Process the instrument name and update the player's instrument
-        instrument = self._process_instrument_name(instrument_name, event_type, current_player)
-        self.player_instruments[current_player] = {"instrument": instrument, "layout": ""}
+        instrument = self._process_instrument_name(instrument_name, event_type, self.current_player)
+        self.player_instruments[self.current_player] = {"instrument": instrument, "layout": ""}
 
     def _process_instrument_name(self, instrument_name, event_type, current_player):
         """Processes and returns a standardized instrument name."""
