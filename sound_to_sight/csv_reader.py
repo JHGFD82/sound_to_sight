@@ -149,7 +149,7 @@ class MidiCsvParser:
 
     def _handle_note_on(self, row):
         """Handles a 'Note_on_c' event."""
-        time, track, note_value, velocity = self._extract_note_data(row)
+        time, track, note_value, velocity = self._extract_row_data(row, [1, 0, 4, 5])
 
         # Calculate measure time and current measure
         measure_time = time % self.pattern_length
@@ -176,13 +176,8 @@ class MidiCsvParser:
                 self.current_measure >= self.section_start_times[self.current_section]):
             self.current_section += 1
 
-    def _extract_note_data(self, row):
-        """Extracts and returns data from a 'Note_on_c' event row."""
-        time = int(row[1])
-        track = int(row[0])
-        note_value = int(row[4])
-        velocity = int(row[5])
-        return time, track, note_value, velocity
+    def _extract_row_data(self, row, fields):
+        return [int(row[field]) for field in fields]
 
     def _get_instrument_and_layout(self):
         """Retrieve instrument and layout for the current player."""
@@ -243,7 +238,7 @@ class MidiCsvParser:
 
     def _handle_note_off(self, row):
         """Handles a 'Note_off_c' event."""
-        time, track, note_value, _ = self._extract_note_data(row)
+        time, track, note_value = self._extract_row_data(row, [1, 0, 4])
 
         # Process incomplete patterns more efficiently
         for pattern in self.unfinished_patterns.values():
