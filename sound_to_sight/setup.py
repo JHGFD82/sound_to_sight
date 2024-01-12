@@ -6,13 +6,13 @@ setup(
     author='Jeff Heller (JHGFD)',
     author_email='jeffheller@jhgfd.com',
     packages=find_packages(),
-    install_requires=['pandas', 'BPMtoFPS'],
+    install_requires=['BPMtoFPS'],
     entry_points={
         'console_scripts': [
-            'Visualizer-Tools = Visualizer-Tools.main:main',
+            'sound_to_sight = sound_to_sight.main:main',
         ],
     },
-    url="https://github.com/JHGFD82/Visualizer-Tools",
+    url="https://github.com/JHGFD82/sound_to_sight",
     description="Tools to assist in the process of turning music data into video projects.",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
