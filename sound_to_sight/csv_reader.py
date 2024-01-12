@@ -135,6 +135,9 @@ class MidiCsvParser:
         """Processes a single row based on the event type."""
         row = [field.strip() for field in row]
         event_type = row[2]
+        time = int(row[1])
+
+        self.current_measure = (time // self.pattern_length) + 1
 
         # Handle different MIDI event types by delegating to specific methods
         if event_type == 'Note_on_c':
@@ -148,15 +151,14 @@ class MidiCsvParser:
         """Handles a 'Note_on_c' event."""
         time, track, note_value, velocity = self._extract_note_on_data(row)
 
-        # Ensure the player and section are correctly identified
-        current_player, current_section = self._get_player_and_section(track, time)
-
         # Calculate measure time and current measure
         measure_time = time % self.pattern_length
-        current_measure = (time // self.pattern_length) + 1
+
+        # Update the current section count, if applicable
+        self._get_section(time)
 
         # Retrieve instrument and layout information
-        instrument, layout, layout_name = self._get_instrument_and_layout(current_player)
+        instrument, layout, layout_name = self._get_instrument_and_layout()
 
         # Fetch x, y coordinates for the note
         x, y = self._get_note_coordinates(layout, note_value)
@@ -173,26 +175,10 @@ class MidiCsvParser:
         velocity = int(row[5])
         return time, track, note_value, velocity
 
-    def _get_player_and_section(self, track, time):
-        """Determines the current player and section based on the track and time."""
-        current_player = self.track_to_player.get(track, None)
-        if current_player is None:
-            raise ValueError(f"Track {track} is not assigned to any player.")
-
-        # Determine the current section based on time and section_start_times
-        current_section = 1
-        for start_time in self.section_start_times:
-            if time >= start_time:
-                current_section += 1
-            else:
-                break
-
-        return current_player, current_section
-
-    def _get_instrument_and_layout(self, current_player):
+    def _get_instrument_and_layout(self):
         """Retrieve instrument and layout for the current player."""
         # Retrieve the instrument for the current player
-        instrument_info = self.player_instruments.get(current_player, {})
+        instrument_info = self.player_instruments.get(self.current_player, {})
         instrument = instrument_info.get("instrument", self.default_instrument)
 
         # Determine the layout file for the instrument
