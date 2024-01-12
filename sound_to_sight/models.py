@@ -72,6 +72,7 @@ class Pattern:
         else:
             self._update_or_add_player_measure(player_measures[current_player], measure_number, section_number,
                                                current_player, instrument, timing_info)
+
         del unfinished_patterns[index]
 
     def _create_player_measure(self, measure_number, section_number, player_number, instrument, timing_info):
@@ -116,4 +117,5 @@ class PlayerMeasure:
 
     def _update_frame_start(self):
         if all([self._bpm, self._division, self._fps, self._pattern_length]):
-            self.frame_start = ticks_to_frames((self.measure_number - 1) * self._pattern_length, self._bpm, self._division, self._fps)
+            self.frame_start = ticks_to_frames((self.measure_number - 1) * self._pattern_length,
+                                               self._bpm, self._division, self._fps)
