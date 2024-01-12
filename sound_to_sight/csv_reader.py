@@ -149,7 +149,7 @@ class MidiCsvParser:
 
     def _handle_note_on(self, row):
         """Handles a 'Note_on_c' event."""
-        time, track, note_value, velocity = self._extract_note_on_data(row)
+        time, track, note_value, velocity = self._extract_note_data(row)
 
         # Calculate measure time and current measure
         measure_time = time % self.pattern_length
@@ -174,7 +174,7 @@ class MidiCsvParser:
                 self.current_measure >= self.section_start_times[self.current_section]):
             self.current_section += 1
 
-    def _extract_note_on_data(self, row):
+    def _extract_note_data(self, row):
         """Extracts and returns data from a 'Note_on_c' event row."""
         time = int(row[1])
         track = int(row[0])
@@ -241,7 +241,7 @@ class MidiCsvParser:
 
     def _handle_note_off(self, row):
         """Handles a 'Note_off_c' event."""
-        time, track, note_value = self._extract_note_off_data(row)
+        time, track, note_value, _ = self._extract_note_data(row)
 
         # Process incomplete patterns more efficiently
         for pattern in self.unfinished_patterns.values():
@@ -252,13 +252,6 @@ class MidiCsvParser:
 
         # Finalize patterns if necessary, avoiding modifying the dict during iteration
         self._finalize_patterns()
-
-    def _extract_note_off_data(self, row):
-        """Extracts and returns data from a 'Note_off_c' event row."""
-        time = int(row[1])
-        track = int(row[0])
-        note_value = int(row[4])
-        return time, track, note_value
 
     def _finalize_patterns(self):
         """Finalize patterns that are complete."""
