@@ -17,6 +17,11 @@ class MidiCsvParser:
         self.tempo = None
         self.notes_per_bar = None
 
+        # Initialize current placement in row examination
+        self.current_player = None
+        self.current_measure = 1
+        self.current_section = 0
+
         # Initialize data structures for parsing and processing
         self.player_measures = {}  # To store measures associated with each player
         self.unfinished_patterns = []  # To keep track of unfinished musical patterns
