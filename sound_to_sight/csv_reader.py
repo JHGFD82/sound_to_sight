@@ -158,8 +158,7 @@ class MidiCsvParser:
         self._get_section(time)
 
         # Retrieve instrument and layout information
-        instrument = self.player_instruments[self.current_player]['instrument']
-        layout_name = self.player_instruments[self.current_player]['layout'].replace('_layout.json', '')
+        instrument, layout_name = self._get_player_instrument_layout(self.current_player)
         layout = self._get_instrument_and_layout()
 
         x, y = self._get_note_coordinates(layout, note_value)
@@ -178,6 +177,12 @@ class MidiCsvParser:
 
     def _extract_row_data(self, row, fields):
         return [int(row[field]) for field in fields]
+
+    def _get_player_instrument_layout(self, player):
+        instrument = self.player_instruments[player]['instrument']
+        layout_file = self.player_instruments[player]['layout']
+        layout_name = layout_file.replace('_layout.json', '')
+        return instrument, layout_name
 
     def _get_instrument_and_layout(self):
         """Retrieve instrument and layout for the current player."""
