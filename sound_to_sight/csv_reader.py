@@ -11,6 +11,7 @@ class MidiCsvParser:
     def __init__(self, filename, fps, section_start_times):
         self.filename = filename
         self.fps = fps
+        self.section_start_times = section_start_times  # To manage different sections in the music
 
         # Initialize attributes to store MIDI file metadata
         self.division = None
@@ -29,7 +30,6 @@ class MidiCsvParser:
         self.instrument_layout = {}  # To store layout information for each instrument
         self.layout_coordinates = {}  # To store coordinates for each instrument layout
         self.note_symbols = {}  # To map MIDI note numbers to symbols
-        self.section_start_times = section_start_times  # To manage different sections in the music
         self.player_instruments = {}  # Maps player numbers to instruments
         self.track_to_player = {}  # Maps track numbers to player numbers
         self.player_number = 1  # Initial player number
