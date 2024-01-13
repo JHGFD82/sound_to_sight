@@ -1,6 +1,7 @@
 import os
 import argparse
 from csv_reader import MidiCsvParser
+from utils import export_to_json
 
 
 def main(file_list, fps, sections=None, action_safe=False):
@@ -24,6 +25,8 @@ def main(file_list, fps, sections=None, action_safe=False):
         music.append(midi_parser.parse())
 
     print('done!')
+
+    export_to_json(music[0], 'timeline.json')
 
 
 # if __name__ == "__main__":
