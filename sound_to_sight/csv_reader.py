@@ -161,7 +161,7 @@ class MidiCsvParser:
         measure_time = time % self.pattern_length
 
         # Update the current section count, if applicable
-        self._get_section(time)
+        self._get_section()
 
         # Retrieve instrument and layout information
         if not self.player_instruments[self.current_player]['layout']:
@@ -176,7 +176,7 @@ class MidiCsvParser:
         dict_key = (self.current_player, self.current_measure, self.current_section)
         self.unfinished_patterns.setdefault(dict_key, Pattern(instrument)).add_note(note)
 
-    def _get_section(self, time):
+    def _get_section(self):
         # Determine the current section based on time and section_start_times
         if self.current_section < len(self.section_start_times) and (
                 self.current_measure >= self.section_start_times[self.current_section]):
