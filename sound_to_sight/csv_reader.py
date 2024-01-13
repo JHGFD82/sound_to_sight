@@ -159,16 +159,17 @@ class MidiCsvParser:
         self._get_section(time)
 
         # Retrieve instrument and layout information
-        instrument, layout_name = self._get_player_instrument_layout(self.current_player)
-        layout = self._get_instrument_and_layout()
+        if not self.player_instruments[self.current_player]['layout']:
+            self._get_instrument_and_layout()
 
-        x, y = self._get_note_coordinates(layout, note_value)
+        x, y = self._get_note_coordinates(note_value)
+        layout_name = self.player_instruments[self.current_player]['layout'].replace('_layout.json', '')
         note = self._create_note(time, measure_time, note_value, velocity, layout_name, x, y)
+        instrument = self.player_instruments[self.current_player]['instrument']
 
         # Directly add note to pattern, avoiding multiple dictionary lookups
         dict_key = (self.current_player, self.current_measure, self.current_section)
-        pattern = self.unfinished_patterns.setdefault(dict_key, Pattern(instrument))
-        pattern.add_note(note)
+        self.unfinished_patterns.setdefault(dict_key, Pattern(instrument)).add_note(note)
 
     def _get_section(self, time):
         # Determine the current section based on time and section_start_times
@@ -179,17 +180,10 @@ class MidiCsvParser:
     def _extract_row_data(self, row, fields):
         return [int(row[field]) for field in fields]
 
-    def _get_player_instrument_layout(self, player):
-        instrument = self.player_instruments[player]['instrument']
-        layout_file = self.player_instruments[player]['layout']
-        layout_name = layout_file.replace('_layout.json', '')
-        return instrument, layout_name
-
     def _get_instrument_and_layout(self):
         """Retrieve instrument and layout for the current player."""
         # Retrieve the instrument for the current player
-        instrument_info = self.player_instruments.get(self.current_player, {})
-        instrument = instrument_info.get("instrument", self.default_instrument)
+        instrument = self.player_instruments[self.current_player]['instrument']
         layout_file = self.player_instruments[self.current_player]['layout']
 
         # Determine the layout file for the instrument
@@ -209,21 +203,19 @@ class MidiCsvParser:
         self.player_instruments[self.current_player]['layout'] = layout_file
 
         # Extract layout coordinates
-        layout_coordinates = self.layout_coordinates.get(layout_file)
-        if not layout_coordinates:
+        self.current_coords = self.layout_coordinates.get(layout_file)
+        if not self.current_coords:
             raise ValueError(f"No layout coordinates found for layout file: {layout_file}")
 
-        return layout_coordinates
-
-    def _get_note_coordinates(self, layout_coordinates, note_value):
+    def _get_note_coordinates(self, note_value):
         """Retrieve x, y coordinates for the note based on its value and layout."""
-        if note_value not in layout_coordinates:
+        if note_value not in self.current_coords:
             raise ValueError(f"No coordinates found for note value: {note_value} in the given layout.")
 
         # Assuming the layout_coordinates are stored as a list of coordinates for each note value,
         # and we're taking the first set of coordinates for simplicity.
         # You might need to adjust this if your data structure is different.
-        coordinates = layout_coordinates[note_value][0]
+        coordinates = self.current_coords[note_value][0]
 
         # Extract x and y values
         x = coordinates.get('x')
