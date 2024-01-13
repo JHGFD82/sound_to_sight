@@ -106,18 +106,18 @@ class MidiCsvParser:
         """Parse the header to extract MIDI file metadata."""
 
         for row in rows:
-            row = [field.strip() for field in row]
+            event_type = self._string_row_data(row, [2])[0]
 
             # Identify the row type and extract relevant information
-            if row[2] == 'note_on_c':
+            if event_type == 'note_on_c':
                 # Stop metadata extraction when note rows are reached
                 break
-            if row[2] == 'Header':
-                self.division = int(row[5])
-            if row[2] == 'Tempo':
-                self.tempo = int(row[3])
-            if row[2] == 'Time_signature':
-                self.notes_per_bar = int(row[3])
+            if event_type == 'Header':
+                self.division = self._integer_row_data(row, [5])[0]
+            if event_type == 'Tempo':
+                self.tempo = self._integer_row_data(row, [3])[0]
+            if event_type == 'Time_signature':
+                self.notes_per_bar = self._integer_row_data(row, [3])[0]
 
         # Validate extracted metadata
         if not all([self.division, self.tempo, self.notes_per_bar]):
@@ -140,9 +140,8 @@ class MidiCsvParser:
 
     def _process_row(self, row):
         """Processes a single row based on the event type."""
-        row = [field.strip() for field in row]
-        event_type = row[2]
-        time = int(row[1])
+        time = self._integer_row_data(row, [1])[0]
+        event_type = self._string_row_data(row, [2])[0]
 
         self.current_measure = (time // self.pattern_length) + 1
 
@@ -156,7 +155,7 @@ class MidiCsvParser:
 
     def _handle_note_on(self, row):
         """Handles a 'Note_on_c' event."""
-        time, track, note_value, velocity = self._extract_row_data(row, [1, 0, 4, 5])
+        time, track, note_value, velocity = self._integer_row_data(row, [1, 0, 4, 5])
 
         # Calculate measure time and current measure
         measure_time = time % self.pattern_length
@@ -182,9 +181,6 @@ class MidiCsvParser:
         if self.current_section < len(self.section_start_times) and (
                 self.current_measure >= self.section_start_times[self.current_section]):
             self.current_section += 1
-
-    def _extract_row_data(self, row, fields):
-        return [int(row[field]) for field in fields]
 
     def _get_instrument_and_layout(self):
         """Retrieve instrument and layout for the current player."""
@@ -242,7 +238,7 @@ class MidiCsvParser:
 
     def _handle_note_off(self, row):
         """Handles a 'Note_off_c' event."""
-        time, track, note_value = self._extract_row_data(row, [1, 0, 4])
+        time, track, note_value = self._integer_row_data(row, [1, 0, 4])
 
         # Process incomplete patterns more efficiently
         for pattern in self.unfinished_patterns.values():
@@ -273,7 +269,8 @@ class MidiCsvParser:
 
     def _handle_instrument_declaration(self, row):
         """Handles instrument declarations in the MIDI file."""
-        time, event_type, track, instrument_name = int(row[1]), row[2], int(row[0]), row[3]
+        time, track = self._integer_row_data(row, [1, 0])
+        event_type, instrument_name = self._string_row_data(row, [2, 3])
 
         # A new player means sections reset to 1
         self.current_section = 1
