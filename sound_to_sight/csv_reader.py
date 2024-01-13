@@ -22,6 +22,7 @@ class MidiCsvParser:
         self.current_player = None
         self.current_measure = 1
         self.current_section = 0
+        self.current_coords = None
 
         # Initialize data structures for parsing and processing
         self.player_measures = {}  # To store measures associated with each player
