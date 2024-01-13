@@ -37,10 +37,22 @@ class MidiCsvParser:
         self.default_instrument = "keyboard"  # Default instrument in case of missing data
         self.pattern_length = None  # Initialize pattern_length
 
+    def _load_from_json(self, file):
+        with open(file, 'r') as f:
+            return json.load(f)
+
+    def _load_from_csv(self, file):
+        with open(file, 'r') as f:
+            return list(csv.reader(f))
+
+    def _integer_row_data(self, row, fields):
+        return [int(row[field]) for field in fields]
+
+    def _string_row_data(self, row, fields):
+        return [row[field].strip() for field in fields]
     def parse(self):
         # Open and read the CSV file
-        with open(self.filename, "r") as csvfile:
-            rows = list(csv.reader(csvfile))
+        rows = self._load_from_csv(self.filename)
 
         # Parse the header to extract MIDI file metadata
         self._parse_header(rows)
@@ -49,7 +61,7 @@ class MidiCsvParser:
         self.establish_sections()
 
         # Load additional resources necessary for parsing
-        self.supported_instruments = self._load_supported_instruments()
+        self.supported_instruments = {}
         self._initialize_instrument_layouts()
 
         # Read additional MIDI info if required
@@ -65,8 +77,8 @@ class MidiCsvParser:
     def _initialize_instrument_layouts(self):
         """Loads instrument layout information."""
         # Load supported instruments first
-        self.supported_instruments = self._load_supported_instruments()
-        layout_dir = 'midi_data/visual_layouts/'
+        supported_instruments_json = 'midi_data/supported_instruments.json'
+        self.supported_instruments = self._load_from_json(supported_instruments_json)
 
         # Populate the instrument_layout and layout_coordinates dictionaries
         for layout_file, instruments in self.supported_instruments.items():
@@ -75,21 +87,15 @@ class MidiCsvParser:
                 self.instrument_layout[instrument] = layout_file
 
             # Load layout coordinates from the layout file
-            with open(os.path.join(layout_dir, layout_file), 'r') as f:
-                layout = json.load(f)
-                layout_coord = {int(key): values for key, values in layout.items()}
-                self.layout_coordinates[layout_file] = layout_coord
-
-    def _load_supported_instruments(self):
-        """Load supported instruments from a JSON file."""
-        with open('midi_data/supported_instruments.json', 'r') as f:
-            return json.load(f)
+            layout_dir = 'midi_data/visual_layouts/'
+            layout = self._load_from_json(layout_dir + layout_file)
+            layout_coord = {int(key): values for key, values in layout.items()}
+            self.layout_coordinates[layout_file] = layout_coord
 
     def _load_midi_info(self):
         """Loads MIDI information from a JSON file."""
         midi_info_file = 'midi_data/midi_info.json'  # Path to the MIDI info JSON file
-        with open(midi_info_file, 'r') as f:
-            midi_info = json.load(f)
+        midi_info = self._load_from_json(midi_info_file)
 
         # Convert the MIDI info into a more usable format, if necessary
         # For example, creating a dictionary that maps MIDI note numbers to note symbols
