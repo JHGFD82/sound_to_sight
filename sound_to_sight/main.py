@@ -1,10 +1,13 @@
 import os
 import argparse
 from csv_reader import MidiCsvParser
-from utils import export_to_json
+from utils import export_timeline, export_player_definitions, export_pattern_definitions, calculate_fps, music_to_video_length
+
+MIN_FPS = 24
+MAX_FPS = 60
 
 
-def main(file_list, fps, sections=None, action_safe=False):
+def main(file_list, fps, video_resolution, sections=None, action_safe=False):
     # FILE IMPORT
     for file in file_list:
         if not os.path.isfile(file):
@@ -22,7 +25,10 @@ def main(file_list, fps, sections=None, action_safe=False):
 
     for file in file_list:
         midi_parser = MidiCsvParser(file, fps, sections)
-        music.append(midi_parser.parse())
+        music_instance, bpm, notes_per_bar, division, total_length = midi_parser.parse()
+        pattern_fps = calculate_fps(bpm, notes_per_bar, MIN_FPS, MAX_FPS)
+        project_length = music_to_video_length(total_length, bpm, fps)
+        music.append(music_instance)
 
     print('done!')
 
@@ -42,4 +48,4 @@ def main(file_list, fps, sections=None, action_safe=False):
 #     main(args.input_files, args.bpm, args.fps, args.sections, args.action_safe)
 
 
-main(['../../Six Marimbas/Music/Six.csv'], 60, sections=[329, 676])
+main(['../../Six Marimbas/Music/Six.csv'], 60, [3840, 2160], sections=[329, 676])
