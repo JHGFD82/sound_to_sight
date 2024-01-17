@@ -2,7 +2,7 @@ import json
 from BPMtoFPS import beats_to_seconds, seconds_to_timecode
 
 
-def export_to_json(player_measures_dict, filename):
+def export_timeline(player_measures_dict, filename):
     section_dict = {}
     for player in player_measures_dict.values():
         for player_measure in player:
