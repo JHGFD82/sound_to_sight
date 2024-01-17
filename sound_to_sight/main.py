@@ -32,7 +32,9 @@ def main(file_list, fps, video_resolution, sections=None, action_safe=False):
 
     print('done!')
 
-    export_to_json(music[0], 'timeline.json')
+    export_timeline(music[0], 'timeline.json')
+    export_pattern_definitions(music[0], 'patterns.json')
+    export_player_definitions(music[0], 'players.json')
 
 
 # if __name__ == "__main__":
