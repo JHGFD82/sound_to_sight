@@ -36,6 +36,7 @@ class MidiCsvParser:
         self.player_number = 1  # Initial player number
         self.default_instrument = "keyboard"  # Default instrument in case of missing data
         self.pattern_length = None  # Initialize pattern_length
+        self.total_length = 0
 
     def _load_from_json(self, file):
         with open(file, 'r') as f:
@@ -167,6 +168,13 @@ class MidiCsvParser:
             self._handle_note_off(row)
         elif event_type in ['Title_t', 'Instrument_name_t']:
             self._handle_instrument_declaration(row)
+        elif event_type == 'End_track':
+            self._find_total_length(row)
+
+    def _find_total_length(self, row):
+        length = int(row[1])
+        if length > self.total_length:
+            self.total_length = length
 
     def _handle_note_on(self, row):
         """Handles a 'Note_on_c' event."""
