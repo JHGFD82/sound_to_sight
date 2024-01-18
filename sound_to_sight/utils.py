@@ -1,5 +1,5 @@
 import json
-from BPMtoFPS import beats_to_seconds, seconds_to_timecode
+from BPMtoFPS import beats_to_seconds
 
 
 def export_timeline(player_measures_dict, filename):
