@@ -83,9 +83,10 @@ function processPlayers(sectionKey, measureKey, measure) {
             var player = measure[playerKey];
             
             // Perform actions on players here (if needed)
+            var playerLayout = playerData[playerKey]['layout']
 
             // Process patterns for this player
-            processPatterns(sectionKey, measureKey, playerKey, player);
+            processPatterns(sectionKey, measureKey, playerKey, player, playerLayout);
         }
     }
 }
