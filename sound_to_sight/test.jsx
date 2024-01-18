@@ -59,17 +59,19 @@ function loadJSONData(fileName, data) {
 }
 
 // Call functions to load data from reference JSONs
-patternData = loadJSONData('patterns.json', patternData);
-playerData = loadJSONData('players.json', playerData);
+var patternData = loadJSONData('patterns.json', patternData);
+var playerData = loadJSONData('players.json', playerData);
+
+// Ok, so what happens next? After patterns are extracted,  
 
 // Recursive function to process patterns
-function processPatterns(sectionKey, measureKey, playerKey, player) {
+function processPatterns(sectionKey, measureKey, playerKey, player, playerLayout) {
     for (var patternKey in player) {
         if (player.hasOwnProperty(patternKey)) {
             var patternValue = player[patternKey];
             
             // Perform actions on the pattern here
-            alert("Section: " + sectionKey + ", Measure: " + measureKey + ", Player: " + playerKey + ", Pattern: " + patternKey + ", Value: " + patternValue);
+            // alert("Section: " + sectionKey + ", Measure: " + measureKey + ", Player: " + playerKey + ", Pattern: " + patternKey + ", Value: " + patternValue);
         }
     }
 }
