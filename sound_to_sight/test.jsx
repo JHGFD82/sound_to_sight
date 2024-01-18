@@ -121,43 +121,46 @@ function processSections(timelineData) {
 
 // Main function
 function main() {
-    var timelinePath = new File($.fileName).parent.fullName + '/timeline.json'; // Replace with your JSON file path
+
+    // Import project detail JSON
+    var detailPath = new File($.fileName).parent.fullName + '/project_details.json';
+    try {
+        var detailContent = readFile(detailPath);
+        var detailData = parseJSON(detailContent);
+    } catch (e) {
+        throw new Error('Error: ' + e.message);
+    }
+
+    // Save project details to variables
+    var patternFPS = detailData['pattern_fps'];
+    var projectLength = detailData['project_length'];
+    var fps = detailData['fps'];
+    var videoResolution = detailData['video_resolution'];
+
+    // Import timeline JSON
+    var timelinePath = new File($.fileName).parent.fullName + '/timeline.json';
     try {
         var timelineContent = readFile(timelinePath);
         var timelineData = parseJSON(timelineContent);
     } catch (e) {
-        $.writeln('Error: ' + e.message);
+        throw new Error('Error: ' + e.message);
     }
 
-    var project = app.project;
+    // Check for main comp first, create it if it doesn't exist
+    mainComp();
 
-    // Main comp creation
-    var compNameToCheck = "Main comp"; // Replace with the name of the composition you want to check
+    // Note Object searching from the root of the project
+    var itemNameToCheck = prompt("What is the name of your note object?", "");
+    var noteObject = verifyExist(itemNameToCheck);
 
-    // Loop through all items in the project to find the composition
-    for (var i = 1; i <= project.numItems; i++) {
-        var currentItem = project.item(i);
-        if (currentItem instanceof CompItem && currentItem.name === compNameToCheck) {
-            break; // You can break out of the loop once you find the composition
-        }
+    // If the note object does not exist, throw an error
+    if (!noteObject) {
+        throw new Error("The note object " + itemNameToCheck + " was not found.");
     }
 
-    // If the loop finishes and no matching composition is found
-    if (i > project.numItems) {
-        var newComp = app.project.items.addComp("Main comp", 3840, 2160, 1, 1142.5, 60);
-    }
-
-    // Note Object selection
-    var result = prompt("What is the name of your note object?");
-
-    // Start searching from the root of the project
-    var 
-    var compositionFound = verifyExist(project.rootitem);
-
-    // If the composition is not found anywhere in the project
-    if (!compositionFound) {
-        alert("Composition does not exist in any item.");
-    }
+    // Grab the duration of the note object
+    var noteDuration = noteObject.duration;
+    var totalDuration = projectLength + noteDuration;
 
     //Begin construction of note-based compositions
     processSections(timelineData);
