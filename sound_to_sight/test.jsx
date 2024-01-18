@@ -1,23 +1,29 @@
+// Declare global variables
 var project = app.project;
 
-function verifyExist(item) {
-    for (var i = 1; i <= item.numItems; i++) {
-        var currentItem = item.item(i);
-        
-        if (currentItem.name === compNameToCheck) {
-            // Composition with the specified name exists in the item
-            alert("Composition exists in item: " + item.name);
-            return true;
-        }
-        
-        // Check if the item is a item and recursively search inside it
-        if (currentItem instanceof FolderItem) {
-            if (verifyExist(currentItem)) {
-                return true; // Found in a subitem, no need to continue searching
-            }
+// Check project assets for existence of specified item
+function verifyExist(itemName) {
+    for (var i = 1; i <= project.numItems; i++) {
+        var currentItem = project.items[i];
+        if (currentItem.name === itemName) {
+            return project.items[i];
         }
     }
-    return false; // Composition not found in this item
+    return null; // Composition not found in this item
+}
+
+    // Main comp creation
+function mainComp() {
+
+    var itemNameToCheck = "Main Comp"; // Replace with the name of the composition you want to check
+
+    // Loop through all items in the project to find the composition
+    var mainCompExist = verifyExist(itemNameToCheck);
+
+    // If the loop finishes and no matching composition is found, create the comp
+    if (!mainCompExist) {
+        var newComp = project.items.addComp(itemNameToCheck, videoResolution[0], videoResolution[1], 1, totalDuration, fps);
+    }
 }
 
 // Function to read a file and return its content as a string
