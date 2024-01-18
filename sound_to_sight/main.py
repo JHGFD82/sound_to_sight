@@ -1,13 +1,14 @@
 import os
 import argparse
 from csv_reader import MidiCsvParser
-from utils import export_timeline, export_player_definitions, export_pattern_definitions, calculate_fps, music_to_video_length
+from utils import (export_timeline, export_player_definitions, export_pattern_definitions, export_project_details,
+                   calculate_fps, music_to_video_length)
 
 MIN_FPS = 24
 MAX_FPS = 60
 
 
-def main(file_list, fps, video_resolution, sections=None, action_safe=False):
+def main(file_list, fps, video_resolution, sections=None):
     # FILE IMPORT
     for file in file_list:
         if not os.path.isfile(file):
