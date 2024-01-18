@@ -76,5 +76,5 @@ def calculate_fps(bpm, beats_per_measure, fps_min=24, fps_max=60):
     return None
 
 
-def music_to_video_length(length, bpm, fps):
-    return seconds_to_timecode(beats_to_seconds(length, bpm), fps)
+def music_to_video_length(length, bpm):
+    return beats_to_seconds(length, bpm)
