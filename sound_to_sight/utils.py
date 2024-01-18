@@ -2,6 +2,14 @@ import json
 from BPMtoFPS import beats_to_seconds
 
 
+def export_project_details(pattern_fps, project_length, fps, video_resolution, filename):
+    project_details = {'pattern_fps': pattern_fps, 'project_length': project_length,
+                       'fps': fps, 'video_resolution': video_resolution}
+
+    with open(filename, 'w') as json_file:
+        json.dump(project_details, json_file, indent=4)
+
+
 def export_timeline(player_measures_dict, filename):
     section_dict = {}
     for player in player_measures_dict.values():
