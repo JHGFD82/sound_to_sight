@@ -144,9 +144,6 @@ function main() {
         throw new Error('Error: ' + e.message);
     }
 
-    // Check for main comp first, create it if it doesn't exist
-    mainComp();
-
     // Note Object searching from the root of the project
     var itemNameToCheck = prompt("What is the name of your note object?", "");
     var noteObject = verifyExist(itemNameToCheck);
@@ -167,6 +164,8 @@ function main() {
     var noteDuration = noteObject.duration;
     var totalDuration = projectLength + noteDuration;
 
+    // Check for main comp first, create it if it doesn't exist
+    mainComp(videoResolution, totalDuration, fps);
     //Begin construction of note-based compositions
     processSections(timelineData);
 
