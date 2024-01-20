@@ -156,6 +156,13 @@ function main() {
         throw new Error("The note object " + itemNameToCheck + " was not found.");
     }
 
+    // Check if the item is indeed a composition, and if so save the resolution for later use
+    if (noteObject instanceof CompItem) {
+        var noteResolution = [myComp.width, myComp.height];
+    } else {
+        throw new Error("\"" + itemNameToCheck + "\" is not a composition.");
+    }
+
     // Grab the duration of the note object
     var noteDuration = noteObject.duration;
     var totalDuration = projectLength + noteDuration;
