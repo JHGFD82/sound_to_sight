@@ -1,5 +1,5 @@
 import json
-from BPMtoFPS import beats_to_seconds
+from BPMtoFPS import ticks_to_seconds
 
 
 def export_project_details(pattern_fps, project_length, pattern_length, fps, video_resolution, filename):
@@ -87,5 +87,5 @@ def calculate_fps(bpm, beats_per_measure, fps_min=24, fps_max=60):
     return None
 
 
-def music_to_video_length(length, bpm):
-    return beats_to_seconds(length, bpm)
+def music_to_video_length(length, bpm, division):
+    return ticks_to_seconds(length, bpm, division)
