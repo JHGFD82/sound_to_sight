@@ -12,20 +12,6 @@ function verifyExist(itemName) {
     return null; // Composition not found in this item
 }
 
-    // Main comp creation
-function mainComp() {
-
-    var itemNameToCheck = "Main Comp"; // Replace with the name of the composition you want to check
-
-    // Loop through all items in the project to find the composition
-    var mainCompExist = verifyExist(itemNameToCheck);
-
-    // If the loop finishes and no matching composition is found, create the comp
-    if (!mainCompExist) {
-        var newComp = project.items.addComp(itemNameToCheck, videoResolution[0], videoResolution[1], 1, totalDuration, fps);
-    }
-}
-
 // Function to read a file and return its content as a string
 function readFile(filePath) {
     var file = new File(filePath);
@@ -62,7 +48,19 @@ function loadJSONData(fileName, data) {
 var patternData = loadJSONData('patterns.json', patternData);
 var playerData = loadJSONData('players.json', playerData);
 
-// Ok, so what happens next? After patterns are extracted,  
+// Main comp creation
+function mainComp(videoResolution, totalDuration, fps) {
+
+    var itemNameToCheck = "Main Comp"; // Replace with the name of the composition you want to check
+
+    // Loop through all items in the project to find the composition
+    var mainCompExist = verifyExist(itemNameToCheck);
+
+    // If the loop finishes and no matching composition is found, create the comp
+    if (!mainCompExist) {
+        project.items.addComp(itemNameToCheck, videoResolution[0], videoResolution[1], 1, totalDuration, fps);
+    }
+}
 
 // Recursive function to process patterns
 function processPatterns(sectionKey, measureKey, playerKey, player, playerLayout) {
