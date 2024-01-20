@@ -165,7 +165,7 @@ function processSections(timelineData) {
 function main() {
 
     // Import project detail JSON
-    var detailPath = new File($.fileName).parent.fullName + '/project_details.json';
+    var detailPath = new File($.fileName).parent.fullName + '/project_detail.json';
     try {
         var detailContent = readFile(detailPath);
         var detailData = parseJSON(detailContent);
