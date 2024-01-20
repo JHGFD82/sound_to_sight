@@ -62,6 +62,43 @@ function mainComp(videoResolution, totalDuration, fps) {
     }
 }
 
+function patternBuilder() {
+    pass;
+}
+
+function patternLayout(layoutKey, noteResolution, patternLength, patternFPS) {
+    // Check if the folder for the instrument layout already exists
+    var folderExists = verifyExist(layoutKey);
+
+    // If there is no folder, create it
+    if (!folderExists) {
+        project.items.addFolder(layoutKey);
+    }
+    for (patternKey in patternData[layoutKey]) {
+        project.items.addComp(layoutKey, noteResolution[0], noteResolution[1], 1, patternLength, patternFPS);
+        for (noteKey in patternKey) {
+            patternBuilder(patternKey[noteKey]);
+        }
+    }
+}
+
+// Pattern folder and composition creation process
+function patternDirectoryCreator(noteResolution, patternLength, patternFPS) {
+    // Check if the folder for the player already exists
+    var folderExists = verifyExist("Patterns");
+
+    // If there is no folder, create it
+    if (!folderExists) {
+        project.items.addFolder("Patterns");
+    }
+
+    // Start the pattern building process
+    for (layoutKey in patternData) {
+        patternLayout(layoutKey, noteResolution, patternLength, patternFPS);
+    }
+}
+
+
 // Recursive function to process patterns
 function processPatterns(sectionKey, measureKey, playerKey, player, playerLayout) {
     for (var patternKey in player) {
@@ -139,6 +176,7 @@ function main() {
     // Save project details to variables
     var patternFPS = detailData['pattern_fps'];
     var projectLength = detailData['project_length'];
+    var patternLength = detailData['pattern_length']
     var fps = detailData['fps'];
     var videoResolution = detailData['video_resolution'];
 
@@ -173,6 +211,10 @@ function main() {
 
     // Check for main comp first, create it if it doesn't exist
     mainComp(videoResolution, totalDuration, fps);
+
+    // Create pattern folder and compositions
+    patternDirectoryCreator(noteResolution, patternLength, patternFPS);
+
     //Begin construction of note-based compositions
     processSections(timelineData);
 
