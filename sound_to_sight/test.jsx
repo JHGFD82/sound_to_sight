@@ -55,50 +55,61 @@ function mainComp() {
     }
 }
 
-function patternBuilder() {
-    pass;
+// Assemble patterns with supplied note information
+function patternBuilder(patternComp, note, instrumentDiagramSize) {
+    var noteLayer = patternComp.layers.add(noteObject);
+    noteLayer.startTime = note[0] / fps;
+    noteLayer.opacity.setValue(note[2] / 6);
+    var noteLayerWidth = note[4][0] + (patternComp.width / 2) - (instrumentDiagramSize[0] / 2);
+    var noteLayerHeight = note[4][1] + (patternComp.height / 2) - (instrumentDiagramSize[1] / 2);
+    noteLayer.position.setValue([noteLayerWidth, noteLayerHeight]);
 }
 
-function patternLayout(layoutKey, noteResolution, patternLength, patternFPS) {
-    // Check if the folder for the instrument layout already exists
-    var folderExists = verifyExist(layoutKey);
+// Create pattern compositions
+function patternLayout(patternFolder, layoutKey, instrumentDiagram) {
+    var layoutFolder = verifyExist(layoutKey) || project.items.addFolder(layoutKey);
+    layoutFolder.parentFolder = patternFolder;
+    instrumentDiagram.parentFolder = layoutFolder;
+    var instrumentDiagramSize = [instrumentDiagram.width, instrumentDiagram.height];
 
-    // If there is no folder, create it
-    if (!folderExists) {
-        project.items.addFolder(layoutKey);
-    }
-    for (patternKey in patternData[layoutKey]) {
-        project.items.addComp(layoutKey, noteResolution[0], noteResolution[1], 1, patternLength, patternFPS);
-        for (noteKey in patternKey) {
-            patternBuilder(patternKey[noteKey]);
+    for (var patternKey in patternData[layoutKey]) {
+        if (patternData[layoutKey].hasOwnProperty(patternKey)) {
+            var patternComp = project.items.addComp(patternKey, noteResolution[0], noteResolution[1], 1, noteDuration, patternFPS);
+            patternComp.parentFolder = layoutFolder;
+            patternComp.layers.add(instrumentDiagram);
+
+            var notesArray = patternData[layoutKey][patternKey];
+            if (Array.isArray(notesArray)) {
+                for (var i = 0; i < notesArray.length; i++) {
+                    patternBuilder(patternComp, notesArray[i], instrumentDiagramSize);
+                }
+            } else {
+                $.writeln('Error: patternData for ' + layoutKey + ' - ' + patternKey + ' is not an array.');
+            }
         }
     }
 }
 
 // Pattern folder and composition creation process
-function patternDirectoryCreator(noteResolution, patternLength, patternFPS) {
-    // Check if the folder for the player already exists
-    var folderExists = verifyExist("Patterns");
+function patternDirectoryCreator() {
+    var patternFolder = verifyExist("Patterns") || project.items.addFolder("Patterns");
 
-    // If there is no folder, create it
-    if (!folderExists) {
-        project.items.addFolder("Patterns");
-    }
-
-    // Start the pattern building process
-    for (layoutKey in patternData) {
-        patternLayout(layoutKey, noteResolution, patternLength, patternFPS);
+    for (var layoutKey in patternData) {
+        var footageFile = new File($.fileName).parent.fullName + "/midi_data/visual_layouts/graphics/" + layoutKey + "_layout.ai";
+        var instrumentDiagram = verifyExist(footageFile) || project.importFile(new ImportOptions(new File(footageFile)));
+        patternLayout(patternFolder, layoutKey, instrumentDiagram);
     }
 }
-
 
 // Recursive function to process patterns
 function processPatterns(sectionKey, measureKey, playerKey, player, playerLayout) {
     for (var patternKey in player) {
         if (player.hasOwnProperty(patternKey)) {
             var patternValue = player[patternKey];
+            if (patternValue )
             
             // Perform actions on the pattern here
+            var pattern = patternData[playerLayout][patternKey]
             // alert("Section: " + sectionKey + ", Measure: " + measureKey + ", Player: " + playerKey + ", Pattern: " + patternKey + ", Value: " + patternValue);
         }
     }
