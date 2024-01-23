@@ -1,5 +1,4 @@
 import json
-import os
 import csv
 import re
 from sound_to_sight import Note, Pattern
