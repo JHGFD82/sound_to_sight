@@ -168,56 +168,44 @@ function processSections(timelineData) {
 // Main function
 function main() {
 
+    // Call functions to load data from reference JSONs
+    patternData = loadJSONData('patterns.json');
+    playerData = loadJSONData('players.json');
+    instrument_info = loadJSONData('midi_data/supported_instruments.json')
+
     // Import project detail JSON
-    var detailPath = new File($.fileName).parent.fullName + '/project_detail.json';
-    try {
-        var detailContent = readFile(detailPath);
-        var detailData = parseJSON(detailContent);
-    } catch (e) {
-        throw new Error('Error: ' + e.message);
-    }
+    var detailData = loadJSONData('project_detail.json');
 
     // Save project details to variables
-    var patternFPS = detailData['pattern_fps'];
-    var projectLength = detailData['project_length'];
-    var patternLength = detailData['pattern_length']
-    var fps = detailData['fps'];
-    var videoResolution = detailData['video_resolution'];
+    patternFPS = detailData['pattern_fps'];
+    projectLength = detailData['project_length'];
+    patternLength = detailData['pattern_length'];
+    fps = detailData['fps'];
+    videoResolution = detailData['video_resolution'];
 
     // Import timeline JSON
-    var timelinePath = new File($.fileName).parent.fullName + '/timeline.json';
-    try {
-        var timelineContent = readFile(timelinePath);
-        var timelineData = parseJSON(timelineContent);
-    } catch (e) {
-        throw new Error('Error: ' + e.message);
-    }
+    var timelineData = loadJSONData('timeline.json');
 
     // Note Object searching from the root of the project
-    var itemNameToCheck = prompt("What is the name of your note object?", "");
-    var noteObject = verifyExist(itemNameToCheck);
+    // var itemNameToCheck = prompt("What is the name of your note object?", "");
+    var itemNameToCheck = 'Base Ring';
+    noteObject = verifyExist(itemNameToCheck);
 
     // If the note object does not exist, throw an error
-    if (!noteObject) {
-        throw new Error("The note object " + itemNameToCheck + " was not found.");
+    if (!noteObject || !(noteObject instanceof CompItem)) {
+        throw new Error("The note object " + itemNameToCheck + " was not found or is not a composition.");
     }
-
-    // Check if the item is indeed a composition, and if so save the resolution for later use
-    if (noteObject instanceof CompItem) {
-        var noteResolution = [myComp.width, myComp.height];
-    } else {
-        throw new Error("\"" + itemNameToCheck + "\" is not a composition.");
-    }
-
+    
     // Grab the duration of the note object
-    var noteDuration = noteObject.duration;
-    var totalDuration = projectLength + noteDuration;
+    noteResolution = [noteObject.width, noteObject.height];
+    noteDuration = noteObject.duration + patternLength;
+    totalDuration = projectLength + noteDuration;
 
     // Check for main comp first, create it if it doesn't exist
-    mainComp(videoResolution, totalDuration, fps);
+    mainComp();
 
     // Create pattern folder and compositions
-    patternDirectoryCreator(noteResolution, patternLength, patternFPS);
+    patternDirectoryCreator();
 
     //Begin construction of note-based compositions
     processSections(timelineData);
