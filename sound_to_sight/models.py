@@ -44,9 +44,10 @@ class Note:
 
 
 class Pattern:
-    def __init__(self, instrument):
+    def __init__(self, instrument, footage):
         self.notes = []
         self.instrument = instrument
+        self.footage = footage
         self.hash = None
 
     def add_note(self, note):
@@ -62,26 +63,27 @@ class Pattern:
         """Check if all notes in the pattern are complete (have lengths)."""
         return all(note.length is not None for note in self.notes)
 
-    def finalize(self, player_measures, current_player, measure_number, section_number, instrument, unfinished_patterns,
-                 index, timing_info):
+    def finalize(self, player_measures, current_player, measure_number, section_number, instrument, footage,
+                 unfinished_patterns, index, timing_info):
         """Finalize the pattern and update relevant structures."""
         self.hash = self.calculate_hash()
         if current_player not in player_measures:
             player_measures[current_player] = [self._create_player_measure(measure_number, section_number,
-                                                                           current_player, instrument, timing_info)]
+                                                                           current_player, instrument, footage,
+                                                                           timing_info)]
         else:
             self._update_or_add_player_measure(player_measures[current_player], measure_number, section_number,
-                                               current_player, instrument, timing_info)
+                                               current_player, instrument, footage, timing_info)
 
         del unfinished_patterns[index]
 
-    def _create_player_measure(self, measure_number, section_number, player_number, instrument, timing_info):
-        player_measure = PlayerMeasure(measure_number, section_number, player_number, instrument, self)
+    def _create_player_measure(self, measure_number, section_number, player_number, instrument, footage, timing_info):
+        player_measure = PlayerMeasure(measure_number, section_number, player_number, instrument, footage, self)
         player_measure.set_timing_info(*timing_info)
         return player_measure
 
     def _update_or_add_player_measure(self, player_measures_list, measure_number, section_number, player_number,
-                                      instrument, timing_info):
+                                      instrument, footage, timing_info):
         latest_pm = player_measures_list[-1]
 
         pattern_changed = self.hash != latest_pm.pattern.hash
@@ -89,17 +91,18 @@ class Pattern:
 
         if pattern_changed or section_changed:
             player_measures_list.append(self._create_player_measure(measure_number, section_number, player_number,
-                                                                    instrument, timing_info))
+                                                                    instrument, footage, timing_info))
         else:
             latest_pm.play_count += 1
 
 
 class PlayerMeasure:
-    def __init__(self, measure_number, section_number, player_number, instrument, pattern):
+    def __init__(self, measure_number, section_number, player_number, instrument, footage, pattern):
         self.measure_number = measure_number
         self.section_number = section_number
         self.player_number = player_number
         self.instrument = instrument
+        self.footage = footage
         self.pattern = pattern
         self.play_count = 1
         self._bpm = None

@@ -38,9 +38,10 @@ def export_player_definitions(player_measures_dict, filename):
     for player in player_measures_dict.values():
         player_number = player[0].player_number
         instrument = player[0].instrument
+        footage = player[0].footage
         layout = player[0].pattern.notes[0].layout
 
-        player_definitions[player_number] = {'instrument': instrument, 'layout': layout}
+        player_definitions[player_number] = {'instrument': instrument, 'layout': layout, 'footage': footage}
 
     with open(filename, 'w') as json_file:
         json.dump(player_definitions, json_file, indent=4)

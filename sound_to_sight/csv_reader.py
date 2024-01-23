@@ -194,10 +194,11 @@ class MidiCsvParser:
         layout_name = self.player_instruments[self.current_player]['layout'].replace('_layout.json', '')
         note = self._create_note(time, measure_time, note_value, velocity, layout_name, x, y)
         instrument = self.player_instruments[self.current_player]['instrument']
+        footage = self.player_instruments[self.current_player]['footage']
 
         # Directly add note to pattern, avoiding multiple dictionary lookups
         dict_key = (self.current_player, self.current_measure, self.current_section)
-        self.unfinished_patterns.setdefault(dict_key, Pattern(instrument)).add_note(note)
+        self.unfinished_patterns.setdefault(dict_key, Pattern(instrument, footage)).add_note(note)
 
     def _get_section(self):
         # Determine the current section based on time and section_start_times
@@ -226,6 +227,7 @@ class MidiCsvParser:
                     instrument = self.default_instrument
 
         self.player_instruments[self.current_player]['layout'] = layout_file
+        self.player_instruments[self.current_player]['footage'] = self.supported_instruments[instrument]['footage']
 
         # Extract layout coordinates
         self.current_coords = self.layout_coordinates.get(layout_file)
@@ -287,7 +289,7 @@ class MidiCsvParser:
         # Finalize the patterns outside the loop
         for key, pattern in patterns_to_finalize:
             player, measure, section = key
-            pattern.finalize(self.player_measures, player, measure, section, pattern.instrument,
+            pattern.finalize(self.player_measures, player, measure, section, pattern.instrument, pattern.footage,
                              self.unfinished_patterns, key, timing_info)
 
     def _handle_instrument_declaration(self, row):
@@ -308,7 +310,7 @@ class MidiCsvParser:
 
         # Process the instrument name and update the player's instrument
         instrument = self._process_instrument_name(instrument_name, event_type, self.current_player)
-        self.player_instruments[self.current_player] = {"instrument": instrument, "layout": ""}
+        self.player_instruments[self.current_player] = {"instrument": instrument, "layout": "", "footage": ""}
 
     def _process_instrument_name(self, instrument_name, event_type, current_player):
         """Processes and returns a standardized instrument name."""
