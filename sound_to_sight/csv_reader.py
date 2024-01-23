@@ -236,7 +236,7 @@ class MidiCsvParser:
         self.player_instruments[self.current_player]['footage'] = self.supported_instruments[instrument]['footage']
 
         # Extract layout coordinates
-        self.current_coords = self.layout_coordinates.get(layout_file)
+        self.current_coords = self.layout_coordinates.get(instrument)
         if not self.current_coords:
             raise ValueError(f"No layout coordinates found for layout file: {layout_file}")
 
