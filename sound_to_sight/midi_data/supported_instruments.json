@@ -1,24 +1,66 @@
 {
-  "cello_layout.json": [
-    "cello"
-  ],
-  "keyboard_layout.json": [
-    "accordion",
-    "celesta",
-    "clavichord",
-    "electric keyboard",
-    "glockenspiel",
-    "keyboard",
-    "harpsichord",
-    "marimba",
-    "melodica",
-    "organ",
-    "piano",
-    "synthesizer",
-    "vibraphone",
-    "xylophone"
-  ],
-  "violin_layout.json": [
-    "violin"
-  ]
+  "cello": {
+    "layout": "cello_layout.json",
+    "footage": ""
+  },
+  "violin": {
+    "layout": "violin_layout.json",
+    "footage": ""
+  },
+  "keyboard": {
+    "layout": "keyboard_layout.json",
+    "footage": ""
+  },
+  "piano": {
+    "layout": "keyboard_layout.json",
+    "footage": ""
+  },
+  "organ": {
+    "layout": "keyboard_layout.json",
+    "footage": ""
+  },
+  "synthesizer": {
+    "layout": "keyboard_layout.json",
+    "footage": ""
+  },
+  "electric keyboard": {
+    "layout": "keyboard_layout.json",
+    "footage": ""
+  },
+  "accordian": {
+    "layout": "keyboard_layout.json",
+    "footage": ""
+  },
+  "celesta": {
+    "layout": "keyboard_layout.json",
+    "footage": ""
+  },
+  "clavichord": {
+    "layout": "keyboard_layout.json",
+    "footage": ""
+  },
+  "glockenspiel": {
+    "layout": "keyboard_layout.json",
+    "footage": ""
+  },
+  "harpsichord": {
+    "layout": "keyboard_layout.json",
+    "footage": ""
+  },
+  "melodica": {
+    "layout": "keyboard_layout.json",
+    "footage": ""
+  },
+  "marimba": {
+    "layout": "marimba_layout.json",
+    "footage": "marimba_layout.ai"
+  },
+  "vibraphone": {
+    "layout": "marimba_layout.json",
+    "footage": "marimba_layout.ai"
+  },
+  "xylophone": {
+    "layout": "marimba_layout.json",
+    "footage": "marimba_layout.ai"
+  }
 }
