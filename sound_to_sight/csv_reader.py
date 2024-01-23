@@ -96,17 +96,23 @@ class MidiCsvParser:
         supported_instruments_json = 'midi_data/supported_instruments.json'
         self.supported_instruments = self._load_from_json(supported_instruments_json)
 
-        # Populate the instrument_layout and layout_coordinates dictionaries
-        for layout_file, instruments in self.supported_instruments.items():
-            # Map each instrument to its corresponding layout file
-            for instrument in instruments:
-                self.instrument_layout[instrument] = layout_file
+        # Create a dictionary to store already loaded layouts to prevent duplicate loading
+        loaded_layouts = {}
 
-            # Load layout coordinates from the layout file
-            layout_dir = 'midi_data/visual_layouts/'
-            layout = self._load_from_json(layout_dir + layout_file)
-            layout_coord = {int(key): values for key, values in layout.items()}
-            self.layout_coordinates[layout_file] = layout_coord
+        # Populate the instrument_layout and layout_coordinates dictionaries
+        for instrument, data in self.supported_instruments.items():
+            layout_file = data['layout']
+
+            # Check if layout is already loaded
+            if layout_file not in loaded_layouts:
+                layout_dir = 'midi_data/visual_layouts/'
+                layout = self._load_from_json(layout_dir + layout_file)
+                layout_coord = {int(key): values for key, values in layout.items()}
+                loaded_layouts[layout_file] = layout_coord
+
+            # Assign loaded layout to the instrument
+            self.instrument_layout[instrument] = layout_file
+            self.layout_coordinates[instrument] = loaded_layouts[layout_file]
 
     def _load_midi_info(self):
         """Loads MIDI information from a JSON file."""
