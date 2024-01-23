@@ -35,22 +35,14 @@ function parseJSON(jsonString) {
 }
 
 // Function to load pattern data from a JSON file
-function loadJSONData(fileName, data) {
-    var filePath = new File($.fileName).parent.fullName + '/' + fileName; // Replace with your JSON file path
-    try {
-        var content = readFile(filePath);
-        return parseJSON(content);
-    } catch (e) {
-        $.writeln('Error loading pattern data: ' + e.message);
-    }
+function loadJSONData(fileName) {
+    var filePath = new File($.fileName).parent.fullName + '/' + fileName;
+    var content = readFile(filePath);
+    return parseJSON(content);
 }
 
-// Call functions to load data from reference JSONs
-var patternData = loadJSONData('patterns.json', patternData);
-var playerData = loadJSONData('players.json', playerData);
-
 // Main comp creation
-function mainComp(videoResolution, totalDuration, fps) {
+function mainComp() {
 
     var itemNameToCheck = "Main Comp"; // Replace with the name of the composition you want to check
 
