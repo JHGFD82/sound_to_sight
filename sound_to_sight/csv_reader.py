@@ -55,7 +55,8 @@ class MidiCsvParser:
         """
         Parse Method
 
-        Open and read the CSV file specified by `filename`. Then, perform further parsing operations on the contents of the file.
+        Open and read the CSV file specified by `filename`. Then, perform further parsing operations on the contents
+        of the file.
 
         Parameters:
         - self: The instance of the class calling the method.
