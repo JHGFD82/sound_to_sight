@@ -101,17 +101,20 @@ function patternBuilder(patternComp, note, instrumentDiagramSize, instrumentDiag
     noteTrackMatte.startTime = objStartTime;
     noteTrackMatte.position.setValue(objPosition);
     noteTrackMatte.setTrackMatte(instrumentDiagramLayer, TrackMatteType.ALPHA);
+    noteTrackMatte.collapseTransformation = true;
 
     // Creation of the note object
     var noteLayer = patternComp.layers.add(noteObject);
     noteLayer.startTime = objStartTime;
     noteLayer.opacity.setValue(note[2] / 6);
     noteLayer.position.setValue(objPosition);
+    noteLayer.collapseTransformation = true;
 
     // Placement of the note hit comp above the note
     var noteHit = patternComp.layers.add(noteHitComp);
     noteHit.startTime = objStartTime;
     noteHit.position.setValue(objPosition);
+    noteHit.collapseTransformation = true;
 }
 
 // Create pattern compositions
