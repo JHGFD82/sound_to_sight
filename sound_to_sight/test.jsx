@@ -100,12 +100,12 @@ function patternBuilder(patternComp, note, instrumentDiagramSize) {
     noteTrackMatte.startTime = objStartTime;
     noteTrackMatte.position.setValue(objPosition);
     noteTrackMatte.setTrackMatte(instrumentDiagramLayer, TrackMatteType.ALPHA);
+
+    // Creation of the note object
     var noteLayer = patternComp.layers.add(noteObject);
-    noteLayer.startTime = note[0] / fps;
+    noteLayer.startTime = objStartTime;
     noteLayer.opacity.setValue(note[2] / 6);
-    var noteLayerWidth = note[4][0] + (patternComp.width / 2) - (instrumentDiagramSize[0] / 2);
-    var noteLayerHeight = note[4][1] + (patternComp.height / 2) - (instrumentDiagramSize[1] / 2);
-    noteLayer.position.setValue([noteLayerWidth, noteLayerHeight]);
+    noteLayer.position.setValue(objPosition);
 
     // Placement of the note hit comp above the note
     var noteHit = patternComp.layers.add(noteHitComp);
