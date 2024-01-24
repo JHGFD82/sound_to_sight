@@ -88,7 +88,8 @@ function mainComp() {
 }
 
 // Assemble patterns with supplied note information
-function patternBuilder(patternComp, note, instrumentDiagramSize) {
+function patternBuilder(patternComp, note, instrumentDiagramSize, instrumentDiagramLayer) {
+
     // NoteLayer properties for use with multiple objects per note
     var noteLayerX = note[4][0] + (patternComp.width / 2) - (instrumentDiagramSize[0] / 2);
     var noteLayerY = note[4][1] + (patternComp.height / 2) - (instrumentDiagramSize[1] / 2);
@@ -124,12 +125,12 @@ function patternLayout(patternFolder, layoutKey, instrumentDiagram) {
         if (patternData[layoutKey].hasOwnProperty(patternKey)) {
             var patternComp = project.items.addComp(patternKey, noteResolution[0], noteResolution[1], 1, noteDuration, patternFPS);
             patternComp.parentFolder = layoutFolder;
-            patternComp.layers.add(instrumentDiagram);
+            var instrumentDiagramLayer = patternComp.layers.add(instrumentDiagram);
 
             var notesArray = patternData[layoutKey][patternKey];
             if (notesArray instanceof Array) {
                 for (var i = 0; i < notesArray.length; i++) {
-                    patternBuilder(patternComp, notesArray[i], instrumentDiagramSize);
+                    patternBuilder(patternComp, notesArray[i], instrumentDiagramSize, instrumentDiagramLayer);
                 }
             } else {
                 $.writeln('Error: patternData for ' + layoutKey + ' - ' + patternKey + ' is not an array.');
