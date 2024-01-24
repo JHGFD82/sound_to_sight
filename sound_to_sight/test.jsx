@@ -41,6 +41,22 @@ function loadJSONData(fileName) {
     return parseJSON(content);
 }
 
+// Create track matte for instrument layout underneath note for each note object
+function createNoteObjects() {
+    noteTrackMatteComp = project.items.addComp("Note Track Matte", 345, 345, 1, 20 / patternFPS, patternFPS);
+    var trackMatte = noteTrackMatteComp.layers.addShape();
+    trackMatte.name = "Note Track Matte";
+    var trackMatteOpacity = trackMatte.opacity;
+    trackMatteOpacity.setValueAtTime(0, 100);
+    trackMatteOpacity.setValueAtTime(20 / patternFPS, 0);
+    var contents = trackMatte.property("ADBE Root Vectors Group");
+    var trackMatte = contents.addProperty("ADBE Vector Shape - Ellipse");
+    trackMatte.property("ADBE Vector Ellipse Size").setValue([345, 345]);
+    var shapeFill = contents.addProperty("ADBE Vector Graphic - G-Fill");
+    shapeFill.property("ADBE Vector Grad Type").setValue(2);
+    shapeFill.property("ADBE Vector Grad Start Pt").setValue([0.0, 0.0]);
+    shapeFill.property("ADBE Vector Grad End Pt").setValue([0.0, noteTrackMatteComp.height / 2]);
+}
 // Main comp creation
 function mainComp() {
 
@@ -57,6 +73,17 @@ function mainComp() {
 
 // Assemble patterns with supplied note information
 function patternBuilder(patternComp, note, instrumentDiagramSize) {
+    // NoteLayer properties for use with multiple objects per note
+    var noteLayerX = note[4][0] + (patternComp.width / 2) - (instrumentDiagramSize[0] / 2);
+    var noteLayerY = note[4][1] + (patternComp.height / 2) - (instrumentDiagramSize[1] / 2);
+    var objPosition = [noteLayerX, noteLayerY];
+    var objStartTime = note[0] / patternFPS;
+
+    // Placement of the track matte comp behind note
+    var noteTrackMatte = patternComp.layers.add(noteTrackMatteComp);
+    noteTrackMatte.startTime = objStartTime;
+    noteTrackMatte.position.setValue(objPosition);
+    noteTrackMatte.setTrackMatte(instrumentDiagramLayer, TrackMatteType.ALPHA);
     var noteLayer = patternComp.layers.add(noteObject);
     noteLayer.startTime = note[0] / fps;
     noteLayer.opacity.setValue(note[2] / 6);
@@ -201,6 +228,7 @@ function main() {
     noteDuration = noteObject.duration + patternLength;
     totalDuration = projectLength + noteDuration;
 
+    createNoteObjects();
     // Check for main comp first, create it if it doesn't exist
     mainComp();
 
