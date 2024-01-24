@@ -57,6 +57,22 @@ function createNoteObjects() {
     shapeFill.property("ADBE Vector Grad Start Pt").setValue([0.0, 0.0]);
     shapeFill.property("ADBE Vector Grad End Pt").setValue([0.0, noteTrackMatteComp.height / 2]);
 }
+
+// Create white note hit symbol
+function createNoteHit() {
+    noteHitComp = project.items.addComp("Note Hit", 100, 100, 1, 10 / patternFPS, patternFPS);
+    var noteHit = noteHitComp.layers.addShape();
+    noteHit.name = "Note Hit";
+    var noteHitOpacity = noteHit.opacity;
+    noteHitOpacity.setValueAtTime(0, 100);
+    noteHitOpacity.setValueAtTime(6 / patternFPS, 0);
+    var contents = noteHit.property("ADBE Root Vectors Group");
+    var noteHit = contents.addProperty("ADBE Vector Shape - Ellipse");
+    noteHit.property("ADBE Vector Ellipse Size").setValue([100, 100]);
+    var shapeFill = contents.addProperty("ADBE Vector Graphic - Fill");
+    shapeFill.property("ADBE Vector Fill Color").setValue([1, 1, 1, 1]);
+}
+
 // Main comp creation
 function mainComp() {
 
@@ -90,6 +106,11 @@ function patternBuilder(patternComp, note, instrumentDiagramSize) {
     var noteLayerWidth = note[4][0] + (patternComp.width / 2) - (instrumentDiagramSize[0] / 2);
     var noteLayerHeight = note[4][1] + (patternComp.height / 2) - (instrumentDiagramSize[1] / 2);
     noteLayer.position.setValue([noteLayerWidth, noteLayerHeight]);
+
+    // Placement of the note hit comp above the note
+    var noteHit = patternComp.layers.add(noteHitComp);
+    noteHit.startTime = objStartTime;
+    noteHit.position.setValue(objPosition);
 }
 
 // Create pattern compositions
@@ -229,6 +250,8 @@ function main() {
     totalDuration = projectLength + noteDuration;
 
     createNoteObjects();
+    createNoteHit();
+
     // Check for main comp first, create it if it doesn't exist
     mainComp();
 
