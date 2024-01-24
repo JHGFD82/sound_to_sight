@@ -250,6 +250,10 @@ function main() {
     noteDuration = noteObject.duration + patternLength;
     totalDuration = projectLength + noteDuration;
 
+    // Start Undo Group of everything until construction is finished
+    app.beginUndoGroup("Process");
+
+    // Create additional objects per note
     createNoteObjects();
     createNoteHit();
 
@@ -261,6 +265,8 @@ function main() {
 
     //Begin construction of note-based compositions
     processSections(timelineData);
+
+    app.endUndoGroup();
 
 }
 
