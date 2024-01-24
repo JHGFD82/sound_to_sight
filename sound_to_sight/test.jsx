@@ -1,6 +1,6 @@
 // Global variables
 var project = app.project;
-var patternData, playerData, patternFPS, projectLength, patternLength, fps, videoResolution, noteObject, noteResolution, noteDuration, totalDuration;
+var patternData, playerData, patternFPS, projectLength, patternLength, fps, videoResolution, noteObject, noteResolution, noteDuration, totalDuration, noteTrackMatteComp, noteHitComp;
 
 // Check project assets for existence of specified item
 function verifyExist(itemName) {
