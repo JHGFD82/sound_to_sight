@@ -158,15 +158,8 @@ function processPlayers(sectionKey, measureKey, measure) {
         if (measure.hasOwnProperty(playerKey)) {
             var player = measure[playerKey];
             
-            // Check if the folder for the player already exists
-            var folderExists = verifyExist("P" + playerKey);
-
-            // If there is no folder, create it
-            if (!folderExists) {
-                project.items.addFolder("P" + playerKey);
-            }
-            
-            var playerLayout = playerData[playerKey]['layout'];
+            // Check if the folder for the player already exists, create one if not
+            var playerFolder = verifyExist("P" + playerKey) || project.items.addFolder("P" + playerKey);
 
             // Process patterns for this player
             processPatterns(sectionKey, measureKey, playerKey, player, playerFolder);
