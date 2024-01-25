@@ -1,6 +1,6 @@
 // Global variables
 var project = app.project;
-var patternData, playerData, patternFPS, projectLength, patternLength, fps, videoResolution, noteObject, noteResolution, noteDuration, totalDuration, noteTrackMatteComp, noteHitComp;
+var patternData, playerData, patternFPS, projectLength, patternLength, noteCeiling, fps, videoResolution, noteObject, noteResolution, noteDuration, totalDuration, noteTrackMatteComp, noteHitComp, patternFolder;
 
 // Check project assets for existence of specified item
 function verifyExist(itemName) {
@@ -241,6 +241,7 @@ function main() {
     noteResolution = [noteObject.width, noteObject.height];
     noteDuration = noteObject.duration + patternLength;
     totalDuration = projectLength + noteDuration;
+    noteCeiling = Math.ceil(noteDuration / patternLength);
 
     // Start Undo Group of everything until construction is finished
     app.beginUndoGroup("Process");
