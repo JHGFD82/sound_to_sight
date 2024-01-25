@@ -73,20 +73,6 @@ function createNoteHit() {
     shapeFill.property("ADBE Vector Fill Color").setValue([1, 1, 1, 1]);
 }
 
-// Main comp creation
-function mainComp() {
-
-    var itemNameToCheck = "Main Comp"; // Replace with the name of the composition you want to check
-
-    // Loop through all items in the project to find the composition
-    var mainCompExist = verifyExist(itemNameToCheck);
-
-    // If the loop finishes and no matching composition is found, create the comp
-    if (!mainCompExist) {
-        project.items.addComp(itemNameToCheck, videoResolution[0], videoResolution[1], 1, totalDuration, fps);
-    }
-}
-
 // Assemble patterns with supplied note information
 function patternBuilder(patternComp, note, instrumentDiagramSize, instrumentDiagramLayer) {
 
