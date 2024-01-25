@@ -169,7 +169,7 @@ function processPlayers(sectionKey, measureKey, measure) {
             var playerLayout = playerData[playerKey]['layout'];
 
             // Process patterns for this player
-            processPatterns(sectionKey, measureKey, playerKey, player, playerLayout);
+            processPatterns(sectionKey, measureKey, playerKey, player, playerFolder);
         }
     }
 }
