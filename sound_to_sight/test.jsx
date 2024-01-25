@@ -115,6 +115,7 @@ function patternLayout(patternFolder, layoutKey, instrumentDiagram) {
             var patternComp = project.items.addComp(patternKey, noteResolution[0], noteResolution[1], 1, noteDuration, patternFPS);
             patternComp.parentFolder = layoutFolder;
             var instrumentDiagramLayer = patternComp.layers.add(instrumentDiagram);
+            instrumentDiagramLayer.collapseTransformation = true;
 
             var notesArray = patternData[layoutKey][patternKey];
             if (notesArray instanceof Array) {
