@@ -131,8 +131,6 @@ function patternLayout(patternFolder, layoutKey, instrumentDiagram) {
 
 // Pattern folder and composition creation process
 function patternDirectoryCreator() {
-    var patternFolder = verifyExist("Patterns") || project.items.addFolder("Patterns");
-
     for (var layoutKey in patternData) {
         var footageFile = new File($.fileName).parent.fullName + "/midi_data/visual_layouts/graphics/" + layoutKey + "_layout.ai";
         var instrumentDiagram = verifyExist(footageFile) || project.importFile(new ImportOptions(new File(footageFile)));
