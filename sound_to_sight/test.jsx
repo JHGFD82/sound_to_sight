@@ -202,6 +202,10 @@ function processSections(timelineData) {
     }
 }
 
+function assembleMainComp() {
+    pass
+}
+
 // Main function
 function main() {
 
@@ -255,6 +259,8 @@ function main() {
 
     //Begin construction of note-based compositions
     processSections(timelineData);
+
+    assembleMainComp();
 
     app.endUndoGroup();
 
