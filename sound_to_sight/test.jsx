@@ -138,16 +138,78 @@ function patternDirectoryCreator() {
     }
 }
 
+// Creation of pattern loop compositions for player-based timeline
+function patternLoopConstructor(patternRepetitions, patternKey) {
+    // Check first if the pattern exists, throw an error if not
+    var patternComp = verifyExist(patternKey);
+    if (!patternComp) {
+        throw new Error("Pattern " + patternKey + " does not exist in the project. Check that all patterns listed in the timeline.JSON file are listed in the patterns.JSON file to ensure all patterns are created.");
+    }
+
+    // Check for the existence of the needed pattern repetition comp before creating one
+    if (patternRepetitions > noteCeiling) {
+        var patternLoopName = patternKey + "-loop";
+        var loopNumber = noteCeiling;
+    } else {
+        var patternLoopName = patternKey + "-" + patternRepetitions;
+        var loopNumber = patternRepetitions;
+    }
+    var patternLoopExists = verifyExist(patternLoopName);
+    if (patternLoopExists) {return patternLoopExists};
+
+    // Create the loop composition if none exist
+    var patternLoopDuration = patternLength * (noteCeiling - 1) + noteDuration;
+    var patternLoopContainer = project.items.addComp(patternLoopName, noteResolution[0], noteResolution[1], 1, patternLoopDuration, patternFPS);
+    patternLoopContainer.parentFolder = patternFolder;
+
+    for (var i = 0; i < loopNumber; i++) {
+        var loopObject = patternLoopContainer.layers.add(patternComp);
+        loopObject.collapseTransformation = true;
+        loopObject.startTime = patternLength * i;
+    }
+    return patternLoopContainer;
+}
+
 // Recursive function to process patterns
-function processPatterns(sectionKey, measureKey, playerKey, player, playerLayout) {
+function processPatterns(sectionKey, measureKey, playerKey, player, playerFolder) {
+    // Check for existence of player composition, create one if none
+    playerComp = verifyExist("P" + playerKey + " comp");
+    if (!playerComp) {
+        var playerComp = project.items.addComp("P" + playerKey + " comp", noteResolution[0], noteResolution[1], 1, totalDuration, patternFPS);
+        playerComp.parentFolder = playerFolder;
+    }
+
+    // Assemble patterns in player composition
     for (var patternKey in player) {
         if (player.hasOwnProperty(patternKey)) {
-            var patternValue = player[patternKey];
-            if (patternValue )
-            
-            // Perform actions on the pattern here
-            var pattern = patternData[playerLayout][patternKey]
-            // alert("Section: " + sectionKey + ", Measure: " + measureKey + ", Player: " + playerKey + ", Pattern: " + patternKey + ", Value: " + patternValue);
+            var patternRepetitions = player[patternKey];
+            var patternLoopContainer = patternLoopConstructor(patternRepetitions, patternKey);
+            var patternLoopLayer = playerComp.layers.add(patternLoopContainer);
+            patternLoopLayer.collapseTransformation = true;
+            var videoMeasureTime = measureKey - 1;
+            patternLoopLayer.startTime = videoMeasureTime * patternLength;
+
+            // If this is a looped pattern, set up the looping structure
+            if (patternRepetitions > noteCeiling) {
+                var inPointValue = (videoMeasureTime + noteCeiling - 1) * patternLength;
+                var outPointValue = (videoMeasureTime + patternRepetitions) * patternLength;
+                patternLoopLayer.outPoint = videoMeasureTime * patternLength + (noteCeiling - 1) * patternLength;
+                var patternLoopLayerEnd = patternLoopLayer.duplicate();
+                patternLoopLayerEnd.startTime = outPointValue - (noteCeiling * patternLength);
+                patternLoopLayerEnd.inPoint = outPointValue;
+                patternLoopLayerEnd.outPoint = patternLoopLayerEnd.startTime + patternLoopLayerEnd.source.duration;
+                var loopingLayer = patternLoopLayer.duplicate();
+                loopingLayer.timeRemapEnabled = true;
+                var loopingLayerRemap = loopingLayer.property("ADBE Time Remapping");
+                var loopExpr = "loopOut(\"cycle\")";
+                loopingLayerRemap.expression = loopExpr;
+                loopingLayerRemap.removeKey(1);
+                loopingLayerRemap.setValueAtTime(inPointValue, (noteCeiling - 1) * patternLength);
+                loopingLayerRemap.setValueAtTime(inPointValue + patternLength, (noteCeiling - 1) * patternLength + patternLength);
+                loopingLayerRemap.removeKey(3);
+                loopingLayer.inPoint = inPointValue;
+                loopingLayer.outPoint = outPointValue;
+            }
         }
     }
 }
