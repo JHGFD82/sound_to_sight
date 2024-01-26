@@ -119,6 +119,7 @@ function patternLayout(patternFolder, layoutKey, instrumentDiagram) {
             var notesArray = patternData[layoutKey][patternKey];
             if (notesArray instanceof Array) {
                 for (var i = 0; i < notesArray.length; i++) {
+                    instrumentLayoutMatte(instrumentDiagramLayer, notesArray[i]);
                     patternBuilder(patternComp, notesArray[i], instrumentDiagramSize, instrumentDiagramLayer);
                 }
             } else {
