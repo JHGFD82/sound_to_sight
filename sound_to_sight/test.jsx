@@ -307,16 +307,14 @@ function main() {
     app.beginUndoGroup("Process");
 
     // Create additional objects per note
-    // createNoteObjects();
-    // createNoteHit();
+    noteHitComp = verifyExist("Note Hit") || createNoteHit();
 
     // // Check for main comp first, create it if it doesn't exist
-    mainComp = verifyExist("Main Comp") || project.items.addComp(itemNameToCheck, videoResolution[0], videoResolution[1], 1, totalDuration, fps);
-
+    mainComp = verifyExist("Main Comp") || project.items.addComp("Main Comp", videoResolution[0], videoResolution[1], 1, totalDuration, fps);
 
     // // Create pattern folder and compositions
     patternFolder = verifyExist("Patterns") || project.items.addFolder("Patterns");
-    // patternDirectoryCreator();
+    patternDirectoryCreator();
 
     //Begin construction of note-based compositions
     processSections(timelineData);
