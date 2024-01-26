@@ -171,12 +171,11 @@ function patternLoopConstructor(patternRepetitions, patternKey) {
 }
 
 // Recursive function to process patterns
-function processPatterns(sectionKey, measureKey, playerKey, player, playerFolder) {
+function processPatterns(sectionKey, measureKey, playerKey, player) {
     // Check for existence of player composition, create one if none
-    playerComp = verifyExist("P" + playerKey + " comp");
+    var playerComp = verifyExist("P" + playerKey + " comp");
     if (!playerComp) {
-        var playerComp = project.items.addComp("P" + playerKey + " comp", noteResolution[0], noteResolution[1], 1, totalDuration, patternFPS);
-        playerComp.parentFolder = playerFolder;
+        throw new Error("P" + playerKey + " comp does not exist in this project. Check the processPlayers function for any processing issues.")
     }
 
     // Assemble patterns in player composition
