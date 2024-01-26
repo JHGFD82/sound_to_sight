@@ -219,11 +219,13 @@ function processPlayers(sectionKey, measureKey, measure) {
         if (measure.hasOwnProperty(playerKey)) {
             var player = measure[playerKey];
             
-            // Check if the folder for the player already exists, create one if not
+            // Check if the folder and pattern assembly composition for the player already exists, create one if not
             var playerFolder = verifyExist("P" + playerKey) || project.items.addFolder("P" + playerKey);
+            var playerComp = verifyExist("P" + playerKey + " comp") || project.items.addComp("P" + playerKey + " comp", noteResolution[0], noteResolution[1], 1, totalDuration, patternFPS);
+            playerComp.parentFolder = playerFolder;
 
             // Process patterns for this player
-            processPatterns(sectionKey, measureKey, playerKey, player, playerFolder);
+            processPatterns(sectionKey, measureKey, playerKey, player);
         }
     }
 }
