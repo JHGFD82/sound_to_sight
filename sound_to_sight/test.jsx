@@ -41,23 +41,6 @@ function loadJSONData(fileName) {
     return parseJSON(content);
 }
 
-// Create track matte for instrument layout underneath note for each note object
-function createNoteObjects() {
-    noteTrackMatteComp = project.items.addComp("Note Track Matte", 345, 345, 1, 20 / patternFPS, patternFPS);
-    var trackMatte = noteTrackMatteComp.layers.addShape();
-    trackMatte.name = "Note Track Matte";
-    var trackMatteOpacity = trackMatte.opacity;
-    trackMatteOpacity.setValueAtTime(0, 100);
-    trackMatteOpacity.setValueAtTime(20 / patternFPS, 0);
-    var contents = trackMatte.property("ADBE Root Vectors Group");
-    var trackMatte = contents.addProperty("ADBE Vector Shape - Ellipse");
-    trackMatte.property("ADBE Vector Ellipse Size").setValue([345, 345]);
-    var shapeFill = contents.addProperty("ADBE Vector Graphic - G-Fill");
-    shapeFill.property("ADBE Vector Grad Type").setValue(2);
-    shapeFill.property("ADBE Vector Grad Start Pt").setValue([0.0, 0.0]);
-    shapeFill.property("ADBE Vector Grad End Pt").setValue([0.0, noteTrackMatteComp.height / 2]);
-}
-
 // Create white note hit symbol
 function createNoteHit() {
     noteHitComp = project.items.addComp("Note Hit", 100, 100, 1, 10 / patternFPS, patternFPS);
