@@ -289,7 +289,7 @@ function main() {
 
     // Note Object searching from the root of the project
     // var itemNameToCheck = prompt("What is the name of your note object?", "");
-    var itemNameToCheck = 'Base Ring';
+    var itemNameToCheck = "Base Ring";
     noteObject = verifyExist(itemNameToCheck);
 
     // If the note object does not exist, throw an error
