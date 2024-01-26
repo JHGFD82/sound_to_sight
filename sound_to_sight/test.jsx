@@ -80,6 +80,28 @@ function patternBuilder(patternComp, note, instrumentDiagramSize, instrumentDiag
     noteHit.collapseTransformation = true;
 }
 
+function instrumentLayoutMatte(instrumentDiagramLayer, note) {
+    var mask = instrumentDiagramLayer.property("Masks").addProperty("Mask");
+    var maskShape = new Shape();
+    var vertices = [];
+    var numPoints = 18; // Number of points to define the circle
+    var angleStep = Math.PI * 2 / numPoints;
+    for (var i = 0; i < numPoints; i++) {
+        var angle = angleStep * i;
+        var x = note[4][0] + Math.cos(angle) * (345 / 2);
+        var y = note[4][1] + Math.sin(angle) * (345 / 2);
+        vertices.push([x, y]);
+    }
+    maskShape.vertices = vertices;
+    maskShape.closed = true;
+    mask.property("ADBE Mask Shape").setValue(maskShape);
+    mask.property("ADBE Mask Feather").setValue([345 / 2, 345 / 2]);
+    var maskOpacity = mask.property("ADBE Mask Opacity");
+    maskOpacity.setValueAtTime((note[0] - 1) / patternFPS, 0);
+    maskOpacity.setValueAtTime(note[0] / patternFPS, 75);
+    maskOpacity.setValueAtTime((note[0] + 15) / patternFPS, 0);
+}
+
 // Create pattern compositions
 function patternLayout(patternFolder, layoutKey, instrumentDiagram) {
     var layoutFolder = verifyExist(layoutKey) || project.items.addFolder(layoutKey);
