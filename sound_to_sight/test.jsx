@@ -54,6 +54,7 @@ function createNoteHit() {
     noteHit.property("ADBE Vector Ellipse Size").setValue([100, 100]);
     var shapeFill = contents.addProperty("ADBE Vector Graphic - Fill");
     shapeFill.property("ADBE Vector Fill Color").setValue([1, 1, 1, 1]);
+    return noteHitComp;
 }
 
 // Assemble patterns with supplied note information
