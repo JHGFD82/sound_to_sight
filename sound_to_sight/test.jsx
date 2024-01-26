@@ -66,13 +66,6 @@ function patternBuilder(patternComp, note, instrumentDiagramSize, instrumentDiag
     var objPosition = [noteLayerX, noteLayerY];
     var objStartTime = note[0] / patternFPS;
 
-    // Placement of the track matte comp behind note
-    var noteTrackMatte = patternComp.layers.add(noteTrackMatteComp);
-    noteTrackMatte.startTime = objStartTime;
-    noteTrackMatte.position.setValue(objPosition);
-    noteTrackMatte.setTrackMatte(instrumentDiagramLayer, TrackMatteType.ALPHA);
-    noteTrackMatte.collapseTransformation = true;
-
     // Creation of the note object
     var noteLayer = patternComp.layers.add(noteObject);
     noteLayer.startTime = objStartTime;
