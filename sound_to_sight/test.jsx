@@ -259,7 +259,11 @@ function processSections(timelineData) {
 }
 
 function assembleMainComp() {
-    pass
+    for (playerKey in playerData) {
+        var playerComp = verifyExist("P" + playerKey + " comp");
+        mainCompPlayer = mainComp.layers.add(playerComp)
+        mainCompPlayer.collapseTransformation = true;
+    }
 }
 
 // Main function
