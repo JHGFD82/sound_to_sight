@@ -49,9 +49,19 @@ def export_player_definitions(player_measures_dict, filename):
 
 def export_pattern_definitions(player_measures_dict, filename):
     pattern_definitions = {}
+    processed_hashes = set()  # Set to keep track of processed pattern hashes
+
     for player in player_measures_dict.values():
         for player_measure in player:
             pattern_hash = player_measure.pattern.hash
+
+            # Skip this pattern if it's already been processed
+            if pattern_hash in processed_hashes:
+                continue
+
+            # Add the hash to the set of processed hashes
+            processed_hashes.add(pattern_hash)
+
             for note in player_measure.pattern.notes:
                 layout = note.layout
                 frame_start = note.frame_start
@@ -62,10 +72,10 @@ def export_pattern_definitions(player_measures_dict, filename):
                 y = note.y
 
                 layout_dict = pattern_definitions.setdefault(layout, {})
-                hash_dict = layout_dict.setdefault(pattern_hash, []).append([
-                    frame_start, note_value, velocity, frame_duration, [x, y]
-                ])
+                hash_dict = layout_dict.setdefault(pattern_hash, [])
+                hash_dict.append([frame_start, note_value, velocity, frame_duration, [x, y]])
 
+    # Sort the pattern definitions
     pattern_definitions = {key: dict(sorted(inner_dict.items())) for key, inner_dict in pattern_definitions.items()}
 
     with open(filename, 'w') as json_file:
