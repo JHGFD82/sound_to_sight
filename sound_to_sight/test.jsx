@@ -77,9 +77,9 @@ function patternBuilder(patternComp, note, instrumentDiagramSize) {
     var noteHit = patternComp.layers.add(noteHitComp);
     noteHit.startTime = objStartTime;
     noteHit.position.setValue(objPosition);
-    noteHit.collapseTransformation = true;
     noteHit.scale.setValue([note[2] / 2 + 68, note[2] / 2 + 68]);
     noteHit.opacity.setValue(note[2] / 4 + 68);
+    // noteHit.collapseTransformation = true;
 }
 
 function instrumentLayoutMatte(instrumentDiagramLayer, note) {
@@ -116,7 +116,7 @@ function patternLayout(patternFolder, layoutKey, instrumentDiagram) {
             var patternComp = project.items.addComp(patternKey, noteResolution[0], noteResolution[1], 1, noteDuration, patternFPS);
             patternComp.parentFolder = layoutFolder;
             var instrumentDiagramLayer = patternComp.layers.add(instrumentDiagram);
-            instrumentDiagramLayer.collapseTransformation = true;
+            // instrumentDiagramLayer.collapseTransformation = true;
 
             var notesArray = patternData[layoutKey][patternKey];
             if (notesArray instanceof Array) {
