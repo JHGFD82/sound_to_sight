@@ -97,7 +97,7 @@ function instrumentLayoutMatte(instrumentDiagramLayer, note) {
     maskShape.vertices = vertices;
     maskShape.closed = true;
     mask.property("ADBE Mask Shape").setValue(maskShape);
-    mask.property("ADBE Mask Feather").setValue([345 / 2, 345 / 2]);
+    mask.property("ADBE Mask Feather").setValue([345, 345]);
     var maskOpacity = mask.property("ADBE Mask Opacity");
     maskOpacity.setValueAtTime((note[0] - 1) / patternFPS, 0);
     maskOpacity.setValueAtTime(note[0] / patternFPS, 75);
