@@ -58,7 +58,7 @@ function createNoteHit() {
 }
 
 // Assemble patterns with supplied note information
-function patternBuilder(patternComp, note, instrumentDiagramSize, instrumentDiagramLayer) {
+function patternBuilder(patternComp, note, instrumentDiagramSize) {
 
     // NoteLayer properties for use with multiple objects per note
     var noteLayerX = note[4][0] + (patternComp.width / 2) - (instrumentDiagramSize[0] / 2);
@@ -171,7 +171,7 @@ function patternLoopConstructor(patternRepetitions, patternKey) {
 }
 
 // Recursive function to process patterns
-function processPatterns(sectionKey, measureKey, playerKey, player) {
+function processPatterns(measureKey, playerKey, player) {
     // Check for existence of player composition, create one if none
     var playerComp = verifyExist("P" + playerKey + " comp");
     if (!playerComp) {
@@ -214,7 +214,7 @@ function processPatterns(sectionKey, measureKey, playerKey, player) {
 }
 
 // Recursive function to process players
-function processPlayers(sectionKey, measureKey, measure) {
+function processPlayers(measureKey, measure) {
     for (var playerKey in measure) {
         if (measure.hasOwnProperty(playerKey)) {
             var player = measure[playerKey];
@@ -225,13 +225,13 @@ function processPlayers(sectionKey, measureKey, measure) {
             playerComp.parentFolder = playerFolder;
 
             // Process patterns for this player
-            processPatterns(sectionKey, measureKey, playerKey, player);
+            processPatterns(measureKey, playerKey, player);
         }
     }
 }
 
 // Recursive function to process measures
-function processMeasures(sectionKey, section) {
+function processMeasures(section) {
     for (var measureKey in section) {
         if (section.hasOwnProperty(measureKey)) {
             var measure = section[measureKey];
@@ -239,7 +239,7 @@ function processMeasures(sectionKey, section) {
             // Perform actions on measures here (if needed)
 
             // Process players for this measure
-            processPlayers(sectionKey, measureKey, measure);
+            processPlayers(measureKey, measure);
         }
     }
 }
@@ -253,7 +253,7 @@ function processSections(timelineData) {
             // Perform actions on sections here (if needed)
 
             // Process measures for this section
-            processMeasures(sectionKey, section);
+            processMeasures(section);
         }
     }
 }
