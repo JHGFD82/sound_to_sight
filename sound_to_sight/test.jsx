@@ -122,7 +122,7 @@ function patternLayout(patternFolder, layoutKey, instrumentDiagram) {
             if (notesArray instanceof Array) {
                 for (var i = 0; i < notesArray.length; i++) {
                     instrumentLayoutMatte(instrumentDiagramLayer, notesArray[i]);
-                    patternBuilder(patternComp, notesArray[i], instrumentDiagramSize, instrumentDiagramLayer);
+                    patternBuilder(patternComp, notesArray[i], instrumentDiagramSize);
                 }
             } else {
                 $.writeln('Error: patternData for ' + layoutKey + ' - ' + patternKey + ' is not an array.');
