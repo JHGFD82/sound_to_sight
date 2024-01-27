@@ -78,6 +78,8 @@ function patternBuilder(patternComp, note, instrumentDiagramSize) {
     noteHit.startTime = objStartTime;
     noteHit.position.setValue(objPosition);
     noteHit.collapseTransformation = true;
+    noteHit.scale.setValue([note[2] / 2 + 68, note[2] / 2 + 68]);
+    noteHit.opacity.setValue(note[2] / 4 + 68);
 }
 
 function instrumentLayoutMatte(instrumentDiagramLayer, note) {
