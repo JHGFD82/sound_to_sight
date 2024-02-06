@@ -88,7 +88,8 @@ class MidiCsvParser:
             self._process_row(row)
 
         # Return the final result after parsing
-        return self.player_measures, self.bpm, self.notes_per_bar, self.division, self.total_length
+        return (self.player_measures, self.section_start_times, self.bpm, self.notes_per_bar,
+                self.division, self.total_length)
 
     def _initialize_instrument_layouts(self):
         """Loads instrument layout information."""

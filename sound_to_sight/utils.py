@@ -2,9 +2,10 @@ import json
 from BPMtoFPS import ticks_to_seconds
 
 
-def export_project_details(pattern_fps, project_length, pattern_length, fps, video_resolution, filename):
+def export_project_details(pattern_fps, project_length, sections, pattern_length, fps, video_resolution, filename):
     project_details = {'pattern_fps': pattern_fps,
                        'project_length': project_length,
+                       'sections': sections,
                        'pattern_length': pattern_length,
                        'fps': fps,
                        'video_resolution': video_resolution}
