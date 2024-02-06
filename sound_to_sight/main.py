@@ -2,7 +2,7 @@ import os
 import argparse
 from csv_reader import MidiCsvParser
 from utils import (export_timeline, export_player_definitions, export_pattern_definitions, export_project_details,
-                   calculate_fps, music_to_video_length)
+                   calculate_fps, music_to_video_length, sections_to_video_time)
 
 MIN_FPS = 24
 MAX_FPS = 60
@@ -32,6 +32,7 @@ def main(file_list, fps, video_resolution, sections=None):
         music_instance, sections, bpm, notes_per_bar, division, total_length = midi_parser.parse()
         pattern_fps = calculate_fps(bpm, notes_per_bar, MIN_FPS, MAX_FPS)
         project_length = music_to_video_length(total_length, bpm, division)
+        sections = [sections_to_video_time(x * notes_per_bar, bpm) for x in sections]
         pattern_length = music_to_video_length(notes_per_bar * division, bpm, division)
         music.append(music_instance)
 
