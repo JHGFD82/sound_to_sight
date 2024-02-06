@@ -29,7 +29,7 @@ def main(file_list, fps, video_resolution, sections=None):
 
     for file in file_list:
         midi_parser = MidiCsvParser(file, fps, sections)
-        music_instance, bpm, notes_per_bar, division, total_length = midi_parser.parse()
+        music_instance, sections, bpm, notes_per_bar, division, total_length = midi_parser.parse()
         pattern_fps = calculate_fps(bpm, notes_per_bar, MIN_FPS, MAX_FPS)
         project_length = music_to_video_length(total_length, bpm, division)
         pattern_length = music_to_video_length(notes_per_bar * division, bpm, division)
@@ -41,7 +41,8 @@ def main(file_list, fps, video_resolution, sections=None):
     export_timeline(music[0], 'timeline.json')
     export_pattern_definitions(music[0], 'patterns.json')
     export_player_definitions(music[0], 'players.json')
-    export_project_details(pattern_fps, project_length, pattern_length, fps, video_resolution, 'project_detail.json')
+    export_project_details(pattern_fps, project_length, sections, pattern_length, fps,
+                           video_resolution, 'project_detail.json')
 
 # if __name__ == "__main__":
 #     parser = argparse.ArgumentParser(description="Process some files.")
