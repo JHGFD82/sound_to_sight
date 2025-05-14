@@ -75,11 +75,21 @@ class MidiCsvParser:
         with open(file, 'r') as f:
             return list(csv.reader(f))
 
-    def _integer_row_data(self, row, fields) -> list:
-        return [int(row[field]) for field in fields]
+    def _row_data(self, row, fields, cast_func) -> list:
+        """
+        Extracts data from a row based on specified fields and applies a casting function to each field.
+        This method is used to convert the data in the specified fields to the desired type.
+        
+        Parameters:
+            row (list): The row from which to extract data.
+            fields (list): A list of field indices to extract from the row.
+            cast_func (function): A function to cast the extracted data to the desired type.
 
-    def _string_row_data(self, row, fields) -> list:
-        return [row[field].strip() for field in fields]
+        Returns:
+            list: A list of extracted and casted data.
+        """
+        # Extract data from the row based on specified fields and apply casting function
+        return [cast_func(row[field]) for field in fields]
 
     def parse(self) -> tuple[dict, list, int, int, int, int]:
         """
@@ -186,18 +196,18 @@ class MidiCsvParser:
         """
         # Initialize metadata attributes
         for row in rows:
-            event_type = self._string_row_data(row, [2])[0]
+            event_type = self._row_data(row, [2], lambda x: x.strip())[0]
 
             # Identify the row type and extract relevant information
             if event_type == 'note_on_c':
                 # Stop metadata extraction when note rows are reached
                 break
             if event_type == 'Header':
-                self.division = self._integer_row_data(row, [5])[0]
+                self.division = self._row_data(row, [5], int)[0]
             if event_type == 'Tempo':
-                self.tempo = self._integer_row_data(row, [3])[0]
+                self.tempo = self._row_data(row, [3], int)[0]
             if event_type == 'Time_signature':
-                self.notes_per_bar = self._integer_row_data(row, [3])[0]
+                self.notes_per_bar = self._row_data(row, [3], int)[0]
 
         # Validate extracted metadata
         if not all([self.division, self.tempo, self.notes_per_bar]):
@@ -268,8 +278,8 @@ class MidiCsvParser:
             None
         """
         # Extract relevant information from the row
-        time = self._integer_row_data(row, [1])[0]
-        event_type = self._string_row_data(row, [2])[0]
+        time = self._row_data(row, [1], int)[0]
+        event_type = self._row_data(row, [2], lambda x: x.strip())[0]
 
         # Update the current measure based on the time and pattern length
         Status.current_measure = (time // self.pattern_length) + 1
@@ -314,7 +324,7 @@ class MidiCsvParser:
             None
         """
         # Extract relevant information from the row
-        time, track, note_value, velocity = self._integer_row_data(row, [1, 0, 4, 5])
+        time, track, note_value, velocity = self._row_data(row, [1, 0, 4, 5], int)
 
         # Calculate measure time and current measure
         measure_time = time % self.pattern_length
@@ -453,7 +463,7 @@ class MidiCsvParser:
             None
         """
         # Extract relevant information from the row
-        time, track, note_value = self._integer_row_data(row, [1, 0, 4])
+        time, track, note_value = self._row_data(row, [1, 0, 4], int)
 
         # Process incomplete patterns more efficiently
         for pattern in self.unfinished_patterns.values():
@@ -493,8 +503,8 @@ class MidiCsvParser:
 
     def _handle_instrument_declaration(self, row):
         """Handles instrument declarations in the MIDI file."""
-        _, track = self._integer_row_data(row, [1, 0])
-        event_type, instrument_name = self._string_row_data(row, [2, 3])
+        _, track = self._row_data(row, [1, 0], int)
+        event_type, instrument_name = self._row_data(row, [2, 3], lambda x: x.strip())
 
         # A new player means sections reset to 1
         Status.current_section = 1
