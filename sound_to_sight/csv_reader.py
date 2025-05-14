@@ -5,6 +5,15 @@ from sound_to_sight import Note, Pattern
 
 
 class MidiCsvParser:
+    """
+    MidiCsvParser Class
+    
+    This class is responsible for parsing MIDI CSV files and extracting relevant information such as
+    note events, instrument declarations, and tempo information. It also manages the organization of
+    musical patterns and their associated players.
+    """
+
+    # Constants for time calculations
     MICROSECONDS_PER_MINUTE = 60000000
 
     def __init__(self, filename: str, fps: int, section_start_times: list):
