@@ -4,10 +4,46 @@ import re
 from sound_to_sight import Note, Pattern
 
 
+# Initialize current placement in row examination
+class Status:
+    """
+    Status Class
+
+    This class is used to keep track of the current state of the MIDI parsing process.
+    It includes information about the current player, measure, section, and coordinates.
+
+    Attributes:
+        current_player (int): The current player number being processed.
+        current_measure (int): The current measure number being processed.
+        current_section (int): The current section number being processed.
+        current_coords (tuple): The current coordinates of the note being processed.
+
+    Methods:
+        __init__: Initializes the Status object with default values.
+
+    Returns:
+        None
+    """
+    def __init__(self):
+        self.current_player = None
+        self.current_measure = 1
+        self.current_section = 0
+        self.current_coords = None
+
 class MidiCsvParser:
+    """
+    MidiCsvParser Class
+    
+    This class is responsible for parsing MIDI CSV files and extracting relevant information such as
+    note events, instrument declarations, and tempo information. It also manages the organization of
+    musical patterns and their associated players.
+    """
+
+    # Constants for time calculations
     MICROSECONDS_PER_MINUTE = 60000000
 
-    def __init__(self, filename, fps, section_start_times):
+    def __init__(self, filename: str, fps: int, section_start_times: list):
+    
         self.filename = filename
         self.fps = fps
         self.section_start_times = section_start_times  # To manage different sections in the music
@@ -16,12 +52,6 @@ class MidiCsvParser:
         self.division = None
         self.tempo = None
         self.notes_per_bar = None
-
-        # Initialize current placement in row examination
-        self.current_player = None
-        self.current_measure = 1
-        self.current_section = 0
-        self.current_coords = None
 
         # Initialize data structures for parsing and processing
         self.player_measures = {}  # To store measures associated with each player
@@ -37,21 +67,21 @@ class MidiCsvParser:
         self.pattern_length = None  # Initialize pattern_length
         self.total_length = 0
 
-    def _load_from_json(self, file):
+    def _load_from_json(self, file: str) -> dict:
         with open(file, 'r') as f:
             return json.load(f)
 
-    def _load_from_csv(self, file):
+    def _load_from_csv(self, file: str) -> list:
         with open(file, 'r') as f:
             return list(csv.reader(f))
 
-    def _integer_row_data(self, row, fields):
+    def _integer_row_data(self, row, fields) -> list:
         return [int(row[field]) for field in fields]
 
-    def _string_row_data(self, row, fields):
+    def _string_row_data(self, row, fields) -> list:
         return [row[field].strip() for field in fields]
 
-    def parse(self):
+    def parse(self) -> tuple[dict, list, int, int, int, int]:
         """
         Parse Method
 
@@ -60,9 +90,6 @@ class MidiCsvParser:
 
         Parameters:
         - self: The instance of the class calling the method.
-
-        Raises:
-        - N/A
 
         Returns:
         - `player_measures`: The final result after parsing.
@@ -115,7 +142,7 @@ class MidiCsvParser:
             self.instrument_layout[instrument] = layout_file
             self.layout_coordinates[instrument] = loaded_layouts[layout_file]
 
-    def _load_midi_info(self):
+    def _load_midi_info(self) -> dict[int, str]:
         """Loads MIDI information from a JSON file."""
         midi_info_file = 'midi_data/midi_info.json'  # Path to the MIDI info JSON file
         midi_info = self._load_from_json(midi_info_file)
@@ -152,7 +179,7 @@ class MidiCsvParser:
         # Calculate BPM from the extracted tempo
         self.bpm = self._calculate_bpm(self.tempo)
 
-    def _calculate_bpm(self, tempo):
+    def _calculate_bpm(self, tempo) -> float:
         """Calculate beats per minute from tempo."""
         return self.MICROSECONDS_PER_MINUTE / tempo
 
@@ -166,7 +193,7 @@ class MidiCsvParser:
         time = self._integer_row_data(row, [1])[0]
         event_type = self._string_row_data(row, [2])[0]
 
-        self.current_measure = (time // self.pattern_length) + 1
+        Status.current_measure = (time // self.pattern_length) + 1
 
         # Handle different MIDI event types by delegating to specific methods
         if event_type == 'Note_on_c':
@@ -194,30 +221,30 @@ class MidiCsvParser:
         self._get_section()
 
         # Retrieve instrument and layout information
-        if not self.player_instruments[self.current_player]['layout']:
+        if not self.player_instruments[Status.current_player]['layout']:
             self._get_instrument_and_layout()
 
         x, y = self._get_note_coordinates(note_value)
-        layout_name = self.player_instruments[self.current_player]['layout'].replace('_layout.json', '')
+        layout_name = self.player_instruments[Status.current_player]['layout'].replace('_layout.json', '')
         note = self._create_note(time, measure_time, note_value, velocity, layout_name, x, y)
-        instrument = self.player_instruments[self.current_player]['instrument']
-        footage = self.player_instruments[self.current_player]['footage']
+        instrument = self.player_instruments[Status.current_player]['instrument']
+        footage = self.player_instruments[Status.current_player]['footage']
 
         # Directly add note to pattern, avoiding multiple dictionary lookups
-        dict_key = (self.current_player, self.current_measure, self.current_section)
+        dict_key = (Status.current_player, Status.current_measure, Status.current_section)
         self.unfinished_patterns.setdefault(dict_key, Pattern(instrument, footage)).add_note(note)
 
     def _get_section(self):
         # Determine the current section based on time and section_start_times
-        if self.current_section < len(self.section_start_times) and (
-                self.current_measure >= self.section_start_times[self.current_section]):
-            self.current_section += 1
+        if Status.current_section < len(self.section_start_times) and (
+                Status.current_measure >= self.section_start_times[Status.current_section]):
+            Status.current_section += 1
 
     def _get_instrument_and_layout(self):
         """Retrieve instrument and layout for the current player."""
         # Retrieve the instrument for the current player
-        instrument = self.player_instruments[self.current_player]['instrument']
-        layout_file = self.player_instruments[self.current_player]['layout']
+        instrument = self.player_instruments[Status.current_player]['instrument']
+        layout_file = self.player_instruments[Status.current_player]['layout']
 
         # Determine the layout file for the instrument
         while not layout_file:
@@ -233,23 +260,23 @@ class MidiCsvParser:
                 else:
                     instrument = self.default_instrument
 
-        self.player_instruments[self.current_player]['layout'] = layout_file
-        self.player_instruments[self.current_player]['footage'] = self.supported_instruments[instrument]['footage']
+        self.player_instruments[Status.current_player]['layout'] = layout_file
+        self.player_instruments[Status.current_player]['footage'] = self.supported_instruments[instrument]['footage']
 
         # Extract layout coordinates
-        self.current_coords = self.layout_coordinates.get(instrument)
-        if not self.current_coords:
+        Status.current_coords = self.layout_coordinates.get(instrument)
+        if not Status.current_coords:
             raise ValueError(f"No layout coordinates found for layout file: {layout_file}")
 
-    def _get_note_coordinates(self, note_value):
+    def _get_note_coordinates(self, note_value) -> tuple[int, int]:
         """Retrieve x, y coordinates for the note based on its value and layout."""
-        if note_value not in self.current_coords:
+        if note_value not in Status.current_coords:
             raise ValueError(f"No coordinates found for note value: {note_value} in the given layout.")
 
         # Assuming the layout_coordinates are stored as a list of coordinates for each note value,
         # and we're taking the first set of coordinates for simplicity.
         # You might need to adjust this if your data structure is different.
-        coordinates = self.current_coords[note_value][0]
+        coordinates = Status.current_coords[note_value][0]
 
         # Extract x and y values
         x = coordinates.get('x')
@@ -260,7 +287,7 @@ class MidiCsvParser:
 
         return x, y
 
-    def _create_note(self, time, measure_time, note_value, velocity, layout, x, y):
+    def _create_note(self, time, measure_time, note_value, velocity, layout, x, y) -> Note:
         """Creates and returns a new Note object."""
         note = Note(start_time=time, measure_time=measure_time, note_value=note_value,
                     velocity=velocity, note_name=self.note_symbols[note_value],
@@ -290,7 +317,7 @@ class MidiCsvParser:
         patterns_to_finalize = []
         for key, pattern in self.unfinished_patterns.items():
             _, measure_number, _ = key
-            if measure_number < self.current_measure and pattern.is_complete():
+            if measure_number < Status.current_measure and pattern.is_complete():
                 patterns_to_finalize.append((key, pattern))
 
         # Finalize the patterns outside the loop
@@ -301,11 +328,11 @@ class MidiCsvParser:
 
     def _handle_instrument_declaration(self, row):
         """Handles instrument declarations in the MIDI file."""
-        time, track = self._integer_row_data(row, [1, 0])
+        _, track = self._integer_row_data(row, [1, 0])
         event_type, instrument_name = self._string_row_data(row, [2, 3])
 
         # A new player means sections reset to 1
-        self.current_section = 1
+        Status.current_section = 1
 
         # Assign a new player number to a new track if not already assigned
         if track not in self.track_to_player:
@@ -313,13 +340,13 @@ class MidiCsvParser:
             self.player_number += 1
 
         # Get the current player number for this track
-        self.current_player = self.track_to_player[track]
+        Status.current_player = self.track_to_player[track]
 
         # Process the instrument name and update the player's instrument
-        instrument = self._process_instrument_name(instrument_name, event_type, self.current_player)
-        self.player_instruments[self.current_player] = {"instrument": instrument, "layout": "", "footage": ""}
+        instrument = self._process_instrument_name(instrument_name, event_type, Status.current_player)
+        self.player_instruments[Status.current_player] = {"instrument": instrument, "layout": "", "footage": ""}
 
-    def _process_instrument_name(self, instrument_name, event_type, current_player):
+    def _process_instrument_name(self, instrument_name, event_type, current_player) -> str:
         """Processes and returns a standardized instrument name."""
         instrument_name = instrument_name.lower().replace('"', '')
 
