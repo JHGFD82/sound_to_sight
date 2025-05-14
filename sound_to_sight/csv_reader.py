@@ -119,7 +119,14 @@ class MidiCsvParser:
                 self.division, self.total_length)
 
     def _initialize_instrument_layouts(self):
-        """Loads instrument layout information."""
+        """
+        Initialize instrument layouts and coordinates from JSON files.
+        This method loads the supported instruments and their corresponding layouts from JSON files.
+        It also creates a dictionary to store already loaded layouts to prevent duplicate loading.
+        
+        Returns:
+            None
+        """
         # Load supported instruments first
         supported_instruments_json = 'midi_data/supported_instruments.json'
         self.supported_instruments = self._load_from_json(supported_instruments_json)
@@ -143,7 +150,15 @@ class MidiCsvParser:
             self.layout_coordinates[instrument] = loaded_layouts[layout_file]
 
     def _load_midi_info(self) -> dict[int, str]:
-        """Loads MIDI information from a JSON file."""
+        """
+        Load MIDI info from a JSON file and convert it into a more usable format.
+        This method reads the MIDI info JSON file and creates a dictionary that maps MIDI note numbers to note symbols.
+        It is assumed that the JSON file contains a list of dictionaries with "MIDI Note Number" and "Note Symbol" keys.
+
+        Returns:
+            dict[int, str]: A dictionary mapping MIDI note numbers to note symbols.
+        """
+        # Load MIDI info from the JSON file
         midi_info_file = 'midi_data/midi_info.json'  # Path to the MIDI info JSON file
         midi_info = self._load_from_json(midi_info_file)
 
@@ -153,8 +168,23 @@ class MidiCsvParser:
         return note_symbols
 
     def _parse_header(self, rows):
-        """Parse the header to extract MIDI file metadata."""
+        """
+        Parse the header of the MIDI CSV file to extract metadata such as division, tempo, and notes per bar.
+        This method iterates through the rows of the CSV file and identifies the relevant metadata based on the event type.
+        It stops parsing when it encounters a 'note_on_c' event, as this indicates the start of the actual note events.
+        It also validates the extracted metadata to ensure that all required fields are present.
+        If any required metadata is missing, it raises a ValueError to indicate the issue.
 
+        Parameters:
+            rows (list): A list of rows from the MIDI CSV file.
+        
+        Raises:
+            ValueError: If any required metadata is missing or incomplete.
+
+        Returns:
+            None
+        """
+        # Initialize metadata attributes
         for row in rows:
             event_type = self._string_row_data(row, [2])[0]
 
@@ -180,19 +210,55 @@ class MidiCsvParser:
         self.bpm = self._calculate_bpm(self.tempo)
 
     def _calculate_bpm(self, tempo) -> float:
-        """Calculate beats per minute from tempo."""
+        """
+        Calculate BPM from the given tempo in microseconds per quarter note.
+        This method converts the tempo to BPM using the formula:
+        BPM = (60 * 1,000,000) / tempo
+        where tempo is the duration of a quarter note in microseconds.
+
+        Parameters:
+            tempo (int): The tempo in microseconds per quarter note.
+
+        Raises:
+            ValueError: If the tempo is not a positive integer or exceeds the maximum allowed value.
+        
+        Returns:
+            float: The calculated BPM (Beats Per Minute).
+        """
+        # Calculate BPM from the given tempo
         return self.MICROSECONDS_PER_MINUTE / tempo
 
     def establish_sections(self):
-        """Establish the sections based on start times."""
-        if not self.section_start_times or self.section_start_times[0] != 1:
+        """
+        Establish sections based on the provided section start times.
+        This method checks if the section start times are provided and ensures that the first section starts at time 1.
+        If the first section start time is not 1, it prepends 1 to the list of section start times.
+        It also ensures that the section start times are in ascending order.
+        
+        Returns:
+            None
+        """
+        # Ensure section start times are in ascending order
             self.section_start_times = [1] + self.section_start_times
 
     def _process_row(self, row):
-        """Processes a single row based on the event type."""
+        """
+        Process a single row of the MIDI CSV file.
+        This method extracts relevant information from the row, such as time, event type, and instrument declarations.
+        It updates the current measure and section based on the time information and handles different MIDI event types
+        accordingly. It also manages the unfinished patterns and finalizes them when necessary.
+        
+        Parameters:
+            row (list): A single row from the MIDI CSV file.
+            
+        Returns:
+            None
+        """
+        # Extract relevant information from the row
         time = self._integer_row_data(row, [1])[0]
         event_type = self._string_row_data(row, [2])[0]
 
+        # Update the current measure based on the time and pattern length
         Status.current_measure = (time // self.pattern_length) + 1
 
         # Handle different MIDI event types by delegating to specific methods
@@ -206,12 +272,35 @@ class MidiCsvParser:
             self._find_total_length(row)
 
     def _find_total_length(self, row):
+        """
+        Finds the total length of the MIDI file based on the 'End_track' event.
+        This method extracts the length from the row and updates the total length if it is greater than the current total length.
+        
+        Parameters:
+            row (list): A single row from the MIDI CSV file.
+            
+        Returns:
+            None
+        """
+        # Extract the length from the row and update the total length
         length = int(row[1])
         if length > self.total_length:
             self.total_length = length
 
     def _handle_note_on(self, row):
-        """Handles a 'Note_on_c' event."""
+        """
+        Handles a 'Note_on_c' event.
+        This method extracts relevant information from the row, such as time, track, note value, and velocity.
+        It calculates the measure time and current measure, updates the current section count if applicable,
+        and retrieves instrument and layout information. It then creates a Note object and adds it to the unfinished patterns.
+        
+        Parameters:
+            row (list): A single row from the MIDI CSV file.
+
+        Returns:
+            None
+        """
+        # Extract relevant information from the row
         time, track, note_value, velocity = self._integer_row_data(row, [1, 0, 4, 5])
 
         # Calculate measure time and current measure
@@ -235,13 +324,28 @@ class MidiCsvParser:
         self.unfinished_patterns.setdefault(dict_key, Pattern(instrument, footage)).add_note(note)
 
     def _get_section(self):
+        """
+        Update the current section based on the time and section start times.
+        This method checks if the current measure is greater than or equal to the start time of the current section.
+        If so, it increments the current section count. This is used to manage different sections in the music.
+        
+        Returns:
+            None
+        """
         # Determine the current section based on time and section_start_times
         if Status.current_section < len(self.section_start_times) and (
                 Status.current_measure >= self.section_start_times[Status.current_section]):
             Status.current_section += 1
 
     def _get_instrument_and_layout(self):
-        """Retrieve instrument and layout for the current player."""
+        """Retrieve instrument and layout for the current player.
+        This method checks if the current player has a layout defined. If not, it prompts the user to input an instrument name.
+        It also retrieves the layout file and footage information for the instrument.
+        If the layout file is not found, it prompts the user to input a physical instrument name or use a default keyboard-based layout.
+        
+        Returns:
+            None
+        """
         # Retrieve the instrument for the current player
         instrument = self.player_instruments[Status.current_player]['instrument']
         layout_file = self.player_instruments[Status.current_player]['layout']
@@ -269,7 +373,20 @@ class MidiCsvParser:
             raise ValueError(f"No layout coordinates found for layout file: {layout_file}")
 
     def _get_note_coordinates(self, note_value) -> tuple[int, int]:
-        """Retrieve x, y coordinates for the note based on its value and layout."""
+        """Retrieve x, y coordinates for the note based on its value and layout.
+        This method checks if the note value exists in the current layout coordinates.
+        If it does, it retrieves the x and y coordinates. If not, it raises a ValueError.
+        
+        Parameters:
+            note_value (int): The MIDI note value for which to retrieve coordinates.
+        
+        Raises:
+            ValueError: If the note value is not found in the current layout coordinates.
+            
+        Returns:
+            tuple[int, int]: A tuple containing the x and y coordinates for the note.
+        """
+        # Check if the note value exists in the current layout coordinates
         if note_value not in Status.current_coords:
             raise ValueError(f"No coordinates found for note value: {note_value} in the given layout.")
 
@@ -288,7 +405,22 @@ class MidiCsvParser:
         return x, y
 
     def _create_note(self, time, measure_time, note_value, velocity, layout, x, y) -> Note:
-        """Creates and returns a new Note object."""
+        """Creates and returns a new Note object.
+        This method initializes a Note object with the provided parameters and sets its timing information.
+        
+        Parameters:
+            time (int): The time at which the note starts.
+            measure_time (int): The time within the measure.
+            note_value (int): The MIDI note value.
+            velocity (int): The velocity of the note.
+            layout (str): The layout name for the note.
+            x (int): The x coordinate for the note.
+            y (int): The y coordinate for the note.
+            
+        Returns:
+            Note: A new Note object initialized with the provided parameters.
+        """
+        # Create a new Note object with the provided parameters
         note = Note(start_time=time, measure_time=measure_time, note_value=note_value,
                     velocity=velocity, note_name=self.note_symbols[note_value],
                     layout=layout, x=x, y=y)
@@ -296,7 +428,18 @@ class MidiCsvParser:
         return note
 
     def _handle_note_off(self, row):
-        """Handles a 'Note_off_c' event."""
+        """Handles a 'Note_off_c' event.
+        This method extracts relevant information from the row, such as time, track, and note value.
+        It updates the unfinished patterns by setting the length of the note to the difference between the current time
+        and the start time of the note. It also finalizes patterns if necessary.
+        
+        Parameters:
+            row (list): A single row from the MIDI CSV file.
+        
+        Returns:
+            None
+        """
+        # Extract relevant information from the row
         time, track, note_value = self._integer_row_data(row, [1, 0, 4])
 
         # Process incomplete patterns more efficiently
@@ -310,7 +453,16 @@ class MidiCsvParser:
         self._finalize_patterns()
 
     def _finalize_patterns(self):
-        """Finalize patterns that are complete."""
+        """
+        Finalize patterns that are complete.
+        This method checks the unfinished patterns and finalizes them if they are complete.
+        It also updates the player measures and timing information for the finalized patterns.
+        This is done to avoid modifying the dictionary while iterating over it.
+        
+        Returns:
+            None
+        """
+        # Update the player measures with the current measure
         timing_info = (self.bpm, self.division, self.fps, self.pattern_length)
 
         # Create a list to track patterns to be finalized to avoid modifying the dictionary during iteration
