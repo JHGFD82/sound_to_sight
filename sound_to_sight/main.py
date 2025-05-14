@@ -3,6 +3,7 @@ import argparse
 from csv_reader import MidiCsvParser
 from utils import (export_timeline, export_player_definitions, export_pattern_definitions, export_project_details,
                    calculate_fps, music_to_video_length, sections_to_video_time)
+from typing import List, Tuple
 
 
 MIN_FPS = 24
