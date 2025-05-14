@@ -3,12 +3,13 @@ import argparse
 from csv_reader import MidiCsvParser
 from utils import (export_timeline, export_player_definitions, export_pattern_definitions, export_project_details,
                    calculate_fps, music_to_video_length, sections_to_video_time)
+from typing import List, Tuple
 
 MIN_FPS = 24
 MAX_FPS = 60
 
 
-def main(file_list, fps, video_resolution, sections=None):
+def main(file_list: List[str], fps: int, video_resolution: Tuple[int, int], sections: List[int] = None):
     # FILE IMPORT
     for file in file_list:
         if not os.path.isfile(file):
@@ -58,4 +59,4 @@ def main(file_list, fps, video_resolution, sections=None):
 #     main(args.input_files, args.bpm, args.fps, args.sections, args.action_safe)
 
 
-main(['../../Six Marimbas/Music/Six.csv'], 60, [3840, 2160], sections=[329, 676])
+main(['../../Six Marimbas/Music/Six.csv'], 60, (3840, 2160), sections=[329, 676])
