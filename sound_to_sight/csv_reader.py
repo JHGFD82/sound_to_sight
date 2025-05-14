@@ -7,7 +7,8 @@ from sound_to_sight import Note, Pattern
 class MidiCsvParser:
     MICROSECONDS_PER_MINUTE = 60000000
 
-    def __init__(self, filename, fps, section_start_times):
+    def __init__(self, filename: str, fps: int, section_start_times: list):
+    
         self.filename = filename
         self.fps = fps
         self.section_start_times = section_start_times  # To manage different sections in the music
@@ -37,21 +38,21 @@ class MidiCsvParser:
         self.pattern_length = None  # Initialize pattern_length
         self.total_length = 0
 
-    def _load_from_json(self, file):
+    def _load_from_json(self, file: str) -> dict:
         with open(file, 'r') as f:
             return json.load(f)
 
-    def _load_from_csv(self, file):
+    def _load_from_csv(self, file: str) -> list:
         with open(file, 'r') as f:
             return list(csv.reader(f))
 
-    def _integer_row_data(self, row, fields):
+    def _integer_row_data(self, row, fields) -> list:
         return [int(row[field]) for field in fields]
 
-    def _string_row_data(self, row, fields):
+    def _string_row_data(self, row, fields) -> list:
         return [row[field].strip() for field in fields]
 
-    def parse(self):
+    def parse(self) -> tuple[dict, list, int, int, int, int]:
         """
         Parse Method
 
@@ -115,7 +116,7 @@ class MidiCsvParser:
             self.instrument_layout[instrument] = layout_file
             self.layout_coordinates[instrument] = loaded_layouts[layout_file]
 
-    def _load_midi_info(self):
+    def _load_midi_info(self) -> dict[int, str]:
         """Loads MIDI information from a JSON file."""
         midi_info_file = 'midi_data/midi_info.json'  # Path to the MIDI info JSON file
         midi_info = self._load_from_json(midi_info_file)
@@ -152,7 +153,7 @@ class MidiCsvParser:
         # Calculate BPM from the extracted tempo
         self.bpm = self._calculate_bpm(self.tempo)
 
-    def _calculate_bpm(self, tempo):
+    def _calculate_bpm(self, tempo) -> float:
         """Calculate beats per minute from tempo."""
         return self.MICROSECONDS_PER_MINUTE / tempo
 
@@ -241,7 +242,7 @@ class MidiCsvParser:
         if not self.current_coords:
             raise ValueError(f"No layout coordinates found for layout file: {layout_file}")
 
-    def _get_note_coordinates(self, note_value):
+    def _get_note_coordinates(self, note_value) -> tuple[int, int]:
         """Retrieve x, y coordinates for the note based on its value and layout."""
         if note_value not in self.current_coords:
             raise ValueError(f"No coordinates found for note value: {note_value} in the given layout.")
@@ -260,7 +261,7 @@ class MidiCsvParser:
 
         return x, y
 
-    def _create_note(self, time, measure_time, note_value, velocity, layout, x, y):
+    def _create_note(self, time, measure_time, note_value, velocity, layout, x, y) -> Note:
         """Creates and returns a new Note object."""
         note = Note(start_time=time, measure_time=measure_time, note_value=note_value,
                     velocity=velocity, note_name=self.note_symbols[note_value],
@@ -319,7 +320,7 @@ class MidiCsvParser:
         instrument = self._process_instrument_name(instrument_name, event_type, self.current_player)
         self.player_instruments[self.current_player] = {"instrument": instrument, "layout": "", "footage": ""}
 
-    def _process_instrument_name(self, instrument_name, event_type, current_player):
+    def _process_instrument_name(self, instrument_name, event_type, current_player) -> str:
         """Processes and returns a standardized instrument name."""
         instrument_name = instrument_name.lower().replace('"', '')
 
