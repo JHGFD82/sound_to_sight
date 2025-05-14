@@ -246,6 +246,12 @@ class MidiCsvParser:
             None
         """
         # Ensure section start times are in ascending order
+        self.section_start_times.sort()
+        if not self.section_start_times:
+            self.section_start_times = [1]
+        elif len(self.section_start_times) == 1:
+            self.section_start_times = [1, self.section_start_times[0]]
+        elif len(self.section_start_times) > 1 and self.section_start_times[0] != 1:
             self.section_start_times = [1] + self.section_start_times
 
     def _process_row(self, row):
