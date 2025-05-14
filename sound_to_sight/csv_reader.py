@@ -226,6 +226,13 @@ class MidiCsvParser:
             float: The calculated BPM (Beats Per Minute).
         """
         # Calculate BPM from the given tempo
+        if tempo <= 0:
+            raise ValueError("Tempo must be a positive integer.")
+        if tempo > self.MICROSECONDS_PER_MINUTE:
+            raise ValueError("Tempo must be less than or equal to 60,000,000 microseconds.")
+        # Calculate BPM using the formula
+        # BPM = (60 * 1,000,000) / tempo
+        # where tempo is the duration of a quarter note in microseconds
         return self.MICROSECONDS_PER_MINUTE / tempo
 
     def establish_sections(self):
