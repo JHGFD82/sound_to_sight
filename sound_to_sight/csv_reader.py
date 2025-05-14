@@ -67,13 +67,24 @@ class MidiCsvParser:
         self.pattern_length = None  # Initialize pattern_length
         self.total_length = 0
 
-    def _load_from_json(self, file: str) -> dict:
-        with open(file, 'r') as f:
-            return json.load(f)
+    def _load_file(self, file: str, filetype: str = "json") -> list:
+        """
+        Load and return data from a JSON or CSV file.
 
-    def _load_from_csv(self, file: str) -> list:
+        Arguments:
+            file (str): Path to the file.
+            filetype (str): "json" or "csv".
+
+        Returns:
+            object: Parsed data (dict for JSON, list for CSV).
+        """
         with open(file, 'r') as f:
-            return list(csv.reader(f))
+            if filetype == "json":
+                return json.load(f)
+            elif filetype == "csv":
+                return list(csv.reader(f))
+            else:
+                raise ValueError("Unsupported filetype: must be 'json' or 'csv'")
 
     def _row_data(self, row, fields, cast_func) -> list:
         """
@@ -105,7 +116,7 @@ class MidiCsvParser:
         - `player_measures`: The final result after parsing.
         """
         # Open and read the CSV file
-        rows = self._load_from_csv(self.filename)
+        rows = self._load_file(self.filename)
 
         # Parse the header to extract MIDI file metadata
         self._parse_header(rows)
@@ -151,7 +162,7 @@ class MidiCsvParser:
             # Check if layout is already loaded
             if layout_file not in loaded_layouts:
                 layout_dir = 'midi_data/visual_layouts/'
-                layout = self._load_from_json(layout_dir + layout_file)
+                layout = self._load_file(layout_dir + layout_file)
                 layout_coord = {int(key): values for key, values in layout.items()}
                 loaded_layouts[layout_file] = layout_coord
 
@@ -170,7 +181,7 @@ class MidiCsvParser:
         """
         # Load MIDI info from the JSON file
         midi_info_file = 'midi_data/midi_info.json'  # Path to the MIDI info JSON file
-        midi_info = self._load_from_json(midi_info_file)
+        midi_info = self._load_file(midi_info_file)
 
         # Convert the MIDI info into a more usable format, if necessary
         # For example, creating a dictionary that maps MIDI note numbers to note symbols
