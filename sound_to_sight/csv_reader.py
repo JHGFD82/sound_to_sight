@@ -56,10 +56,10 @@ class MidiCsvParser:
         # Initialize data structures for parsing and processing
         self.player_measures = {}  # To store measures associated with each player
         self.unfinished_patterns = {}  # To keep track of unfinished musical patterns
-        self.supported_instruments = {}  # To store information about supported instruments
+        self.supported_instruments = self._load_file('midi_data/supported_instruments.json')  # To store information about supported instruments
         self.instrument_layout = {}  # To store layout information for each instrument
         self.layout_coordinates = {}  # To store coordinates for each instrument layout
-        self.note_symbols = {}  # To map MIDI note numbers to symbols
+        self.note_symbols = self._load_midi_info()  # To map MIDI note numbers to symbols
         self.player_instruments = {}  # Maps player numbers to instruments
         self.track_to_player = {}  # Maps track numbers to player numbers
         self.player_number = 1  # Initial player number
@@ -128,9 +128,6 @@ class MidiCsvParser:
         self.supported_instruments = {}
         self._initialize_instrument_layouts()
 
-        # Read additional MIDI info if required
-        self.note_symbols = self._load_midi_info()
-
         # Main loop to process each row in the CSV file
         for row in rows:
             self._process_row(row)
@@ -148,10 +145,6 @@ class MidiCsvParser:
         Returns:
             None
         """
-        # Load supported instruments first
-        supported_instruments_json = 'midi_data/supported_instruments.json'
-        self.supported_instruments = self._load_from_json(supported_instruments_json)
-
         # Create a dictionary to store already loaded layouts to prevent duplicate loading
         loaded_layouts = {}
 
