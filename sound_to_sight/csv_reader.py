@@ -91,9 +91,6 @@ class MidiCsvParser:
         Parameters:
         - self: The instance of the class calling the method.
 
-        Raises:
-        - N/A
-
         Returns:
         - `player_measures`: The final result after parsing.
         """
