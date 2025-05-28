@@ -86,7 +86,9 @@ class MidiCsvParser:
             else:
                 raise ValueError("Unsupported filetype: must be 'json' or 'csv'")
 
-    def _row_data(self, row, fields, cast_func) -> list:
+    from typing import Callable, Any
+
+    def _row_data(self, row: list[str], fields: list[int], cast_func: Callable[[str], Any]) -> list[Any]:
         """
         Extracts data from a row based on specified fields and applies a casting function to each field.
         This method is used to convert the data in the specified fields to the desired type.
@@ -94,7 +96,7 @@ class MidiCsvParser:
         Parameters:
             row (list): The row from which to extract data.
             fields (list): A list of field indices to extract from the row.
-            cast_func (function): A function to cast the extracted data to the desired type.
+            cast_func (Callable[[str], Any]): A function to cast the extracted data to the desired type.
 
         Returns:
             list: A list of extracted and casted data.
