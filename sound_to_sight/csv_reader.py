@@ -119,6 +119,8 @@ class MidiCsvParser:
         """
         # Open and read the CSV file
         rows = self._load_file(self.filename)
+        if not isinstance(rows, list):
+            raise ValueError("Expected CSV file to be loaded as a list of rows, but got a different type.")
 
         # Parse the header to extract MIDI file metadata
         self._parse_header(rows)
