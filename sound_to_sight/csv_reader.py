@@ -42,7 +42,7 @@ class MidiCsvParser:
     # Constants for time calculations
     MICROSECONDS_PER_MINUTE = 60000000
 
-    def __init__(self, filename: str, fps: int, section_start_times: list):
+    def __init__(self, filename: str, fps: int, section_start_times: list[int]):
     
         self.filename = filename
         self.fps = fps
@@ -67,7 +67,7 @@ class MidiCsvParser:
         self.pattern_length = None  # Initialize pattern_length
         self.total_length = 0
 
-    def _load_file(self, file: str, filetype: str = "json") -> list:
+    def _load_file(self, file: str, filetype: str = "json") -> list[list[str]] | dict[str, str]:
         """
         Load and return data from a JSON or CSV file.
 
@@ -102,7 +102,7 @@ class MidiCsvParser:
         # Extract data from the row based on specified fields and apply casting function
         return [cast_func(row[field]) for field in fields]
 
-    def parse(self) -> tuple[dict, list, int, int, int, int]:
+    def parse(self) -> tuple[dict[int, dict[int, dict[int, Pattern]]], list[int], float, int, int, int]:
         """
         Parse Method
 
@@ -181,7 +181,7 @@ class MidiCsvParser:
         note_symbols = {int(note["MIDI Note Number"]): note["Note Symbol"] for note in midi_info}
         return note_symbols
 
-    def _parse_header(self, rows):
+    def _parse_header(self, rows: list[list[str]]):
         """
         Parse the header of the MIDI CSV file to extract metadata such as division, tempo, and notes per bar.
         This method iterates through the rows of the CSV file and identifies the relevant metadata based on the event type.
