@@ -106,8 +106,6 @@ class MidiCsvParser:
 
     def parse(self) -> tuple[dict[int, dict[int, dict[int, Pattern]]], list[int], float, int, int, int]:
         """
-        Parse Method
-
         Open and read the CSV file specified by `filename`. Then, perform further parsing operations on the contents
         of the file.
 
