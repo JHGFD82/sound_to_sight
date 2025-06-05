@@ -170,7 +170,7 @@ class MidiCsvParser:
         - `player_measures`: The final result after parsing.
         """
         # Open and read the CSV file
-        rows = self._load_file(self.filename)
+        rows = _load_file(self.filename)
         if not isinstance(rows, list):
             raise ValueError("Expected CSV file to be loaded as a list of rows, but got a different type.")
 
@@ -211,7 +211,7 @@ class MidiCsvParser:
             # Check if layout is already loaded
             if layout_file not in loaded_layouts:
                 layout_dir = 'midi_data/visual_layouts/'
-                layout = self._load_file(layout_dir + layout_file)
+                layout = _load_file(layout_dir + layout_file)
                 layout_coord = {int(key): values for key, values in layout.items()}
                 loaded_layouts[layout_file] = layout_coord
 
