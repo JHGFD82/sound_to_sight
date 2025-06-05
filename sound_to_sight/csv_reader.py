@@ -25,10 +25,10 @@ class Status:
         None
     """
     def __init__(self):
-        self.current_player = None
-        self.current_measure = 1
+        self.current_player = 1 # Start with player 1
+        self.current_measure = 1 # Start with measure 1
         self.current_section = 0
-        self.current_coords = None
+        self.current_coords: dict[int, list[dict[str, int]]] | None = None
 
 class MidiCsvParser:
     """
