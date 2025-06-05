@@ -4,6 +4,26 @@ import re
 from sound_to_sight import Note, Pattern
 
 
+def _load_file(file: str, filetype: str = "json") -> list[list[str]] | dict[str, dict[str, str]]:
+    """
+    Load and return data from a JSON or CSV file.
+
+    Arguments:
+        file (str): Path to the file.
+        filetype (str): "json" or "csv".
+
+    Returns:
+        object: Parsed data (dict for JSON, list for CSV).
+    """
+    with open(file, 'r') as f:
+        if filetype == "json":
+            return json.load(f)
+        elif filetype == "csv":
+            return list(csv.reader(f))
+        else:
+            raise ValueError("Unsupported filetype: must be 'json' or 'csv'")
+
+
 # Initialize current placement in row examination
 class Status:
     """
@@ -68,25 +88,6 @@ class MidiCsvParser:
         self.default_instrument = "keyboard"  # Default instrument in case of missing data
         self.pattern_length = None  # Initialize pattern_length
         self.total_length = 0
-
-    def _load_file(self, file: str, filetype: str = "json") -> list[list[str]] | dict[str, dict[str, str]]:
-        """
-        Load and return data from a JSON or CSV file.
-
-        Arguments:
-            file (str): Path to the file.
-            filetype (str): "json" or "csv".
-
-        Returns:
-            object: Parsed data (dict for JSON, list for CSV).
-        """
-        with open(file, 'r') as f:
-            if filetype == "json":
-                return json.load(f)
-            elif filetype == "csv":
-                return list(csv.reader(f))
-            else:
-                raise ValueError("Unsupported filetype: must be 'json' or 'csv'")
 
     from typing import Callable, Any
 
