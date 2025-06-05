@@ -7,7 +7,7 @@ def ticks_to_frames(ticks, bpm, division, fps):
 
 
 class Note:
-    def __init__(self, start_time, measure_time, note_value, velocity, note_name, layout, x, y):
+    def __init__(self, start_time: int, measure_time: int, note_value: int, velocity: int, note_name: str, layout: str, x: float, y: float):
         self.start_time = start_time
         self.measure_time = measure_time
         self.note_value = note_value

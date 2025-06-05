@@ -58,18 +58,18 @@ class MidiCsvParser:
         # Initialize data structures for parsing and processing
         self.player_measures = {}  # To store measures associated with each player
         self.unfinished_patterns = {}  # To keep track of unfinished musical patterns
-        self.supported_instruments = self._load_file('midi_data/supported_instruments.json')  # To store information about supported instruments
+        self.supported_instruments = self._load_file('midi_data/supported_instruments.json', filetype='json')  # To store information about supported instruments
         self.instrument_layout = {}  # To store layout information for each instrument
-        self.layout_coordinates = {}  # To store coordinates for each instrument layout
+        self.layout_coordinates: dict[str, dict[int, list[dict[str, int]]]] = {}  # To store coordinates for each instrument layout
         self.note_symbols = self._load_midi_info()  # To map MIDI note numbers to symbols
-        self.player_instruments = {}  # Maps player numbers to instruments
+        self.player_instruments: dict[int, dict[str, str]] = {}  # Maps player numbers to instruments
         self.track_to_player = {}  # Maps track numbers to player numbers
         self.player_number = 1  # Initial player number
         self.default_instrument = "keyboard"  # Default instrument in case of missing data
         self.pattern_length = None  # Initialize pattern_length
         self.total_length = 0
 
-    def _load_file(self, file: str, filetype: str = "json") -> list[list[str]] | dict[str, str]:
+    def _load_file(self, file: str, filetype: str = "json") -> list[list[str]] | dict[str, dict[str, str]]:
         """
         Load and return data from a JSON or CSV file.
 
@@ -272,7 +272,7 @@ class MidiCsvParser:
         elif len(self.section_start_times) > 1 and self.section_start_times[0] != 1:
             self.section_start_times = [1] + self.section_start_times
 
-    def _process_row(self, row):
+    def _process_row(self, row: list[str]) -> None:
         """
         Process a single row of the MIDI CSV file.
         This method extracts relevant information from the row, such as time, event type, and instrument declarations.
@@ -395,15 +395,15 @@ class MidiCsvParser:
                 else:
                     instrument = self.default_instrument
 
-        self.player_instruments[Status.current_player]['layout'] = layout_file
-        self.player_instruments[Status.current_player]['footage'] = self.supported_instruments[instrument]['footage']
+        self.player_instruments[self.status.current_player]['layout'] = layout_file
+        self.player_instruments[self.status.current_player]['footage'] = self.supported_instruments[instrument]['footage']
 
         # Extract layout coordinates
         self.status.current_coords = self.layout_coordinates.get(instrument)
         if not self.status.current_coords:
             raise ValueError(f"No layout coordinates found for layout file: {layout_file}")
 
-    def _get_note_coordinates(self, note_value) -> tuple[int, int]:
+    def _get_note_coordinates(self, note_value: int) -> tuple[int, int]:
         """Retrieve x, y coordinates for the note based on its value and layout.
         This method checks if the note value exists in the current layout coordinates.
         If it does, it retrieves the x and y coordinates. If not, it raises a ValueError.
@@ -529,7 +529,7 @@ class MidiCsvParser:
         instrument = self._process_instrument_name(instrument_name, event_type, Status.current_player)
         self.player_instruments[Status.current_player] = {"instrument": instrument, "layout": "", "footage": ""}
 
-    def _process_instrument_name(self, instrument_name, event_type, current_player) -> str:
+    def _process_instrument_name(self, instrument_name: str, event_type: str, current_player: int) -> str:
         """Processes and returns a standardized instrument name."""
         instrument_name = instrument_name.lower().replace('"', '')
 
