@@ -44,6 +44,8 @@ class MidiCsvParser:
 
     def __init__(self, filename: str, fps: int, section_start_times: list[int]):
     
+        self.status = Status() # Initialize the status object to track current parsing state
+
         self.filename = filename
         self.fps = fps
         self.section_start_times = section_start_times  # To manage different sections in the music
@@ -376,8 +378,8 @@ class MidiCsvParser:
             None
         """
         # Retrieve the instrument for the current player
-        instrument = self.player_instruments[Status.current_player]['instrument']
-        layout_file = self.player_instruments[Status.current_player]['layout']
+        instrument = self.player_instruments[self.status.current_player]['instrument']
+        layout_file = self.player_instruments[self.status.current_player]['layout']
 
         # Determine the layout file for the instrument
         while not layout_file:
@@ -397,8 +399,8 @@ class MidiCsvParser:
         self.player_instruments[Status.current_player]['footage'] = self.supported_instruments[instrument]['footage']
 
         # Extract layout coordinates
-        Status.current_coords = self.layout_coordinates.get(instrument)
-        if not Status.current_coords:
+        self.status.current_coords = self.layout_coordinates.get(instrument)
+        if not self.status.current_coords:
             raise ValueError(f"No layout coordinates found for layout file: {layout_file}")
 
     def _get_note_coordinates(self, note_value) -> tuple[int, int]:
@@ -416,13 +418,13 @@ class MidiCsvParser:
             tuple[int, int]: A tuple containing the x and y coordinates for the note.
         """
         # Check if the note value exists in the current layout coordinates
-        if note_value not in Status.current_coords:
+        if note_value not in self.status.current_coords:
             raise ValueError(f"No coordinates found for note value: {note_value} in the given layout.")
 
         # Assuming the layout_coordinates are stored as a list of coordinates for each note value,
         # and we're taking the first set of coordinates for simplicity.
         # You might need to adjust this if your data structure is different.
-        coordinates = Status.current_coords[note_value][0]
+        coordinates = self.status.current_coords[note_value][0]
 
         # Extract x and y values
         x = coordinates.get('x')
