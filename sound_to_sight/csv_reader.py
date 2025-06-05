@@ -50,6 +50,61 @@ class Status:
         self.current_section = 0
         self.current_coords: dict[int, list[dict[str, int]]] | None = None
 
+class Resources:
+    """
+    Resources Class
+
+    This class is responsible for loading and managing resources related to MIDI parsing.
+    It includes loading supported instruments, instrument layouts, and MIDI note symbols.
+
+    Attributes:
+        supported_instruments (dict): A dictionary containing information about supported instruments.
+        instrument_layout (dict): A dictionary mapping instruments to their layout files.
+        layout_coordinates (dict): A dictionary mapping instruments to their layout coordinates.
+        note_symbols (dict): A dictionary mapping MIDI note numbers to note symbols.
+
+    Methods:
+        __init__: Initializes the Resources object and loads the necessary data.
+        _load_midi_info: Loads MIDI note information from a JSON file and converts it into a usable format.
+    
+    Returns:
+        None
+    """
+
+    def __init__(self):
+        """
+        Initialize the Resources object and load necessary data.
+        This method loads the supported instruments from a JSON file, initializes the instrument layout and layout coordinates,
+        and loads MIDI note symbols from a JSON file.
+        It also initializes the note_symbols dictionary to map MIDI note numbers to their corresponding symbols.
+
+        Returns:
+            None
+        """
+
+        self.supported_instruments = _load_file('midi_data/supported_instruments.json', filetype='json')
+        self.instrument_layout = {}
+        self.layout_coordinates = {}
+        self.note_symbols = self._load_midi_info()
+
+    def _load_midi_info(self) -> dict[int, str]:
+        """
+        Load MIDI info from a JSON file and convert it into a more usable format.
+        This method reads the MIDI info JSON file and creates a dictionary that maps MIDI note numbers to note symbols.
+        It is assumed that the JSON file contains a list of dictionaries with "MIDI Note Number" and "Note Symbol" keys.
+
+        Returns:
+            dict[int, str]: A dictionary mapping MIDI note numbers to note symbols.
+        """
+        # Load MIDI info from the JSON file
+        midi_info_file = 'midi_data/midi_info.json'  # Path to the MIDI info JSON file
+        midi_info = _load_file(midi_info_file)
+
+        # Convert the MIDI info into a more usable format, if necessary
+        # For example, creating a dictionary that maps MIDI note numbers to note symbols
+        note_symbols = {int(note["MIDI Note Number"]): note["Note Symbol"] for note in midi_info}
+        return note_symbols
+
 class MidiCsvParser:
     """
     MidiCsvParser Class
@@ -78,10 +133,6 @@ class MidiCsvParser:
         # Initialize data structures for parsing and processing
         self.player_measures = {}  # To store measures associated with each player
         self.unfinished_patterns = {}  # To keep track of unfinished musical patterns
-        self.supported_instruments = self._load_file('midi_data/supported_instruments.json', filetype='json')  # To store information about supported instruments
-        self.instrument_layout = {}  # To store layout information for each instrument
-        self.layout_coordinates: dict[str, dict[int, list[dict[str, int]]]] = {}  # To store coordinates for each instrument layout
-        self.note_symbols = self._load_midi_info()  # To map MIDI note numbers to symbols
         self.player_instruments: dict[int, dict[str, str]] = {}  # Maps player numbers to instruments
         self.track_to_player = {}  # Maps track numbers to player numbers
         self.player_number = 1  # Initial player number
@@ -167,24 +218,6 @@ class MidiCsvParser:
             # Assign loaded layout to the instrument
             self.instrument_layout[instrument] = layout_file
             self.layout_coordinates[instrument] = loaded_layouts[layout_file]
-
-    def _load_midi_info(self) -> dict[int, str]:
-        """
-        Load MIDI info from a JSON file and convert it into a more usable format.
-        This method reads the MIDI info JSON file and creates a dictionary that maps MIDI note numbers to note symbols.
-        It is assumed that the JSON file contains a list of dictionaries with "MIDI Note Number" and "Note Symbol" keys.
-
-        Returns:
-            dict[int, str]: A dictionary mapping MIDI note numbers to note symbols.
-        """
-        # Load MIDI info from the JSON file
-        midi_info_file = 'midi_data/midi_info.json'  # Path to the MIDI info JSON file
-        midi_info = self._load_file(midi_info_file)
-
-        # Convert the MIDI info into a more usable format, if necessary
-        # For example, creating a dictionary that maps MIDI note numbers to note symbols
-        note_symbols = {int(note["MIDI Note Number"]): note["Note Symbol"] for note in midi_info}
-        return note_symbols
 
     def _parse_header(self, rows: list[list[str]]):
         """
