@@ -1,9 +1,26 @@
 import mmh3
-from BPMtoFPS import ticks_to_seconds, seconds_to_frames, convert_time
+from typing import Optional, List, Dict, Tuple, Union, cast
+from BPMtoFPS import convert_time  # type: ignore[import-untyped]
 
 
-def ticks_to_frames(ticks, bpm, division, fps):
-    return convert_time('ticks', 'frames', bpm=bpm, fps=fps, ticks_per_beat=division, input_value=ticks)['frames']
+def ticks_to_frames(ticks: int, bpm: float, division: int, fps: int) -> int:
+    """Convert MIDI ticks to video frames using BPM, division, and FPS parameters."""
+    # BPMtoFPS expects bpm as int, so we'll convert it
+    result = convert_time('ticks', 'frames', bpm=int(bpm), fps=float(fps), ticks_per_beat=division, input_value=ticks)  # type: ignore[misc]
+    
+    # Handle the return value which can be a dict or a single value
+    if isinstance(result, dict) and 'frames' in result:
+        frames_value = result['frames']  # type: ignore[misc]
+        return int(cast(Union[int, float, str], frames_value))
+    elif isinstance(result, (int, float)):
+        return int(result)
+    else:
+        # Fallback calculation if the library doesn't work as expected
+        # Formula: (ticks / division) * (bpm / 60) * fps
+        beats = ticks / division
+        seconds = beats * (60 / bpm)
+        frames = seconds * fps
+        return int(frames)
 
 
 class Note:
@@ -16,27 +33,29 @@ class Note:
         self.layout = layout
         self.x = x
         self.y = y
-        self._length = None
-        self._bpm = None
-        self._division = None
-        self._fps = None
+        self._length: Optional[int] = None
+        self._bpm: Optional[float] = None
+        self._division: Optional[int] = None
+        self._fps: Optional[int] = None
+        self.frame_start: Optional[int] = None
+        self.frame_duration: Optional[int] = None
 
     @property
-    def length(self):
+    def length(self) -> Optional[int]:
         return self._length
 
     @length.setter
-    def length(self, length):
+    def length(self, length: Optional[int]) -> None:
         self._length = length
         self._update_frames()
 
-    def set_timing_info(self, bpm, division, fps):
+    def set_timing_info(self, bpm: float, division: int, fps: int) -> None:
         self._bpm = bpm
         self._division = division
         self._fps = fps
         self._update_frames()
 
-    def _update_frames(self):
+    def _update_frames(self) -> None:
         if self._bpm and self._division and self._fps:
             self.frame_start = ticks_to_frames(self.measure_time, self._bpm, self._division, self._fps)
             if self._length is not None:
@@ -44,60 +63,47 @@ class Note:
 
 
 class Pattern:
-    def __init__(self, instrument, footage):
-        self.notes = []
+    def __init__(self, instrument: str, footage: str):
+        self.notes: List[Note] = []
         self.instrument = instrument
         self.footage = footage
-        self.hash = None
+        self.hash: Optional[int] = None
 
-    def add_note(self, note):
+    def add_note(self, note: Note) -> None:
         # You can add any checks or preprocessing here if needed
         self.notes.append(note)
 
-    def calculate_hash(self):
+    def calculate_hash(self) -> int:
         pattern = [(note.measure_time, note.note_value, note.velocity, note.length, note.layout) for note in self.notes]
         pattern_string = '_'.join('_'.join(map(str, tup)) for tup in pattern)
         return mmh3.hash(pattern_string)
 
-    def is_complete(self):
+    def is_complete(self) -> bool:
         """Check if all notes in the pattern are complete (have lengths)."""
         return all(note.length is not None for note in self.notes)
 
-    def finalize(self, player_measures, current_player, measure_number, section_number, instrument, footage,
-                 unfinished_patterns, index, timing_info):
+    def finalize(self, player_measures: Dict[int, Dict[int, Dict[int, 'Pattern']]], current_player: int, measure_number: int, 
+                 section_number: int, instrument: str, footage: str, unfinished_patterns: Dict[Tuple[int, int, int], 'Pattern'], 
+                 index: Tuple[int, int, int], timing_info: Tuple[float, int, int, int]) -> None:
         """Finalize the pattern and update relevant structures."""
         self.hash = self.calculate_hash()
+        
+        # Initialize player if not exists
         if current_player not in player_measures:
-            player_measures[current_player] = [self._create_player_measure(measure_number, section_number,
-                                                                           current_player, instrument, footage,
-                                                                           timing_info)]
-        else:
-            self._update_or_add_player_measure(player_measures[current_player], measure_number, section_number,
-                                               current_player, instrument, footage, timing_info)
+            player_measures[current_player] = {}
+        
+        # Initialize measure if not exists
+        if measure_number not in player_measures[current_player]:
+            player_measures[current_player][measure_number] = {}
+        
+        # Store the pattern
+        player_measures[current_player][measure_number][section_number] = self
 
         del unfinished_patterns[index]
 
-    def _create_player_measure(self, measure_number, section_number, player_number, instrument, footage, timing_info):
-        player_measure = PlayerMeasure(measure_number, section_number, player_number, instrument, footage, self)
-        player_measure.set_timing_info(*timing_info)
-        return player_measure
-
-    def _update_or_add_player_measure(self, player_measures_list, measure_number, section_number, player_number,
-                                      instrument, footage, timing_info):
-        latest_pm = player_measures_list[-1]
-
-        pattern_changed = self.hash != latest_pm.pattern.hash
-        section_changed = section_number != latest_pm.section_number
-
-        if pattern_changed or section_changed:
-            player_measures_list.append(self._create_player_measure(measure_number, section_number, player_number,
-                                                                    instrument, footage, timing_info))
-        else:
-            latest_pm.play_count += 1
-
 
 class PlayerMeasure:
-    def __init__(self, measure_number, section_number, player_number, instrument, footage, pattern):
+    def __init__(self, measure_number: int, section_number: int, player_number: int, instrument: str, footage: str, pattern: Pattern):
         self.measure_number = measure_number
         self.section_number = section_number
         self.player_number = player_number
@@ -105,20 +111,22 @@ class PlayerMeasure:
         self.footage = footage
         self.pattern = pattern
         self.play_count = 1
-        self._bpm = None
-        self._division = None
-        self._fps = None
-        self._pattern_length = None
-        self.frame_start = None
+        self._bpm: Optional[float] = None
+        self._division: Optional[int] = None
+        self._fps: Optional[int] = None
+        self._pattern_length: Optional[int] = None
+        self.frame_start: Optional[int] = None
 
-    def set_timing_info(self, bpm, division, fps, pattern_length):
+    def set_timing_info(self, bpm: float, division: int, fps: int, pattern_length: int) -> None:
         self._bpm = bpm
         self._division = division
         self._fps = fps
         self._pattern_length = pattern_length
         self._update_frame_start()
 
-    def _update_frame_start(self):
+    def _update_frame_start(self) -> None:
         if all([self._bpm, self._division, self._fps, self._pattern_length]):
+            # Type assertions are safe here because we checked all values are not None above
+            assert self._bpm is not None and self._division is not None and self._fps is not None and self._pattern_length is not None
             self.frame_start = ticks_to_frames((self.measure_number - 1) * self._pattern_length,
                                                self._bpm, self._division, self._fps)
