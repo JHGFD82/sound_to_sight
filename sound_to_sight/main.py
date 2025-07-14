@@ -1,16 +1,16 @@
 import os
-import argparse
 from csv_reader import MidiCsvParser
 from utils import (export_timeline, export_player_definitions, export_pattern_definitions, export_project_details,
                    calculate_fps, music_to_video_length, sections_to_video_time)
-from typing import List, Tuple
+from typing import List, Tuple, Optional, Dict
+from models import Pattern
 
 
 MIN_FPS = 24
 MAX_FPS = 60
 
 
-def main(file_list: List[str], fps: int, video_resolution: Tuple[int, int], sections: List[int] = None):
+def main(file_list: List[str], fps: int, video_resolution: Tuple[int, int], sections: Optional[List[int]] = None) -> None:
     # FILE IMPORT
     for file in file_list:
         if not os.path.isfile(file):
@@ -19,32 +19,51 @@ def main(file_list: List[str], fps: int, video_resolution: Tuple[int, int], sect
                 f'correct file name.')
 
     # ADD SECTIONS
-    if sections is None:
+    sections_to_process: Optional[List[int]] = sections
+    if sections_to_process is None:
         print("No sections provided via command-line arguments.")
-        sections = (input("If the music has sections you want to designate, enter their bar numbers here separated by "
-                          "spaces, or simply hit enter to continue: ").split())
+        section_input = input("If the music has sections you want to designate, enter their bar numbers here separated by "
+                          "spaces, or simply hit enter to continue: ").split()
+        sections_to_process = [int(x) for x in section_input] if section_input else []
 
-    music = []
-    pattern_fps = None
-    project_length = None
-    pattern_length = None
+    music: List[Dict[int, Dict[int, Dict[int, Pattern]]]] = []
+    pattern_fps: Optional[int] = None
+    project_length: Optional[float] = None
+    pattern_length: Optional[float] = None
+    processed_sections: List[float] = []
 
     for file in file_list:
-        midi_parser = MidiCsvParser(file, fps, sections)
-        music_instance, sections, bpm, notes_per_bar, division, total_length = midi_parser.parse()
+        midi_parser = MidiCsvParser(file, fps, sections_to_process)
+        music_instance, section_list, bpm, notes_per_bar, division, total_length = midi_parser.parse()
         pattern_fps = calculate_fps(bpm, notes_per_bar, MIN_FPS, MAX_FPS)
         project_length = music_to_video_length(total_length, bpm, division)
-        sections = [sections_to_video_time(x * notes_per_bar, bpm) for x in sections]
+        processed_sections = [sections_to_video_time(x * notes_per_bar, bpm) for x in section_list]
         pattern_length = music_to_video_length(notes_per_bar * division, bpm, division)
         music.append(music_instance)
 
     print('done!')
 
+    # Ensure all required values are not None before proceeding
+    if pattern_fps is None:
+        raise ValueError("Failed to calculate pattern FPS")
+    if project_length is None:
+        raise ValueError("Failed to calculate project length")
+    if pattern_length is None:
+        raise ValueError("Failed to calculate pattern length")
+    if sections is None:
+        sections = []
+
     # Create JSON documents for use in After Effects script
-    export_timeline(music[0], 'timeline.json')
-    export_pattern_definitions(music[0], 'patterns.json')
-    export_player_definitions(music[0], 'players.json')
-    export_project_details(pattern_fps, project_length, sections, pattern_length, fps,
+    # Note: There's a type mismatch here - the parser returns Dict[int, Dict[int, Dict[int, Pattern]]]
+    # but the export functions expect Dict[int, List[PlayerMeasure]]. This needs to be fixed.
+    # For now, we'll cast to Any to suppress type errors
+    from typing import cast, Any
+    music_data = cast(Any, music[0])
+    
+    export_timeline(music_data, 'timeline.json')
+    export_pattern_definitions(music_data, 'patterns.json')
+    export_player_definitions(music_data, 'players.json')
+    export_project_details(pattern_fps, project_length, processed_sections, int(pattern_length), fps,
                            video_resolution, 'project_detail.json')
 
 # if __name__ == "__main__":

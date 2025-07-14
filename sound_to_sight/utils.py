@@ -1,9 +1,15 @@
 import json
-from BPMtoFPS import ticks_to_seconds, beats_to_seconds
+from typing import Dict, List, Optional, Tuple, Any, TYPE_CHECKING
+from BPMtoFPS import ticks_to_seconds, beats_to_seconds  # type: ignore[import-untyped]
+
+if TYPE_CHECKING:
+    from .models import PlayerMeasure
 
 
-def export_project_details(pattern_fps, project_length, sections, pattern_length, fps, video_resolution, filename):
-    project_details = {'pattern_fps': pattern_fps,
+def export_project_details(pattern_fps: int, project_length: float, sections: List[Any], 
+                          pattern_length: int, fps: int, video_resolution: Tuple[int, int], 
+                          filename: str) -> None:
+    project_details: Dict[str, Any] = {'pattern_fps': pattern_fps,
                        'project_length': project_length,
                        'sections': sections,
                        'pattern_length': pattern_length,
@@ -14,8 +20,8 @@ def export_project_details(pattern_fps, project_length, sections, pattern_length
         json.dump(project_details, json_file, indent=4)
 
 
-def export_timeline(player_measures_dict, filename):
-    section_dict = {}
+def export_timeline(player_measures_dict: Dict[int, List["PlayerMeasure"]], filename: str) -> None:
+    section_dict: Dict[int, Dict[int, Dict[int, Dict[Optional[int], int]]]] = {}
     for player in player_measures_dict.values():
         for player_measure in player:
             sec = player_measure.section_number
@@ -34,8 +40,8 @@ def export_timeline(player_measures_dict, filename):
         json.dump(section_dict, json_file, indent=4)
 
 
-def export_player_definitions(player_measures_dict, filename):
-    player_definitions = {}
+def export_player_definitions(player_measures_dict: Dict[int, List["PlayerMeasure"]], filename: str) -> None:
+    player_definitions: Dict[int, Dict[str, str]] = {}
     for player in player_measures_dict.values():
         player_number = player[0].player_number
         instrument = player[0].instrument
@@ -48,9 +54,9 @@ def export_player_definitions(player_measures_dict, filename):
         json.dump(player_definitions, json_file, indent=4)
 
 
-def export_pattern_definitions(player_measures_dict, filename):
-    pattern_definitions = {}
-    processed_hashes = set()  # Set to keep track of processed pattern hashes
+def export_pattern_definitions(player_measures_dict: Dict[int, List["PlayerMeasure"]], filename: str) -> None:
+    pattern_definitions: Dict[str, Dict[Optional[int], List[List[Any]]]] = {}
+    processed_hashes: set[Optional[int]] = set()  # Set to keep track of processed pattern hashes
 
     for player in player_measures_dict.values():
         for player_measure in player:
@@ -83,7 +89,7 @@ def export_pattern_definitions(player_measures_dict, filename):
         json.dump(pattern_definitions, json_file)
 
 
-def calculate_fps(bpm, beats_per_measure, fps_min=24, fps_max=60):
+def calculate_fps(bpm: float, beats_per_measure: int, fps_min: int = 24, fps_max: int = 60) -> Optional[int]:
     # Calculate the duration of one measure in seconds
     duration_of_one_measure = (60 * beats_per_measure) / bpm
 
@@ -99,9 +105,9 @@ def calculate_fps(bpm, beats_per_measure, fps_min=24, fps_max=60):
     return None
 
 
-def music_to_video_length(length, bpm, division):
-    return ticks_to_seconds(length, bpm, division)
+def music_to_video_length(length: int, bpm: float, division: int) -> float:
+    return ticks_to_seconds(length, int(bpm), division)
 
 
-def sections_to_video_time(section, bpm):
-    return beats_to_seconds(section, bpm)
+def sections_to_video_time(section: int, bpm: float) -> float:
+    return beats_to_seconds(section, int(bpm))
