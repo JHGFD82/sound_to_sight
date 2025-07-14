@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sound-to-sight"
+version = "0.1.0"
+description = "Tools to assist in the process of turning music data into video projects."
+authors = [
+    {name = "Jeff Heller (JHGFD)", email = "jeffheller@jhgfd.com"}
+]
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Topic :: Artistic Software",
+    "Topic :: Multimedia :: Sound/Audio :: MIDI",
+    "Topic :: Multimedia :: Video"
+]
+dependencies = [
+    "BPMtoFPS"
+]
+
+[project.urls]
+Homepage = "https://github.com/JHGFD82/sound_to_sight"
+Repository = "https://github.com/JHGFD82/sound_to_sight"
+
+[project.scripts]
+sound_to_sight = "sound_to_sight.main:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["sound_to_sight*"]
